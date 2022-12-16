@@ -1,14 +1,15 @@
+import config from './config';
 import express from 'express';
 
 const app = express();
 app.use(express.json());
 
-const PORT = 3000;
+console.log(`NODE_ENV=${config.NODE_ENV}`);
 
 app.get('/', (_req, res) => {
-  res.send('APP');
+  res.send('Hello World !!');
 });
 
-app.listen(PORT, ()=> {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT, () => {
+  console.log(`APP LISTENING ON http://${config.HOST}:${config.PORT}`);
 });
