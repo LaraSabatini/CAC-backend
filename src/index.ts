@@ -2,7 +2,12 @@ import config from './config';
 import express from 'express';
 
 const app = express();
+
+import usersRouter from '../src/routes/auth.route';
+
 app.use(express.json());
+app.use('/users', usersRouter);
+
 
 console.log(`NODE_ENV=${config.NODE_ENV}`);
 
