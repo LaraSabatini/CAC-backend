@@ -9,8 +9,12 @@
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LaraSabatini/CAC-backend"
+  },
   "keywords": [],
-  "author": "",
+  "author": "Lara Sabatini",
   "license": "ISC",
   "dependencies": {
     "dotenv": "16.0.3",
