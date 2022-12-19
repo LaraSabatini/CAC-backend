@@ -3,7 +3,8 @@ interface Client {
   userName: string
   email: string
   password: string
-  contactInfo: { // JSON
+  contactInfo: {
+    // JSON
     phone: number
     address: {
       street: string
@@ -17,5 +18,5 @@ interface Client {
   accountBlocked: boolean // 0 || 1
   subscription: boolean // active | inactive
 }
-  
-export default Client;
+
+export default Client
