@@ -27,7 +27,6 @@
     "nodemailer-express-handlebars": "^6.0.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
     "@types/dotenv": "^8.2.0",
