@@ -8,8 +8,7 @@
     "dev": "env-cmd -f .env.development ts-node-dev src/index.ts",
     "prod": "env-cmd -f .env.production ts-node-dev src/index.ts",
     "tsc": "tsc",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test": "env-cmd -f .env.test jest"
   },
   "repository": {
     "type": "git",
