@@ -1,18 +1,31 @@
 import config from './config';
 import express from 'express';
 
-const app = express();
-
 import usersRouter from '../src/routes/auth.route';
 
+export const app = express();
 app.use(express.json());
 app.use('/users', usersRouter);
 
 
-console.log(`NODE_ENV=${config.NODE_ENV}`);
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
+
+app.use((_req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  next();
+});
+
+// console.log(`NODE_ENV=${config.NODE_ENV}`);
 
 app.get('/', (_req, res) => {
-  res.send('Hello World !!');
+  res.json({ message: 'ok' });
 });
 
 app.listen(config.PORT, () => {
