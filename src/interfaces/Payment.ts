@@ -1,10 +1,10 @@
 interface PaymentInterface {
-	  id: number
-    clientId: number
-		mpUser: string
-    paymentExpireDate: Date
-		item: number
-		pricePaid: number
+  id: number
+  clientId: number
+  mpUser: string
+  paymentExpireDate: Date
+  itemId: number
+  pricePaid: number
 }
-    
-export default PaymentInterface;
+
+export default PaymentInterface

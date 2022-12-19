@@ -2,11 +2,13 @@ import express from "express"
 import config from "./config"
 
 import usersRouter from "./routes/auth"
+import paymentsRouter from "./routes/payment"
 
 const app = express()
 
 app.use(express.json())
 app.use("/users", usersRouter)
+app.use("/payments", paymentsRouter)
 
 app.use(express.json())
 app.use(
