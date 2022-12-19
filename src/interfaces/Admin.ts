@@ -5,5 +5,5 @@ interface Admin {
   password: string
   accessPermits: JSON
 }
-  
-export default Admin;
+
+export default Admin

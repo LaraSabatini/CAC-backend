@@ -1,1 +1,10 @@
-.build/
+.build/**
+/mock/**
+/docs/**
+/tmp/**
+/assets/**
+/public/**
+node_modules/*
+./node_modules/**
+*/node_modules/*
+!.eslintrc

@@ -1,8 +1,8 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  setupFiles: ['dotenv/config'],
+  preset: "ts-jest",
+  testEnvironment: "node",
+  setupFiles: ["dotenv/config"],
   moduleNameMapper: {
-    '@exmpl/(.*)': '<rootDir>/src/$1',
+    "@exmpl/(.*)": "<rootDir>/src/$1",
   },
-};
+}
