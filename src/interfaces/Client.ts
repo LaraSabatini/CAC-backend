@@ -1,18 +1,9 @@
 interface Client {
   id: number
-  user_name: string
+  userName: string
   email: string
   password: string
-  payment_info: {
-    mp_user: string
-    payment_expire_date: Date
-    previous_payments: {
-      date: Date,
-      item: number,
-      state: string // current | expired
-    }[]
-  }
-  contact_info: {
+  contact_info: { // JSON
     phone: number
     address: {
       street: string
@@ -22,8 +13,8 @@ interface Client {
       country: string
     }
   }
-  preferences: number[]
-  account_blocked: boolean
+  preferences: number[] // JSON
+  accountBlocked: boolean // 0 || 1
   subscription: boolean // active | inactive
 }
   
