@@ -1,7 +1,7 @@
 import config from './config';
 import express from 'express';
 
-import usersRouter from '../src/routes/auth.route';
+import usersRouter from './routes/auth';
 
 export const app = express();
 app.use(express.json());
