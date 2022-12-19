@@ -1,7 +1,7 @@
 import pool  from '../database/index';
 import { encrypt, compare } from '../helpers/handleBcrypt'; 
 
-const register = async (req: any, res: any) => {
+const adminRegister = async (req: any, res: any) => {
   try {
     const { userName, password, email, accessPermits } = req.body;
     const passwordHash = await encrypt(password);
@@ -16,7 +16,7 @@ const register = async (req: any, res: any) => {
   }
 };
 
-const login = async (req: any, res: any) => {
+const adminLogin = async (req: any, res: any) => {
   try {
     const { email, password } = req.body;
     const [admin]: any = await pool.query(`SELECT * FROM admin WHERE email = '${email}'`);
@@ -39,4 +39,20 @@ const login = async (req: any, res: any) => {
   }
 };
 
-export { login, register };
+const adminChangePassword = async (req: any, res: any) => {
+  try {
+    const { id, newPassword } = req.body;
+    const passwordHash = await encrypt(newPassword);
+
+    const [client]: any = await pool.query(`UPDATE admin SET password = '${passwordHash}' WHERE id = ${id}`);
+
+    if (client) {
+      res.status(200);
+      res.send({ message: 'Password updated successfully' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+export { adminLogin, adminRegister, adminChangePassword };

@@ -3,11 +3,11 @@ interface Client {
   userName: string
   email: string
   password: string
-  contact_info: { // JSON
+  contactInfo: { // JSON
     phone: number
     address: {
       street: string
-      street_number: number
+      streetNumber: number
       neighbourhood: string
       state: string
       country: string
