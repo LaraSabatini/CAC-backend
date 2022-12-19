@@ -57,6 +57,4 @@ const clientChangePassword = async (req: any, res: any) => {
   }
 };
 
-export { 
-  clientLogin,
-  clientRegister, clientChangePassword };
+export { clientLogin, clientRegister, clientChangePassword };
