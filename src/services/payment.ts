@@ -1,46 +1,7 @@
-import mercadopago from "mercadopago"
 import pool from "../database/index"
 import { PaymentInterface } from "../interfaces/Payment"
 
-const createPreference = (req: any, res: any) => {
-  const preference: any = {
-    items: [
-      {
-        title: req.body.description,
-        unit_price: Number(req.body.price),
-        quantity: Number(req.body.quantity),
-      },
-    ],
-    back_urls: {
-      success: "http://localhost:8080/feedback",
-      failure: "http://localhost:8080/feedback",
-      pending: "http://localhost:8080/feedback",
-    },
-    auto_return: "approved",
-  }
-
-  mercadopago.preferences
-    .create(preference)
-    .then(response => {
-      res.json({
-        id: response.body.id,
-      })
-    })
-    .catch((error: any) => {
-      // eslint-disable-next-line no-console
-      console.log("MP ERROR:", error)
-    })
-}
-
-const getFeedback = (req: any, res: any) => {
-  res.json({
-    Payment: req.query.payment_id,
-    Status: req.query.status,
-    MerchantOrder: req.query.merchant_order_id,
-  })
-}
-
-const createPayment = async (req: any, res: any) => {
+const registerPaymentInDB = async (req: any, res: any) => {
   try {
     const {
       clientId,
@@ -91,4 +52,4 @@ const getPaymentsByClient = async (req: any, res: any) => {
   return {}
 }
 
-export { createPayment, getPaymentsByClient, createPreference, getFeedback }
+export { registerPaymentInDB, getPaymentsByClient }

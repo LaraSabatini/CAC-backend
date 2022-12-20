@@ -1,9 +1,9 @@
 import express from "express"
-import { createPayment, getPaymentsByClient } from "../services/payment"
+import { registerPaymentInDB, getPaymentsByClient } from "../services/payment"
 
 const router = express.Router()
 
-router.post("/", createPayment)
+router.post("/register-in-db", registerPaymentInDB)
 
 router.get("/search/id=:id", getPaymentsByClient)
 
