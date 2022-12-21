@@ -1,3 +1,4 @@
+import mercadopago from "../helpers/mercadoPago"
 import pool from "../database/index"
 import { PaymentInterface } from "../interfaces/Payment"
 
@@ -52,4 +53,47 @@ const getPaymentsByClient = async (req: any, res: any) => {
   return {}
 }
 
-export { registerPaymentInDB, getPaymentsByClient }
+const createPreference = async (req: any, res: any) => {
+  try {
+    const preference: {
+      items: any
+      payer: any
+      back_urls: {
+        success: string
+        failure: string
+        pending: string
+      }
+      auto_return: "approved" | "all" | undefined
+    } = {
+      items: req.body.items,
+      payer: req.body.payer,
+      back_urls: {
+        success: "http://localhost:3000/login",
+        failure: "http://localhost:3000/failure",
+        pending: "http://localhost:3000/pending",
+      },
+      auto_return: "approved",
+    }
+
+    mercadopago.preferences
+      .create(preference)
+      .then((response: any) => {
+        res.json({
+          res: response,
+        })
+      })
+      .catch((error: any) => {
+        res.status(404)
+        res.send({ error, message: "Couldn't process payment" })
+      })
+  } catch (error) {
+    return res.status(500).json({
+      message:
+        "An error has occurred while getting the preference, please try again.",
+    })
+  }
+
+  return {}
+}
+
+export { registerPaymentInDB, getPaymentsByClient, createPreference }

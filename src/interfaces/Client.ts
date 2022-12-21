@@ -4,7 +4,6 @@ interface Client {
   email: string
   password: string
   contactInfo: {
-    // JSON
     phone: number
     address: {
       street: string
@@ -14,9 +13,9 @@ interface Client {
       country: string
     }
   }
-  preferences: number[] // JSON
-  accountBlocked: boolean // 0 || 1
-  subscription: boolean // active | inactive
+  preferences: number[]
+  accountBlocked: boolean
+  subscription: boolean
 }
 
 export default Client
