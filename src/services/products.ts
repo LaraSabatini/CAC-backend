@@ -39,7 +39,8 @@ const createProduct = async (req: any, res: any) => {
 
 const editProduct = async (req: any, res: any) => {
   try {
-    const { name, price, id } = req.body
+    const { name, price } = req.body
+    const { id } = req.params
 
     const [product]: any = await pool.query(
       `UPDATE items SET price = '${price}', name = '${name}' WHERE id = ${id}`,
@@ -61,7 +62,7 @@ const editProduct = async (req: any, res: any) => {
 
 const deleteProduct = async (req: any, res: any) => {
   try {
-    const { id } = req.body
+    const { id } = req.params
 
     const [product]: any = await pool.query(`DELETE FROM items WHERE id=${id}`)
 
