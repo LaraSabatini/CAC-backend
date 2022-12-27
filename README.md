@@ -93,7 +93,7 @@ MAIL_PASS
 | `subscription`      | `boolean` | `number[]` En caso de que se haya vencido el pago |
 
 ```
-  // contactInfo Interface
+  - contactInfo Interface
   contactInfo: {
     phone: number
     address: {
@@ -274,3 +274,41 @@ MAIL_PASS
 | `name`| `string`| **Required**.             |
 | `price`| `number`| **Required**.             |
 | `description`| `string`| **Required**.             |
+
+
+### Articles
+
+#### Get articles
+
+```http
+  GET api/articles/page=:page
+```
+
+-Content comes in 25 items each time.-
+
+#### Create article
+
+```http
+  POST api/articles
+```
+
+#### Body:
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `title`| `string`| **Required**.             |
+| `description`| `string`| **Required**.             |
+| `categories`| `JSON`| number[]             |
+| `picture`| `Blob`|              |
+| `attachment`| `Blob`|              |
+| `createdBy`| `number`|         User id     |
+| `changesHistory`| `changesHistoryInterface[]`|             |
+
+```
+  - changesHistoryInterface
+  {
+    date: Date,
+    action: string,
+    madeBy: number
+  }
+```
