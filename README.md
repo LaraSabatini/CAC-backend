@@ -141,4 +141,22 @@ MAIL_PASS
 | `id`| `number`| **Required**.             |
 | `newPassword`| `string`| **Required**.             |
 
+### Payments
+
+#### Register payment in DB
+
+```http
+  POST api/payment/register-in-db
+```
+
+#### Body:
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `clientId`| `number`| **Required**.             |
+| `mpUser`| `string`| **Required**.             |
+| `paymentExpireDate`| `Date`| **Required**.             |
+| `itemId`| `number`| **Required**.             |
+| `pricePaid`| `number`| **Required**.             |
+
 
