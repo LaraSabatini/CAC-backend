@@ -229,3 +229,48 @@ MAIL_PASS
     pending: string
   }
 ```
+
+### Pricing
+
+#### Get price list
+
+```http
+  GET api/pricing
+```
+
+#### Create price item
+
+```http
+  POST api/pricing
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name`| `string`| **Required**.             |
+| `price`| `number`| **Required**.             |
+| `description`| `string`| **Required**.             |
+
+#### Edit price item
+
+```http
+  PUT api/pricing/id=:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name`| `string`| **Required**.             |
+| `price`| `number`| **Required**.             |
+| `description`| `string`| **Required**.             |
+
+#### Delete price item
+
+```http
+  DELETE api/pricing/id=:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`| `number`| **Required**.             |
+| `name`| `string`| **Required**.             |
+| `price`| `number`| **Required**.             |
+| `description`| `string`| **Required**.             |
