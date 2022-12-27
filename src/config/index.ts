@@ -17,6 +17,7 @@ const config = {
   },
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PASS: process.env.MAIL_PASS,
+  listPerPage: 25,
 }
 
 export default config
