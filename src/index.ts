@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 import config from "./config"
 
-import productsRouter from "./routes/products"
+import pricingRouter from "./routes/pricing"
 
 const app = express()
 
@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors())
 
-app.use("/products", productsRouter)
+app.use("/pricing", pricingRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
