@@ -141,6 +141,7 @@ MAIL_PASS
 | `id`| `number`| **Required**.             |
 | `newPassword`| `string`| **Required**.             |
 
+
 ### Payments
 
 #### Register payment in DB
@@ -160,3 +161,71 @@ MAIL_PASS
 | `pricePaid`| `number`| **Required**.             |
 
 
+#### Get payments by client
+
+```http
+  GET api/payment/search/id=:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`| `number`| **Required**.             |
+
+#### Create preference (MP)
+
+```http
+  POST api/payment/create-preference
+```
+
+#### Body:
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `items`| `itemInterface[]`| **Required**.             |
+| `payer`| `payerInterface`| **Required**.             |
+| `back_urls`| `urlsInterface`| **Required**.             |
+| `auto_return`| `string / undefined`| "approved" / "all" / undefined             |
+
+
+  ```
+  - itemInterface
+  {
+    id: string
+    title: string
+    description?: string
+    category_id?: string
+    quantity: number
+    currency_id?: string
+    unit_price: number
+    picture_url?: string
+  }
+
+  - payerInterface
+  {
+      name: string
+      surname: string
+      email: string
+      date_created?: null
+      last_purchase?: null
+      phone?: {
+        area_code: string
+        number: string
+      }
+      identification: {
+        type: string
+        number: string
+      }
+      address?: {
+        street_name: string
+        street_number: string
+        zip_code: string
+      }
+  }
+
+  - urlsInterface
+  {
+    success: string
+    failure: string
+    pending: string
+  }
+```
