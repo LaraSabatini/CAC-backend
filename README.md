@@ -312,3 +312,37 @@ MAIL_PASS
     madeBy: number
   }
 ```
+
+#### Edit article
+
+```http
+  PUT api/articles/id=:id
+```
+
+#### Body:
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`| `number`| **Required**.             |
+| `title`| `string`| **Required**.             |
+| `description`| `string`| **Required**.             |
+| `categories`| `JSON`| number[]             |
+| `picture`| `Blob`|              |
+| `attachment`| `Blob`|              |
+| `createdBy`| `number`|         User id     |
+| `changesHistory`| `changesHistoryInterface[]`|             |
+
+```
+  - changesHistoryInterface
+  {
+    date: Date,
+    action: string,
+    madeBy: number
+  }
+```
+
+#### Delete article
+
+```http
+  DELETE api/articles/id=:id
+```
