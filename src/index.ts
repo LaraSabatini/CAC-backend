@@ -2,11 +2,13 @@ import express from "express"
 import config from "./config"
 
 import usersRouter from "./routes/auth"
+import articlesRouter from "./routes/articles"
 
 const app = express()
 
 app.use(express.json())
 app.use("/users", usersRouter)
+app.use("/articles", articlesRouter)
 
 app.use(express.json())
 app.use(

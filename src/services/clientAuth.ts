@@ -1,5 +1,5 @@
 import pool from "../database/index"
-import Client from "../interfaces/Client"
+import Client from "../interfaces/users/Client"
 import { encrypt, compare } from "../helpers/handleBcrypt"
 
 const clientRegister = async (req: any, res: any) => {
