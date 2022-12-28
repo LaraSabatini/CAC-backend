@@ -18,10 +18,10 @@ const getPricing = async (_req: any, res: any) => {
 
 const createPricing = async (req: any, res: any) => {
   try {
-    const { name, price, description } = req.body
+    const { name, price, description, time } = req.body
 
     const insertPricing = await pool.query(
-      `INSERT INTO pricing (name, price, description) VALUES ('${name}', '${price}', '${description}');`,
+      `INSERT INTO pricing (name, price, description, time) VALUES ('${name}', '${price}', '${description}', '${time}');`,
     )
 
     if (insertPricing) {
@@ -39,11 +39,11 @@ const createPricing = async (req: any, res: any) => {
 
 const editPricing = async (req: any, res: any) => {
   try {
-    const { name, price, description } = req.body
+    const { name, price, description, time } = req.body
     const { id } = req.params
 
     const [pricing]: any = await pool.query(
-      `UPDATE pricing SET price = '${price}', name = '${name}', description = '${description}' WHERE id = ${id}`,
+      `UPDATE pricing SET price = '${price}', name = '${name}', description = '${description}', time = '${time}' WHERE id = ${id}`,
     )
 
     if (pricing) {
