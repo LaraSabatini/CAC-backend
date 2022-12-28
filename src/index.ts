@@ -2,30 +2,15 @@ import express from "express"
 import config from "./config"
 
 import usersRouter from "./routes/auth"
-import articlesRouter from "./routes/articles"
+import pricingRouter from "./routes/pricing"
 
 const app = express()
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+
 app.use("/users", usersRouter)
-app.use("/articles", articlesRouter)
-
-app.use(express.json())
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-)
-
-app.use((_req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
-  )
-  res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
-  next()
-})
+app.use("/pricing", pricingRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
