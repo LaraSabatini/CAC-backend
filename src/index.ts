@@ -3,6 +3,7 @@ import config from "./config"
 
 import usersRouter from "./routes/auth"
 import pricingRouter from "./routes/pricing"
+import articlesRouter from "./routes/articles"
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use("/users", usersRouter)
 app.use("/pricing", pricingRouter)
+app.use("/articles", articlesRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
