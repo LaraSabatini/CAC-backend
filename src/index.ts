@@ -1,4 +1,5 @@
 import express from "express"
+import cors from "cors"
 import config from "./config"
 
 import usersRouter from "./routes/auth"
@@ -9,6 +10,12 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
+  }),
+)
 
 app.use("/users", usersRouter)
 app.use("/pricing", pricingRouter)
