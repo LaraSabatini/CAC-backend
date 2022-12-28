@@ -2,7 +2,7 @@ import pool from "../database/index"
 
 const getPricing = async (_req: any, res: any) => {
   try {
-    const pricing = await pool.query(`SELECT * FROM pricing`)
+    const [pricing] = await pool.query(`SELECT * FROM pricing`)
 
     if (pricing) {
       return res.status(200).json({ data: pricing })
