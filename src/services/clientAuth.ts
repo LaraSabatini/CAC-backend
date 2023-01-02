@@ -5,19 +5,47 @@ import { encrypt, compare } from "../helpers/handleBcrypt"
 const clientRegister = async (req: any, res: any) => {
   try {
     const {
+      name,
+      lastName,
       userName,
       email,
       password,
-      phone,
-      identification,
+      identificationType,
+      identificationNumber,
+      phoneAreaCode,
+      phoneNumber,
       preferences,
       accountBlocked,
       subscription,
+      dateCreated,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
     const registerClient = await pool.query(
-      `INSERT INTO clients (userName, email, password, phone, identification, preferences, accountBlocked, subscription) VALUES ('${userName}', '${email}', '${passwordHash}', '${phone}', '${identification}', '${preferences}', '${accountBlocked}', '${subscription}');`,
+      `INSERT INTO clients (name,
+        lastName,
+        userName,
+        email,
+        password,
+        identificationType,
+        identificationNumber,
+        phoneAreaCode,
+        phoneNumber,
+        preferences,
+        accountBlocked,
+        subscription,dateCreated) VALUES ('${name}',
+        '${lastName}',
+        '${userName}',
+        '${email}',
+        '${passwordHash}',
+        '${identificationType}',
+        '${identificationNumber}',
+        '${phoneAreaCode}',
+        '${phoneNumber}',
+        '${preferences}',
+        '${accountBlocked}',
+        '${subscription}',
+        '${dateCreated}');`,
     )
 
     if (registerClient) {
@@ -82,9 +110,9 @@ const clientChangePassword = async (req: any, res: any) => {
 
 const validateDuplicatedUser = async (req: any, res: any) => {
   try {
-    const { email, identification } = req.body
+    const { email, identificationNumber } = req.body
     const [client]: any = await pool.query(
-      `SELECT * FROM clients WHERE email = '${email}' OR identification = '${identification}'`,
+      `SELECT * FROM clients WHERE email = '${email}' OR identificationNumber = '${identificationNumber}'`,
     )
 
     if (client.length) {
