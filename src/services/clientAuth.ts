@@ -8,7 +8,8 @@ const clientRegister = async (req: any, res: any) => {
       userName,
       email,
       password,
-      contactInfo,
+      phone,
+      identification,
       preferences,
       accountBlocked,
       subscription,
@@ -16,7 +17,7 @@ const clientRegister = async (req: any, res: any) => {
     const passwordHash = await encrypt(password)
 
     const registerClient = await pool.query(
-      `INSERT INTO clients (userName, email, password, contactInfo, preferences, accountBlocked, subscription) VALUES ('${userName}', '${email}', '${passwordHash}', '${contactInfo}', '${preferences}', '${accountBlocked}', '${subscription}');`,
+      `INSERT INTO clients (userName, email, password, phone, identification, preferences, accountBlocked, subscription) VALUES ('${userName}', '${email}', '${passwordHash}', '${phone}', '${identification}', '${preferences}', '${accountBlocked}', '${subscription}');`,
     )
 
     if (registerClient) {
@@ -79,4 +80,31 @@ const clientChangePassword = async (req: any, res: any) => {
   return {}
 }
 
-export { clientLogin, clientRegister, clientChangePassword }
+const validateDuplicatedUser = async (req: any, res: any) => {
+  try {
+    const { email, identification } = req.body
+    const [client]: any = await pool.query(
+      `SELECT * FROM clients WHERE email = '${email}' OR identification = '${identification}'`,
+    )
+
+    if (client.length) {
+      res
+        .status(200)
+        .json({ message: "Cannot create users", status: "duplicated" })
+    } else {
+      res.status(200)
+      res.send({ message: "Can create user", status: "available" })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" })
+  }
+
+  return {}
+}
+
+export {
+  clientLogin,
+  clientRegister,
+  clientChangePassword,
+  validateDuplicatedUser,
+}

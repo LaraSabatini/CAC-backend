@@ -8,6 +8,7 @@ import {
   clientRegister,
   clientLogin,
   clientChangePassword,
+  validateDuplicatedUser,
 } from "../services/clientAuth"
 
 const router = express.Router()
@@ -23,5 +24,7 @@ router.post("/client/login", clientLogin)
 router.post("/client/register", clientRegister)
 
 router.put("/client/change-password", clientChangePassword)
+
+router.post("/client/validate", validateDuplicatedUser)
 
 export default router
