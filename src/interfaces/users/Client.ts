@@ -3,15 +3,13 @@ interface Client {
   userName: string
   email: string
   password: string
-  contactInfo: {
-    phone: number
-    address: {
-      street: string
-      streetNumber: number
-      neighbourhood: string
-      state: string
-      country: string
-    }
+  phone: {
+    area_code: string
+    number: string
+  }
+  identification: {
+    type: string
+    number: string
   }
   preferences: number[]
   accountBlocked: boolean
