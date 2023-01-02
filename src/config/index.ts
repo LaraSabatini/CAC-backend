@@ -17,6 +17,7 @@ const config = {
   },
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PASS: process.env.MAIL_PASS,
+  MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN,
   listPerPage: 25,
 }
 
