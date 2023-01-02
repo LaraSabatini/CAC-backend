@@ -7,7 +7,6 @@ const clientRegister = async (req: any, res: any) => {
     const {
       name,
       lastName,
-      userName,
       email,
       password,
       identificationType,
@@ -24,7 +23,6 @@ const clientRegister = async (req: any, res: any) => {
     const registerClient = await pool.query(
       `INSERT INTO clients (name,
         lastName,
-        userName,
         email,
         password,
         identificationType,
@@ -35,7 +33,6 @@ const clientRegister = async (req: any, res: any) => {
         accountBlocked,
         subscription,dateCreated) VALUES ('${name}',
         '${lastName}',
-        '${userName}',
         '${email}',
         '${passwordHash}',
         '${identificationType}',

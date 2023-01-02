@@ -2,13 +2,12 @@ interface Client {
   id: number
   name: string
   lastName: string
-  userName: string
   email: string
-  password: string
   identificationType: string
   identificationNumber: string
   phoneAreaCode: string
   phoneNumber: string
+  password: string
   preferences: number[]
   accountBlocked: boolean
   subscription: boolean
