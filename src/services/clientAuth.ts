@@ -115,7 +115,7 @@ const validateDuplicatedUser = async (req: any, res: any) => {
     if (client.length) {
       res
         .status(200)
-        .json({ message: "Cannot create users", status: "duplicated" })
+        .json({ message: "Cannot create user", status: "duplicated" })
     } else {
       res.status(200)
       res.send({ message: "Can create user", status: "available" })
