@@ -12,8 +12,8 @@ interface Client {
     number: string
   }
   preferences: number[]
-  accountBlocked: boolean
-  subscription: boolean
+  accountBlocked: 0 | 1
+  subscription: 0 | 1
 }
 
 export default Client
