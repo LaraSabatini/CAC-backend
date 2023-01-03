@@ -5,15 +5,41 @@ import { PaymentInterface } from "../interfaces/payment/Payment"
 const registerPaymentInDB = async (req: any, res: any) => {
   try {
     const {
+      paymentId,
+      collectionId,
+      collectionStatus,
+      status,
+      paymentType,
+      merchantOrderId,
+      preferenceId,
+      pricePaid,
       clientId,
-      mpUser,
       paymentExpireDate,
       itemId,
-      pricePaid,
     }: PaymentInterface = req.body
 
     const registerPayment = await pool.query(
-      `INSERT INTO payments (clientId, mpUser, paymentExpireDate, itemId, pricePaid) VALUES ('${clientId}', '${mpUser}', '${paymentExpireDate}', '${itemId}', '${pricePaid}');`,
+      `INSERT INTO payments (paymentId,
+        collectionId,
+        collectionStatus,
+        status,
+        paymentType,
+        merchantOrderId,
+        preferenceId,
+        pricePaid,
+        clientId,
+        paymentExpireDate,
+        itemId) VALUES ('${paymentId}',
+        '${collectionId}',
+        '${collectionStatus}',
+        '${status}',
+        '${paymentType}',
+        '${merchantOrderId}',
+        '${preferenceId}',
+        '${pricePaid}',
+        '${clientId}',
+        '${paymentExpireDate}',
+        '${itemId}');`,
     )
 
     if (registerPayment) {
@@ -65,12 +91,12 @@ const createPreference = async (req: any, res: any) => {
       }
       auto_return: "approved" | "all" | undefined
     } = {
-      items: req.body.items,
+      items: req.body.item,
       payer: req.body.payer,
       back_urls: {
-        success: "http://localhost:3000/login",
-        failure: "http://localhost:3000/failure",
-        pending: "http://localhost:3000/pending",
+        success: "http://localhost:3000/payment?payment_status=success",
+        failure: "http://localhost:3000/payment?payment_status=failure",
+        pending: "http://localhost:3000/payment?payment_status=pending",
       },
       auto_return: "approved",
     }
@@ -79,7 +105,8 @@ const createPreference = async (req: any, res: any) => {
       .create(preference)
       .then((response: any) => {
         res.json({
-          res: response,
+          id: response.body.id,
+          status: 200,
         })
       })
       .catch((error: any) => {
