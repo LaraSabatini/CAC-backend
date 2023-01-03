@@ -52,12 +52,14 @@ const clientRegister = async (req: any, res: any) => {
       res.status(200).json({
         message: "Client registered successfully",
         clientId: rowData.insertId,
+        status: 200,
       })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while registering the client, please try again.",
+      status: 500,
     })
   }
 
