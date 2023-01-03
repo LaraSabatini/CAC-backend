@@ -25,12 +25,15 @@ const createPricing = async (req: any, res: any) => {
     )
 
     if (insertPricing) {
-      return res.status(200).json({ message: "Pricing created successfully" })
+      return res
+        .status(200)
+        .json({ message: "Pricing created successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while creating the pricing, please try again.",
+      status: 500,
     })
   }
 
@@ -48,12 +51,13 @@ const editPricing = async (req: any, res: any) => {
 
     if (pricing) {
       res.status(200)
-      res.send({ message: "Pricing updated successfully" })
+      res.send({ message: "Pricing updated successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while updating the pricing, please try again.",
+      status: 500,
     })
   }
 
@@ -70,12 +74,13 @@ const deletePricing = async (req: any, res: any) => {
 
     if (pricing) {
       res.status(200)
-      res.send({ message: "Pricing deleted successfully" })
+      res.send({ message: "Pricing deleted successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while deleting the pricing, please try again.",
+      status: 500,
     })
   }
 

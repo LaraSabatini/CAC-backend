@@ -43,12 +43,15 @@ const registerPaymentInDB = async (req: any, res: any) => {
     )
 
     if (registerPayment) {
-      res.status(200).json({ message: "Payment registered successfully" })
+      res
+        .status(200)
+        .json({ message: "Payment registered successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while registering the payment, please try again.",
+      status: 500,
     })
   }
 
@@ -64,15 +67,16 @@ const getPaymentsByClient = async (req: any, res: any) => {
     )
 
     if (payment.length) {
-      res.status(200).json({ data: payment })
+      res.status(200).json({ data: payment, status: 200 })
     } else {
       res.status(404)
-      res.send({ error: "Payments not found" })
+      res.send({ error: "Payments not found", status: 400 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while getting the payments, please try again.",
+      status: 500,
     })
   }
 

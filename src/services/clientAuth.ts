@@ -1,3 +1,4 @@
+import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import Client from "../interfaces/users/Client"
 import { encrypt, compare } from "../helpers/handleBcrypt"
@@ -20,7 +21,7 @@ const clientRegister = async (req: any, res: any) => {
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
-    const registerClient = await pool.query(
+    const [registerClient] = await pool.query(
       `INSERT INTO clients (name,
         lastName,
         email,
@@ -46,7 +47,12 @@ const clientRegister = async (req: any, res: any) => {
     )
 
     if (registerClient) {
-      res.status(200).json({ message: "Client registered successfully" })
+      const rowData: ResultSetHeader = registerClient as ResultSetHeader
+
+      res.status(200).json({
+        message: "Client registered successfully",
+        clientId: rowData.insertId,
+      })
     }
   } catch (error) {
     return res.status(500).json({
@@ -69,17 +75,19 @@ const clientLogin = async (req: any, res: any) => {
       const checkPassword = await compare(password, client[0].password)
 
       if (checkPassword) {
-        res.status(200).json({ message: "Login successfully" })
+        res.status(200).json({ message: "Login successfully", status: 200 })
       } else {
         res.status(500)
-        res.send({ message: "Wrong password or email" })
+        res.send({ message: "Wrong password or email", status: 401 })
       }
     } else {
       res.status(404)
-      res.send({ error: "User not found" })
+      res.send({ error: "User not found", status: 400 })
     }
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", status: 500 })
   }
 
   return {}
@@ -96,10 +104,12 @@ const clientChangePassword = async (req: any, res: any) => {
 
     if (client) {
       res.status(200)
-      res.send({ message: "Password updated successfully" })
+      res.send({ message: "Password updated successfully", status: 200 })
     }
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", status: 500 })
   }
 
   return {}
@@ -121,7 +131,9 @@ const validateDuplicatedUser = async (req: any, res: any) => {
       res.send({ message: "Can create user", status: "available" })
     }
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", status: 500 })
   }
 
   return {}

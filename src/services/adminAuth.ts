@@ -11,12 +11,15 @@ const adminRegister = async (req: any, res: any) => {
     )
 
     if (registerAdmin) {
-      return res.status(200).json({ message: "Admin registered successfully" })
+      return res
+        .status(200)
+        .json({ message: "Admin registered successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while registering the user, please try again.",
+      status: 500,
     })
   }
 
@@ -34,17 +37,19 @@ const adminLogin = async (req: any, res: any) => {
       const checkPassword = await compare(password, admin[0].password)
 
       if (checkPassword) {
-        res.status(200).json({ message: "Login successfully" })
+        res.status(200).json({ message: "Login successfully", status: 200 })
       } else {
         res.status(500)
-        res.send({ message: "Wrong password or email" })
+        res.send({ message: "Wrong password or email", status: 401 })
       }
     } else {
       res.status(404)
-      res.send({ error: "User not found" })
+      res.send({ error: "User not found", status: 400 })
     }
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", status: 500 })
   }
 
   return {}
@@ -61,10 +66,12 @@ const adminChangePassword = async (req: any, res: any) => {
 
     if (client) {
       res.status(200)
-      res.send({ message: "Password updated successfully" })
+      res.send({ message: "Password updated successfully", status: 200 })
     }
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", status: 500 })
   }
 
   return {}

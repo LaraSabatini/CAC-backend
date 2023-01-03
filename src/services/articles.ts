@@ -26,12 +26,15 @@ const createArticle = async (req: any, res: any) => {
     )
 
     if (registerArticle) {
-      return res.status(200).json({ message: "Article created successfully" })
+      return res
+        .status(200)
+        .json({ message: "Article created successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while creating the article, please try again.",
+      status: 500,
     })
   }
 
@@ -57,11 +60,13 @@ const getArticles = async (req: any, res: any) => {
       return res.status(200).json({
         data: articles,
         meta,
+        status: 200,
       })
     }
   } catch (error) {
     return res.status(500).json({
       message: "An error has occurred, please try again.",
+      status: 500,
     })
   }
 
@@ -87,12 +92,13 @@ const editArticle = async (req: any, res: any) => {
 
     if (article) {
       res.status(200)
-      res.send({ message: "Article updated successfully" })
+      res.send({ message: "Article updated successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while updating the article, please try again.",
+      status: 500,
     })
   }
 
@@ -109,12 +115,13 @@ const deleteArticle = async (req: any, res: any) => {
 
     if (article) {
       res.status(200)
-      res.send({ message: "Article deleted successfully" })
+      res.send({ message: "Article deleted successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while deleting the article, please try again.",
+      status: 500,
     })
   }
 
