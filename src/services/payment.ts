@@ -115,7 +115,7 @@ const createPreference = async (req: any, res: any) => {
       })
       .catch((error: any) => {
         res.status(404)
-        res.send({ error, message: "Couldn't process payment" })
+        res.send({ error, message: "Couldn't process payment", status: 404 })
       })
   } catch (error) {
     return res.status(500).json({

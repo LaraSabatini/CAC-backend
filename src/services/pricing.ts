@@ -5,11 +5,12 @@ const getPricing = async (_req: any, res: any) => {
     const [pricing] = await pool.query(`SELECT * FROM pricing`)
 
     if (pricing) {
-      return res.status(200).json({ data: pricing })
+      return res.status(200).json({ data: pricing, status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message: "An error has occurred, please try again.",
+      status: 500,
     })
   }
 

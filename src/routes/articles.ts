@@ -12,8 +12,8 @@ router.post("/", createArticle)
 
 router.get("/page=:page", getArticles)
 
-router.put("/", editArticle)
+router.put("/id=:id", editArticle)
 
-router.delete("/", deleteArticle)
+router.delete("/id=:id", deleteArticle)
 
 export default router

@@ -1,3 +1,4 @@
+import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import config from "../config/index"
 import { getOffset } from "../helpers/pagination"
@@ -52,9 +53,11 @@ const getArticles = async (req: any, res: any) => {
     const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM articles`)
 
     if (articles) {
+      const rowData: ResultSetHeader = amountOfPages as ResultSetHeader
+
       const meta = {
         page,
-        totalPages: amountOfPages,
+        totalPages: parseInt(Object.keys(rowData)[0], 10),
       }
 
       return res.status(200).json({
