@@ -69,7 +69,7 @@ const getPaymentsByClient = async (req: any, res: any) => {
     if (payment.length) {
       res.status(201).json({ data: payment, status: 201 })
     } else {
-      res.status(404)
+      res.status(200)
       res.send({ error: "Payments not found", status: 404 })
     }
   } catch (error) {
