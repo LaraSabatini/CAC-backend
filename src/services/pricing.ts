@@ -5,7 +5,7 @@ const getPricing = async (_req: any, res: any) => {
     const [pricing] = await pool.query(`SELECT * FROM pricing`)
 
     if (pricing) {
-      return res.status(200).json({ data: pricing, status: 200 })
+      return res.status(201).json({ data: pricing, status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
@@ -27,8 +27,8 @@ const createPricing = async (req: any, res: any) => {
 
     if (insertPricing) {
       return res
-        .status(200)
-        .json({ message: "Pricing created successfully", status: 200 })
+        .status(201)
+        .json({ message: "Pricing created successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
@@ -51,8 +51,8 @@ const editPricing = async (req: any, res: any) => {
     )
 
     if (pricing) {
-      res.status(200)
-      res.send({ message: "Pricing updated successfully", status: 200 })
+      res.status(201)
+      res.send({ message: "Pricing updated successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
@@ -74,8 +74,8 @@ const deletePricing = async (req: any, res: any) => {
     )
 
     if (pricing) {
-      res.status(200)
-      res.send({ message: "Pricing deleted successfully", status: 200 })
+      res.status(201)
+      res.send({ message: "Pricing deleted successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({

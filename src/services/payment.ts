@@ -44,8 +44,8 @@ const registerPaymentInDB = async (req: any, res: any) => {
 
     if (registerPayment) {
       res
-        .status(200)
-        .json({ message: "Payment registered successfully", status: 200 })
+        .status(201)
+        .json({ message: "Payment registered successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
@@ -67,10 +67,10 @@ const getPaymentsByClient = async (req: any, res: any) => {
     )
 
     if (payment.length) {
-      res.status(200).json({ data: payment, status: 200 })
+      res.status(201).json({ data: payment, status: 201 })
     } else {
       res.status(404)
-      res.send({ error: "Payments not found", status: 400 })
+      res.send({ error: "Payments not found", status: 404 })
     }
   } catch (error) {
     return res.status(500).json({
@@ -110,7 +110,7 @@ const createPreference = async (req: any, res: any) => {
       .then((response: any) => {
         res.json({
           id: response.body.id,
-          status: 200,
+          status: 201,
         })
       })
       .catch((error: any) => {

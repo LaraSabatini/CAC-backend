@@ -49,10 +49,10 @@ const clientRegister = async (req: any, res: any) => {
     if (registerClient) {
       const rowData: ResultSetHeader = registerClient as ResultSetHeader
 
-      res.status(200).json({
+      res.status(201).json({
         message: "Client registered successfully",
         clientId: rowData.insertId,
-        status: 200,
+        status: 201,
       })
     }
   } catch (error) {
@@ -77,14 +77,14 @@ const clientLogin = async (req: any, res: any) => {
       const checkPassword = await compare(password, client[0].password)
 
       if (checkPassword) {
-        res.status(200).json({ message: "Login successfully", status: 200 })
+        res.status(201).json({ message: "Login successfully", status: 201 })
       } else {
-        res.status(500)
+        res.status(401)
         res.send({ message: "Wrong password or email", status: 401 })
       }
     } else {
       res.status(404)
-      res.send({ error: "User not found", status: 400 })
+      res.send({ error: "User not found", status: 404 })
     }
   } catch (error) {
     return res
@@ -105,8 +105,8 @@ const clientChangePassword = async (req: any, res: any) => {
     )
 
     if (client) {
-      res.status(200)
-      res.send({ message: "Password updated successfully", status: 200 })
+      res.status(201)
+      res.send({ message: "Password updated successfully", status: 201 })
     }
   } catch (error) {
     return res
@@ -120,17 +120,20 @@ const clientChangePassword = async (req: any, res: any) => {
 const validateDuplicatedUser = async (req: any, res: any) => {
   try {
     const { email, identificationNumber } = req.body
+
     const [client]: any = await pool.query(
-      `SELECT * FROM clients WHERE email = '${email}' OR identificationNumber = '${identificationNumber}'`,
+      `SELECT * FROM clients WHERE email LIKE '${email}' OR identificationNumber LIKE '${identificationNumber}'`,
     )
 
     if (client.length) {
-      res
-        .status(200)
-        .json({ message: "Cannot create user", status: "duplicated" })
+      res.status(401).json({
+        message: "Cannot create user",
+        info: "duplicated",
+        status: 401,
+      })
     } else {
       res.status(200)
-      res.send({ message: "Can create user", status: "available" })
+      res.send({ message: "Can create user", info: "available", status: 200 })
     }
   } catch (error) {
     return res

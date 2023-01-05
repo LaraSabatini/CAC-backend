@@ -28,8 +28,8 @@ const createArticle = async (req: any, res: any) => {
 
     if (registerArticle) {
       return res
-        .status(200)
-        .json({ message: "Article created successfully", status: 200 })
+        .status(201)
+        .json({ message: "Article created successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
@@ -94,8 +94,8 @@ const editArticle = async (req: any, res: any) => {
     )
 
     if (article) {
-      res.status(200)
-      res.send({ message: "Article updated successfully", status: 200 })
+      res.status(201)
+      res.send({ message: "Article updated successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
