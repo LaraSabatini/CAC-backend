@@ -18,6 +18,7 @@ const clientRegister = async (req: any, res: any) => {
       accountBlocked,
       subscription,
       dateCreated,
+      loginAttempts,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -32,7 +33,9 @@ const clientRegister = async (req: any, res: any) => {
         phoneNumber,
         preferences,
         accountBlocked,
-        subscription,dateCreated) VALUES ('${name}',
+        subscription,
+        dateCreated,
+        loginAttempts) VALUES ('${name}',
         '${lastName}',
         '${email}',
         '${passwordHash}',
@@ -43,7 +46,8 @@ const clientRegister = async (req: any, res: any) => {
         '${preferences}',
         '${accountBlocked}',
         '${subscription}',
-        '${dateCreated}');`,
+        '${dateCreated}',
+        '${loginAttempts}');`,
     )
 
     if (registerClient) {
@@ -75,12 +79,56 @@ const clientLogin = async (req: any, res: any) => {
 
     if (client.length) {
       const checkPassword = await compare(password, client[0].password)
+      const rowClientData: Client[] = client as Client[]
+      const loginAttempts = rowClientData[0].loginAttempts + 1
 
       if (checkPassword) {
+        await pool.query(
+          `UPDATE clients SET loginAttempts = '0', accountBlocked='0' WHERE id = ${rowClientData[0].id}`,
+        )
+
         res.status(201).json({ message: "Login successfully", status: 201 })
+      } else if (client.length && rowClientData[0].accountBlocked === 0) {
+        if (loginAttempts === 5) {
+          const [blockAccount]: any = await pool.query(
+            `UPDATE clients SET loginAttempts = '${loginAttempts}', accountBlocked='1' WHERE id = ${rowClientData[0].id}`,
+          )
+
+          const rowBlockAccountData: ResultSetHeader =
+            blockAccount as ResultSetHeader
+
+          if (rowBlockAccountData.affectedRows === 1) {
+            res.status(401)
+            res.send({
+              message: "Account blocked",
+              status: 401,
+            })
+          }
+        } else {
+          const [updateLoginAttempts]: any = await pool.query(
+            `UPDATE clients SET loginAttempts = '${
+              rowClientData[0].loginAttempts + 1
+            }' WHERE id = ${rowClientData[0].id}`,
+          )
+
+          const rowAdminUpdatedData: ResultSetHeader =
+            updateLoginAttempts as ResultSetHeader
+
+          res.status(401)
+          res.send({
+            message: "Wrong password or email",
+            status: 401,
+            loginAttempts:
+              rowAdminUpdatedData.affectedRows === 1 &&
+              rowClientData[0].loginAttempts + 1,
+          })
+        }
       } else {
         res.status(401)
-        res.send({ message: "Wrong password or email", status: 401 })
+        res.send({
+          message: "Account blocked",
+          status: 401,
+        })
       }
     } else {
       res.status(404)

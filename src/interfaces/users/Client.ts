@@ -9,9 +9,10 @@ interface Client {
   phoneNumber: string
   password: string
   preferences: number[]
-  accountBlocked: boolean
-  subscription: boolean
+  accountBlocked: 1 | 0
+  subscription: 1 | 0
   dateCreated: string
+  loginAttempts: number
 }
 
 export default Client
