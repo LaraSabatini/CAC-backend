@@ -111,7 +111,7 @@ const clientLogin = async (req: any, res: any) => {
             }' WHERE id = ${rowClientData[0].id}`,
           )
 
-          const rowAdminUpdatedData: ResultSetHeader =
+          const rowClientUpdatedData: ResultSetHeader =
             updateLoginAttempts as ResultSetHeader
 
           res.status(401)
@@ -119,7 +119,7 @@ const clientLogin = async (req: any, res: any) => {
             message: "Wrong password or email",
             status: 401,
             loginAttempts:
-              rowAdminUpdatedData.affectedRows === 1 &&
+              rowClientUpdatedData.affectedRows === 1 &&
               rowClientData[0].loginAttempts + 1,
           })
         }
