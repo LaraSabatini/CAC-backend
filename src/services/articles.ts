@@ -1,3 +1,4 @@
+import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import config from "../config/index"
 import { getOffset } from "../helpers/pagination"
@@ -26,12 +27,15 @@ const createArticle = async (req: any, res: any) => {
     )
 
     if (registerArticle) {
-      return res.status(200).json({ message: "Article created successfully" })
+      return res
+        .status(201)
+        .json({ message: "Article created successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while creating the article, please try again.",
+      status: 500,
     })
   }
 
@@ -49,19 +53,23 @@ const getArticles = async (req: any, res: any) => {
     const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM articles`)
 
     if (articles) {
+      const rowData: ResultSetHeader = amountOfPages as ResultSetHeader
+
       const meta = {
         page,
-        totalPages: amountOfPages,
+        totalPages: parseInt(Object.keys(rowData)[0], 10),
       }
 
       return res.status(200).json({
         data: articles,
         meta,
+        status: 200,
       })
     }
   } catch (error) {
     return res.status(500).json({
       message: "An error has occurred, please try again.",
+      status: 500,
     })
   }
 
@@ -86,13 +94,14 @@ const editArticle = async (req: any, res: any) => {
     )
 
     if (article) {
-      res.status(200)
-      res.send({ message: "Article updated successfully" })
+      res.status(201)
+      res.send({ message: "Article updated successfully", status: 201 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while updating the article, please try again.",
+      status: 500,
     })
   }
 
@@ -109,12 +118,13 @@ const deleteArticle = async (req: any, res: any) => {
 
     if (article) {
       res.status(200)
-      res.send({ message: "Article deleted successfully" })
+      res.send({ message: "Article deleted successfully", status: 200 })
     }
   } catch (error) {
     return res.status(500).json({
       message:
         "An error has occurred while deleting the article, please try again.",
+      status: 500,
     })
   }
 

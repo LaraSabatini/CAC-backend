@@ -17,7 +17,7 @@ router.post("/admin/login", adminLogin)
 
 router.post("/admin/register", adminRegister)
 
-router.post("/admin/change-password", adminChangePassword)
+router.put("/admin/change-password", adminChangePassword)
 
 router.post("/client/login", clientLogin)
 
