@@ -9,6 +9,8 @@ import paymentsRouter from "./routes/payment"
 
 const app = express()
 
+// prueba
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(
