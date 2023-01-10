@@ -1,6 +1,8 @@
 import express from "express"
 import config from "./config"
 
+import prueba from "./api/routes/pricing"
+
 const app = express()
 
 app.use(express.json())
@@ -19,6 +21,8 @@ app.use((_req, res, next) => {
   res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
   next()
 })
+
+app.use("/pricing", prueba)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
