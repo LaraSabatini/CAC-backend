@@ -19,6 +19,8 @@ const config = {
     MP_ACCESS_TOKEN_TEST: process.env.MP_ACCESS_TOKEN_TEST,
     MP_PUBLIC_KEY_OWN: process.env.MP_PUBLIC_KEY_OWN,
     MP_ACCESS_TOKEN_OWN: process.env.MP_ACCESS_TOKEN_OWN,
+    RECAPTCHA_PUBLIC_KEY: process.env.RECAPTCHA_PUBLIC_KEY,
+    RECAPTCHA_PRIVATE_KEY: process.env.RECAPTCHA_PRIVATE_KEY,
     listPerPage: 25,
 };
 export default config;

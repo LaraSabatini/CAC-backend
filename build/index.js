@@ -1,23 +1,23 @@
 import express from "express";
 import cors from "cors";
 import config from "./config";
-// prueba
 import usersRouter from "./routes/auth";
 import pricingRouter from "./routes/pricing";
 import articlesRouter from "./routes/articles";
 import paymentsRouter from "./routes/payment";
+import validateHumanRouter from "./routes/validateReCaptcha";
 const app = express();
-// prueba
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
 }));
 app.use("/users", usersRouter);
 app.use("/pricing", pricingRouter);
 app.use("/articles", articlesRouter);
 app.use("/payment", paymentsRouter);
+app.use("/reCaptcha", validateHumanRouter);
 app.get("/", (_req, res) => {
     res.json({ message: "ok" });
 });
