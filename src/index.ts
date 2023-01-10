@@ -1,15 +1,13 @@
 import express from "express"
 import cors from "cors"
 import config from "./config"
-// prueba
+
 import usersRouter from "./routes/auth"
 import pricingRouter from "./routes/pricing"
 import articlesRouter from "./routes/articles"
 import paymentsRouter from "./routes/payment"
 
 const app = express()
-
-// prueba
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
