@@ -28,5 +28,3 @@ app.listen(config.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`APP LISTENING ON http://${config.HOST}:${config.PORT}`)
 })
-
-export default app
