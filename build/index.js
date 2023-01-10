@@ -1,16 +1,21 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = express_1.default();
-app.use(express_1.default.json());
-const PORT = 3000;
-app.get('/ping', (_req, res) => {
-    console.log('holis');
-    res.send('pong');
+import express from "express";
+import config from "./config";
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true,
+}));
+app.use((_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
+    next();
 });
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.get("/", (_req, res) => {
+    res.json({ message: "ok" });
 });
+app.listen(config.PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`APP LISTENING ON http://${config.HOST}:${config.PORT}`);
+});
+export default app;
