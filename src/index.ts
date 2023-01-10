@@ -6,6 +6,7 @@ import usersRouter from "./routes/auth"
 import pricingRouter from "./routes/pricing"
 import articlesRouter from "./routes/articles"
 import paymentsRouter from "./routes/payment"
+import validateHumanRouter from "./routes/validateReCaptcha"
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use("/users", usersRouter)
 app.use("/pricing", pricingRouter)
 app.use("/articles", articlesRouter)
 app.use("/payment", paymentsRouter)
+app.use("/reCaptcha", validateHumanRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
