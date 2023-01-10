@@ -1,5 +1,6 @@
 import mercadopago from "../helpers/mercadoPago"
 import pool from "../database/index"
+import statusCodes from "../config/statusCodes"
 import { PaymentInterface } from "../interfaces/payment/Payment"
 
 const registerPaymentInDB = async (req: any, res: any) => {
@@ -43,15 +44,16 @@ const registerPaymentInDB = async (req: any, res: any) => {
     )
 
     if (registerPayment) {
-      res
-        .status(201)
-        .json({ message: "Payment registered successfully", status: 201 })
+      res.status(statusCodes.CREATED).json({
+        message: "Payment registered successfully",
+        status: statusCodes.CREATED,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while registering the payment, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -67,16 +69,18 @@ const getPaymentsByClient = async (req: any, res: any) => {
     )
 
     if (payment.length) {
-      res.status(201).json({ data: payment, status: 201 })
+      res
+        .status(statusCodes.CREATED)
+        .json({ data: payment, status: statusCodes.CREATED })
     } else {
-      res.status(200)
-      res.send({ error: "Payments not found", status: 404 })
+      res.status(statusCodes.NOT_FOUND)
+      res.send({ error: "Payments not found", status: statusCodes.NOT_FOUND })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while getting the payments, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -110,15 +114,19 @@ const createPreference = async (req: any, res: any) => {
       .then((response: any) => {
         res.json({
           id: response.body.id,
-          status: 201,
+          status: statusCodes.CREATED,
         })
       })
       .catch((error: any) => {
-        res.status(404)
-        res.send({ error, message: "Couldn't process payment", status: 404 })
+        res.status(statusCodes.NOT_FOUND)
+        res.send({
+          error,
+          message: "Couldn't process payment",
+          status: statusCodes.NOT_FOUND,
+        })
       })
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while getting the preference, please try again.",
     })

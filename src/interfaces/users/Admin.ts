@@ -1,11 +1,9 @@
-interface Admin {
-  id?: number
+import User from "./User"
+
+interface Admin extends User {
   userName: string
-  email: string
-  password: string
   accessPermits: JSON
   loginAttempts: number
-  accountBlocked: 0 | 1
 }
 
 export default Admin

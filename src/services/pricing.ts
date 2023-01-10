@@ -1,16 +1,19 @@
 import pool from "../database/index"
+import statusCodes from "../config/statusCodes"
 
 const getPricing = async (_req: any, res: any) => {
   try {
     const [pricing] = await pool.query(`SELECT * FROM pricing`)
 
     if (pricing) {
-      return res.status(201).json({ data: pricing, status: 201 })
+      return res
+        .status(statusCodes.CREATED)
+        .json({ data: pricing, status: statusCodes.CREATED })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message: "An error has occurred, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -26,15 +29,16 @@ const createPricing = async (req: any, res: any) => {
     )
 
     if (insertPricing) {
-      return res
-        .status(201)
-        .json({ message: "Pricing created successfully", status: 201 })
+      return res.status(statusCodes.CREATED).json({
+        message: "Pricing created successfully",
+        status: statusCodes.CREATED,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while creating the pricing, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -51,14 +55,17 @@ const editPricing = async (req: any, res: any) => {
     )
 
     if (pricing) {
-      res.status(201)
-      res.send({ message: "Pricing updated successfully", status: 201 })
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Pricing updated successfully",
+        status: statusCodes.CREATED,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while updating the pricing, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -74,14 +81,17 @@ const deletePricing = async (req: any, res: any) => {
     )
 
     if (pricing) {
-      res.status(201)
-      res.send({ message: "Pricing deleted successfully", status: 201 })
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Pricing deleted successfully",
+        status: statusCodes.CREATED,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while deleting the pricing, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
