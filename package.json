@@ -2,7 +2,7 @@
   "name": "camara-de-administradores-de-consorcio",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "src/api/index.ts",
   "scripts": {
     "start": "node build/index.js",
     "dev": "env-cmd -f .env.development ts-node-dev src/index.ts",
