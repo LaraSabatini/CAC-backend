@@ -1,5 +1,6 @@
-interface Client {
-  id: number
+import User from "./User"
+
+interface Client extends User {
   name: string
   lastName: string
   email: string
@@ -9,10 +10,8 @@ interface Client {
   phoneNumber: string
   password: string
   preferences: number[]
-  accountBlocked: 1 | 0
   subscription: 1 | 0
   dateCreated: string
-  loginAttempts: number
 }
 
 export default Client

@@ -1,6 +1,7 @@
 import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import config from "../config/index"
+import statusCodes from "../config/statusCodes"
 import { getOffset } from "../helpers/pagination"
 
 const createArticle = async (req: any, res: any) => {
@@ -27,15 +28,16 @@ const createArticle = async (req: any, res: any) => {
     )
 
     if (registerArticle) {
-      return res
-        .status(201)
-        .json({ message: "Article created successfully", status: 201 })
+      return res.status(statusCodes.CREATED).json({
+        message: "Article created successfully",
+        status: statusCodes.CREATED,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while creating the article, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -60,16 +62,16 @@ const getArticles = async (req: any, res: any) => {
         totalPages: parseInt(Object.keys(rowData)[0], 10),
       }
 
-      return res.status(200).json({
+      return res.status(statusCodes.OK).json({
         data: articles,
         meta,
-        status: 200,
+        status: statusCodes.OK,
       })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message: "An error has occurred, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -94,14 +96,17 @@ const editArticle = async (req: any, res: any) => {
     )
 
     if (article) {
-      res.status(201)
-      res.send({ message: "Article updated successfully", status: 201 })
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Article updated successfully",
+        status: statusCodes.CREATED,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while updating the article, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
@@ -117,14 +122,17 @@ const deleteArticle = async (req: any, res: any) => {
     )
 
     if (article) {
-      res.status(200)
-      res.send({ message: "Article deleted successfully", status: 200 })
+      res.status(statusCodes.OK)
+      res.send({
+        message: "Article deleted successfully",
+        status: statusCodes.OK,
+      })
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:
         "An error has occurred while deleting the article, please try again.",
-      status: 500,
+      status: statusCodes.INTERNAL_SERVER_ERROR,
     })
   }
 
