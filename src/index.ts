@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   }),
 )
@@ -31,5 +31,3 @@ app.listen(config.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`APP LISTENING ON http://${config.HOST}:${config.PORT}`)
 })
-
-export default app
