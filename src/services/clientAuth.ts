@@ -88,9 +88,11 @@ const clientLogin = async (req: any, res: any) => {
           `UPDATE clients SET loginAttempts = '0', accountBlocked='0' WHERE id = ${rowClientData[0].id}`,
         )
 
-        res
-          .status(statusCodes.CREATED)
-          .json({ message: "Login successfully", status: statusCodes.CREATED })
+        res.status(statusCodes.CREATED).json({
+          message: "Login successfully",
+          status: statusCodes.CREATED,
+          clientId: rowClientData[0].id,
+        })
       } else if (rowClientData[0].accountBlocked === 0) {
         if (loginAttempts === 5) {
           const [blockAccount]: any = await pool.query(
