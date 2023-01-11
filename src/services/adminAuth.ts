@@ -55,9 +55,11 @@ const adminLogin = async (req: any, res: any) => {
           `UPDATE admin SET loginAttempts = '0', accountBlocked='0' WHERE id = ${rowAdminData[0].id}`,
         )
 
-        res
-          .status(statusCodes.CREATED)
-          .json({ message: "Login successfully", status: statusCodes.CREATED })
+        res.status(statusCodes.CREATED).json({
+          message: "Login successfully",
+          status: statusCodes.CREATED,
+          adminId: rowAdminData[0].id,
+        })
       } else if (admin.length && rowAdminData[0].accountBlocked === 0) {
         if (loginAttempts === 5) {
           const [blockAccount]: any = await pool.query(
@@ -101,8 +103,16 @@ const adminLogin = async (req: any, res: any) => {
         })
       }
     } else {
-      res.status(statusCodes.NOT_FOUND)
-      res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+      const [client]: any = await pool.query(
+        `SELECT * FROM clients WHERE email = '${email}'`,
+      )
+      if (client.length) {
+        res.status(statusCodes.NOT_FOUND)
+        res.send({ error: "User is client", status: statusCodes.NOT_FOUND })
+      } else {
+        res.status(statusCodes.NOT_FOUND)
+        res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+      }
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({

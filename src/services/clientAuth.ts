@@ -88,10 +88,12 @@ const clientLogin = async (req: any, res: any) => {
           `UPDATE clients SET loginAttempts = '0', accountBlocked='0' WHERE id = ${rowClientData[0].id}`,
         )
 
-        res
-          .status(statusCodes.CREATED)
-          .json({ message: "Login successfully", status: statusCodes.CREATED })
-      } else if (client.length && rowClientData[0].accountBlocked === 0) {
+        res.status(statusCodes.CREATED).json({
+          message: "Login successfully",
+          status: statusCodes.CREATED,
+          clientId: rowClientData[0].id,
+        })
+      } else if (rowClientData[0].accountBlocked === 0) {
         if (loginAttempts === 5) {
           const [blockAccount]: any = await pool.query(
             `UPDATE clients SET loginAttempts = '${loginAttempts}', accountBlocked='1' WHERE id = ${rowClientData[0].id}`,
@@ -134,8 +136,16 @@ const clientLogin = async (req: any, res: any) => {
         })
       }
     } else {
-      res.status(statusCodes.NOT_FOUND)
-      res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+      const [admin]: any = await pool.query(
+        `SELECT * FROM admin WHERE email = '${email}'`,
+      )
+      if (admin.length) {
+        res.status(statusCodes.NOT_FOUND)
+        res.send({ error: "User is admin", status: statusCodes.NOT_FOUND })
+      } else {
+        res.status(statusCodes.NOT_FOUND)
+        res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+      }
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
