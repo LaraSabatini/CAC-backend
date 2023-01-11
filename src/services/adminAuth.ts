@@ -101,8 +101,16 @@ const adminLogin = async (req: any, res: any) => {
         })
       }
     } else {
-      res.status(statusCodes.NOT_FOUND)
-      res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+      const [client]: any = await pool.query(
+        `SELECT * FROM clients WHERE email = '${email}'`,
+      )
+      if (client.length) {
+        res.status(statusCodes.NOT_FOUND)
+        res.send({ error: "User is client", status: statusCodes.NOT_FOUND })
+      } else {
+        res.status(statusCodes.NOT_FOUND)
+        res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+      }
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
