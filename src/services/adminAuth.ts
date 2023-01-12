@@ -150,4 +150,28 @@ const adminChangePassword = async (req: any, res: any) => {
   return {}
 }
 
-export { adminLogin, adminRegister, adminChangePassword }
+const getAdminData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [admin]: any = await pool.query(
+      `SELECT * FROM admins WHERE id = '${id}'`,
+    )
+
+    if (admin) {
+      return res.status(statusCodes.OK).json({
+        data: admin,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export { adminLogin, adminRegister, adminChangePassword, getAdminData }

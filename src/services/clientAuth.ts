@@ -211,9 +211,34 @@ const validateDuplicatedUser = async (req: any, res: any) => {
   return {}
 }
 
+const getClientData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [client]: any = await pool.query(
+      `SELECT * FROM clients WHERE id = '${id}'`,
+    )
+
+    if (client) {
+      return res.status(statusCodes.OK).json({
+        data: client,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   clientLogin,
   clientRegister,
   clientChangePassword,
   validateDuplicatedUser,
+  getClientData,
 }
