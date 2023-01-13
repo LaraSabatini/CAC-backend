@@ -183,12 +183,40 @@ const clientChangePassword = async (req: any, res: any) => {
   return {}
 }
 
-const validateDuplicatedUser = async (req: any, res: any) => {
+const validateEmail = async (req: any, res: any) => {
   try {
-    const { email, identificationNumber } = req.body
+    const { email } = req.body
 
     const [client]: any = await pool.query(
-      `SELECT * FROM clients WHERE email LIKE '${email}' OR identificationNumber LIKE '${identificationNumber}'`,
+      `SELECT * FROM clients WHERE email LIKE '${email}'`,
+    )
+
+    if (client.length) {
+      res.status(statusCodes.UNAUTHORIZED).json({
+        message: "Cannot create user",
+        info: "duplicated",
+        status: statusCodes.UNAUTHORIZED,
+      })
+    } else {
+      res.status(200)
+      res.send({ message: "Can create user", info: "available", status: 200 })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const validateIdentificationNumber = async (req: any, res: any) => {
+  try {
+    const { identificationNumber } = req.body
+
+    const [client]: any = await pool.query(
+      `SELECT * FROM clients WHERE identificationNumber LIKE '${identificationNumber}'`,
     )
 
     if (client.length) {
@@ -235,10 +263,49 @@ const getClientData = async (req: any, res: any) => {
   return {}
 }
 
+const editClientData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const {
+      email,
+      name,
+      lastName,
+      identificationType,
+      identificationNumber,
+      phoneAreaCode,
+      phoneNumber,
+    } = req.body
+
+    const [client]: any = await pool.query(
+      `UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
+      phoneAreaCode = '${phoneAreaCode}',
+      phoneNumber = '${phoneNumber}'
+      WHERE id = ${id}`,
+    )
+
+    if (client) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Profile updated successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   clientLogin,
   clientRegister,
   clientChangePassword,
-  validateDuplicatedUser,
+  validateEmail,
+  validateIdentificationNumber,
   getClientData,
+  editClientData,
 }

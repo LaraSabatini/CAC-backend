@@ -174,4 +174,35 @@ const getAdminData = async (req: any, res: any) => {
   return {}
 }
 
-export { adminLogin, adminRegister, adminChangePassword, getAdminData }
+const editAdminData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const { email, accessPermits } = req.body
+
+    const [admin]: any = await pool.query(
+      `UPDATE admins SET email = '${email}', accessPermits = '${accessPermits}'  WHERE id = ${id}`,
+    )
+
+    if (admin) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Profile updated successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+  return {}
+}
+
+export {
+  adminLogin,
+  adminRegister,
+  adminChangePassword,
+  getAdminData,
+  editAdminData,
+}
