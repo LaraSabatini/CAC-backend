@@ -78,14 +78,14 @@ const clientLogin = async (req: any, res: any) => {
       `SELECT * FROM clients WHERE email = '${email}'`,
     )
 
-    if (client.length) {
+    if (client.length && client[0].accountBlocked === 0) {
       const checkPassword = await compare(password, client[0].password)
       const rowClientData: Client[] = client as Client[]
       const loginAttempts = rowClientData[0].loginAttempts + 1
 
       if (checkPassword) {
         await pool.query(
-          `UPDATE clients SET loginAttempts = '0', accountBlocked='0' WHERE id = ${rowClientData[0].id}`,
+          `UPDATE clients SET loginAttempts = '0' WHERE id = ${rowClientData[0].id}`,
         )
 
         res.status(statusCodes.CREATED).json({
@@ -142,6 +142,12 @@ const clientLogin = async (req: any, res: any) => {
       if (admin.length) {
         res.status(statusCodes.NOT_FOUND)
         res.send({ error: "User is admin", status: statusCodes.NOT_FOUND })
+      } else if (client[0].accountBlocked === 1) {
+        res.status(statusCodes.UNAUTHORIZED)
+        res.send({
+          message: "Account blocked",
+          status: statusCodes.UNAUTHORIZED,
+        })
       } else {
         res.status(statusCodes.NOT_FOUND)
         res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
@@ -300,6 +306,31 @@ const editClientData = async (req: any, res: any) => {
   return {}
 }
 
+const blockAccount = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [client]: any = await pool.query(
+      `UPDATE clients SET accountBlocked = 1, subscription = 0 WHERE id = ${id}`,
+    )
+
+    if (client) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Account blocked successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   clientLogin,
   clientRegister,
@@ -308,4 +339,5 @@ export {
   validateIdentificationNumber,
   getClientData,
   editClientData,
+  blockAccount,
 }

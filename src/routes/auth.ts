@@ -14,6 +14,7 @@ import {
   validateIdentificationNumber,
   getClientData,
   editClientData,
+  blockAccount,
 } from "../services/clientAuth"
 
 const router = express.Router()
@@ -39,6 +40,8 @@ router.post(
 router.get("/client/id=:id", getClientData)
 
 router.put("/client/id=:id", editClientData)
+
+router.put("/client/block_account=true&id=:id", blockAccount)
 
 router.get("/admin/id=:id", getAdminData)
 
