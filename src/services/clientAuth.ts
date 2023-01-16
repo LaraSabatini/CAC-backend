@@ -78,14 +78,14 @@ const clientLogin = async (req: any, res: any) => {
       `SELECT * FROM clients WHERE email = '${email}'`,
     )
 
-    if (client.length) {
+    if (client.length && client[0].accountBlocked === 0) {
       const checkPassword = await compare(password, client[0].password)
       const rowClientData: Client[] = client as Client[]
       const loginAttempts = rowClientData[0].loginAttempts + 1
 
       if (checkPassword) {
         await pool.query(
-          `UPDATE clients SET loginAttempts = '0', accountBlocked='0' WHERE id = ${rowClientData[0].id}`,
+          `UPDATE clients SET loginAttempts = '0' WHERE id = ${rowClientData[0].id}`,
         )
 
         res.status(statusCodes.CREATED).json({
@@ -142,6 +142,12 @@ const clientLogin = async (req: any, res: any) => {
       if (admin.length) {
         res.status(statusCodes.NOT_FOUND)
         res.send({ error: "User is admin", status: statusCodes.NOT_FOUND })
+      } else if (client[0].accountBlocked === 1) {
+        res.status(statusCodes.UNAUTHORIZED)
+        res.send({
+          message: "Account blocked",
+          status: statusCodes.UNAUTHORIZED,
+        })
       } else {
         res.status(statusCodes.NOT_FOUND)
         res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
@@ -183,12 +189,12 @@ const clientChangePassword = async (req: any, res: any) => {
   return {}
 }
 
-const validateDuplicatedUser = async (req: any, res: any) => {
+const validateEmail = async (req: any, res: any) => {
   try {
-    const { email, identificationNumber } = req.body
+    const { email } = req.body
 
     const [client]: any = await pool.query(
-      `SELECT * FROM clients WHERE email LIKE '${email}' OR identificationNumber LIKE '${identificationNumber}'`,
+      `SELECT * FROM clients WHERE email LIKE '${email}'`,
     )
 
     if (client.length) {
@@ -211,9 +217,127 @@ const validateDuplicatedUser = async (req: any, res: any) => {
   return {}
 }
 
+const validateIdentificationNumber = async (req: any, res: any) => {
+  try {
+    const { identificationNumber } = req.body
+
+    const [client]: any = await pool.query(
+      `SELECT * FROM clients WHERE identificationNumber LIKE '${identificationNumber}'`,
+    )
+
+    if (client.length) {
+      res.status(statusCodes.UNAUTHORIZED).json({
+        message: "Cannot create user",
+        info: "duplicated",
+        status: statusCodes.UNAUTHORIZED,
+      })
+    } else {
+      res.status(200)
+      res.send({ message: "Can create user", info: "available", status: 200 })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getClientData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [client]: any = await pool.query(
+      `SELECT * FROM clients WHERE id = '${id}'`,
+    )
+
+    if (client) {
+      return res.status(statusCodes.OK).json({
+        data: client,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const editClientData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const {
+      email,
+      name,
+      lastName,
+      identificationType,
+      identificationNumber,
+      phoneAreaCode,
+      phoneNumber,
+    } = req.body
+
+    const [client]: any = await pool.query(
+      `UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
+      phoneAreaCode = '${phoneAreaCode}',
+      phoneNumber = '${phoneNumber}'
+      WHERE id = ${id}`,
+    )
+
+    if (client) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Profile updated successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const blockAccount = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [client]: any = await pool.query(
+      `UPDATE clients SET accountBlocked = 1, subscription = 0 WHERE id = ${id}`,
+    )
+
+    if (client) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Account blocked successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   clientLogin,
   clientRegister,
   clientChangePassword,
-  validateDuplicatedUser,
+  validateEmail,
+  validateIdentificationNumber,
+  getClientData,
+  editClientData,
+  blockAccount,
 }

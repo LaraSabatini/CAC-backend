@@ -3,12 +3,18 @@ import {
   adminRegister,
   adminLogin,
   adminChangePassword,
+  getAdminData,
+  editAdminData,
 } from "../services/adminAuth"
 import {
   clientRegister,
   clientLogin,
   clientChangePassword,
-  validateDuplicatedUser,
+  validateEmail,
+  validateIdentificationNumber,
+  getClientData,
+  editClientData,
+  blockAccount,
 } from "../services/clientAuth"
 
 const router = express.Router()
@@ -25,6 +31,20 @@ router.post("/client/register", clientRegister)
 
 router.put("/client/change-password", clientChangePassword)
 
-router.post("/client/validate", validateDuplicatedUser)
+router.post("/client/validate-email", validateEmail)
+router.post(
+  "/client/validate-identification_number",
+  validateIdentificationNumber,
+)
+
+router.get("/client/id=:id", getClientData)
+
+router.put("/client/id=:id", editClientData)
+
+router.put("/client/block_account=true&id=:id", blockAccount)
+
+router.get("/admin/id=:id", getAdminData)
+
+router.put("/admin/id=:id", editAdminData)
 
 export default router
