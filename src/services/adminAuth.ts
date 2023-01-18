@@ -13,11 +13,12 @@ const adminRegister = async (req: any, res: any) => {
       accessPermits,
       loginAttempts,
       accountBlocked,
+      firstLogin,
     }: Admin = req.body
     const passwordHash = await encrypt(password)
 
     const registerAdmin = await pool.query(
-      `INSERT INTO admin (userName, email, password, accessPermits, loginAttempts, accountBlocked) VALUES ('${userName}', '${email}', '${passwordHash}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}');`,
+      `INSERT INTO admin (userName, email, password, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${userName}', '${email}', '${passwordHash}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`,
     )
 
     if (registerAdmin) {
@@ -59,6 +60,7 @@ const adminLogin = async (req: any, res: any) => {
           message: "Login successfully",
           status: statusCodes.CREATED,
           adminId: rowAdminData[0].id,
+          firstLogin: rowAdminData[0].firstLogin,
         })
       } else if (admin.length && rowAdminData[0].accountBlocked === 0) {
         if (loginAttempts === 5) {
@@ -177,10 +179,10 @@ const getAdminData = async (req: any, res: any) => {
 const editAdminData = async (req: any, res: any) => {
   try {
     const { id } = req.params
-    const { email, accessPermits } = req.body
+    const { email, accessPermits, firstLogin } = req.body
 
     const [admin]: any = await pool.query(
-      `UPDATE admins SET email = '${email}', accessPermits = '${accessPermits}'  WHERE id = ${id}`,
+      `UPDATE admins SET email = '${email}', accessPermits = '${accessPermits}', firstLogin = '${firstLogin}'  WHERE id = ${id}`,
     )
 
     if (admin) {
