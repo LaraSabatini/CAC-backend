@@ -20,6 +20,7 @@ const clientRegister = async (req: any, res: any) => {
       subscription,
       dateCreated,
       loginAttempts,
+      firstLogin,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -36,7 +37,7 @@ const clientRegister = async (req: any, res: any) => {
         accountBlocked,
         subscription,
         dateCreated,
-        loginAttempts) VALUES ('${name}',
+        loginAttempts, firstLogin) VALUES ('${name}',
         '${lastName}',
         '${email}',
         '${passwordHash}',
@@ -48,7 +49,7 @@ const clientRegister = async (req: any, res: any) => {
         '${accountBlocked}',
         '${subscription}',
         '${dateCreated}',
-        '${loginAttempts}');`,
+        '${loginAttempts}', '${firstLogin}');`,
     )
 
     if (registerClient) {
@@ -92,6 +93,7 @@ const clientLogin = async (req: any, res: any) => {
           message: "Login successfully",
           status: statusCodes.CREATED,
           clientId: rowClientData[0].id,
+          firstLogin: rowClientData[0].firstLogin,
         })
       } else if (rowClientData[0].accountBlocked === 0) {
         if (loginAttempts === 5) {
@@ -169,7 +171,7 @@ const clientChangePassword = async (req: any, res: any) => {
     const passwordHash = await encrypt(newPassword)
 
     const [client]: any = await pool.query(
-      `UPDATE clients SET password = '${passwordHash}' WHERE id = ${id}`,
+      `UPDATE clients SET password = '${passwordHash}', firstLogin = '0' WHERE id = ${id}`,
     )
 
     if (client) {
@@ -280,12 +282,14 @@ const editClientData = async (req: any, res: any) => {
       identificationNumber,
       phoneAreaCode,
       phoneNumber,
+      firstLogin,
     } = req.body
 
     const [client]: any = await pool.query(
       `UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
       phoneAreaCode = '${phoneAreaCode}',
-      phoneNumber = '${phoneNumber}'
+      phoneNumber = '${phoneNumber}',
+      firstLogin = '${firstLogin}'
       WHERE id = ${id}`,
     )
 
