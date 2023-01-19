@@ -128,18 +128,36 @@ const adminLogin = async (req: any, res: any) => {
 
 const adminChangePassword = async (req: any, res: any) => {
   try {
-    const { id, newPassword } = req.body
+    const { id, password, newPassword } = req.body
     const passwordHash = await encrypt(newPassword)
 
     const [admin]: any = await pool.query(
-      `UPDATE admin SET password = '${passwordHash}' WHERE id = ${id}`,
+      `SELECT * FROM admin WHERE id = '${id}'`,
     )
 
-    if (admin) {
-      res.status(statusCodes.CREATED)
-      res.send({
-        message: "Password updated successfully",
-        status: statusCodes.CREATED,
+    const checkPassword = await compare(password, admin[0].password)
+
+    if (checkPassword) {
+      const [changePassword]: any = await pool.query(
+        `UPDATE admin SET password = '${passwordHash}' WHERE id = ${id}`,
+      )
+
+      if (changePassword) {
+        res.status(statusCodes.CREATED)
+        res.send({
+          message: "Password updated successfully",
+          status: statusCodes.CREATED,
+        })
+      } else {
+        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+          message: "Something went wrong",
+          status: statusCodes.INTERNAL_SERVER_ERROR,
+        })
+      }
+    } else {
+      return res.status(statusCodes.UNAUTHORIZED).json({
+        message: "Wrong password",
+        status: statusCodes.UNAUTHORIZED,
       })
     }
   } catch (error) {
