@@ -167,18 +167,36 @@ const clientLogin = async (req: any, res: any) => {
 
 const clientChangePassword = async (req: any, res: any) => {
   try {
-    const { id, newPassword } = req.body
+    const { id, password, newPassword } = req.body
     const passwordHash = await encrypt(newPassword)
 
     const [client]: any = await pool.query(
-      `UPDATE clients SET password = '${passwordHash}', firstLogin = '0' WHERE id = ${id}`,
+      `SELECT * FROM clients WHERE id = '${id}'`,
     )
 
-    if (client) {
-      res.status(statusCodes.CREATED)
-      res.send({
-        message: "Password updated successfully",
-        status: statusCodes.CREATED,
+    const checkPassword = await compare(password, client[0].password)
+
+    if (checkPassword) {
+      const [changePassword]: any = await pool.query(
+        `UPDATE clients SET password = '${passwordHash}', firstLogin = '0' WHERE id = ${id}`,
+      )
+
+      if (changePassword) {
+        res.status(statusCodes.CREATED)
+        res.send({
+          message: "Password updated successfully",
+          status: statusCodes.CREATED,
+        })
+      } else {
+        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+          message: "Something went wrong",
+          status: statusCodes.INTERNAL_SERVER_ERROR,
+        })
+      }
+    } else {
+      return res.status(statusCodes.UNAUTHORIZED).json({
+        message: "Wrong password",
+        status: statusCodes.UNAUTHORIZED,
       })
     }
   } catch (error) {
