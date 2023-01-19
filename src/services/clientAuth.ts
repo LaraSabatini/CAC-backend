@@ -1,5 +1,11 @@
 import { ResultSetHeader } from "mysql2"
+import hbs, {
+  NodemailerExpressHandlebarsOptions,
+} from "nodemailer-express-handlebars"
+import nodemailer from "nodemailer"
+import path from "path"
 import pool from "../database/index"
+import config from "../config/index"
 import Client from "../interfaces/users/Client"
 import statusCodes from "../config/statusCodes"
 import { encrypt, compare } from "../helpers/handleBcrypt"
@@ -353,6 +359,56 @@ const blockAccount = async (req: any, res: any) => {
   return {}
 }
 
+// Mailing
+const registerSuccessEmail = async (req: any, res: any) => {
+  const transporter = nodemailer.createTransport({
+    host: config.MAIL_HOST,
+    port: 587,
+    secure: false,
+    auth: {
+      user: "info@vonceescalada.com", // reemplazar con credenciales de WP
+      pass: config.MAIL_PASS,
+    },
+  })
+
+  const handlebarOptions: NodemailerExpressHandlebarsOptions = {
+    viewEngine: {
+      partialsDir: path.resolve("../views/"),
+      defaultLayout: false,
+    },
+    viewPath: path.resolve("./src/views/"),
+  }
+
+  transporter.use("compile", hbs(handlebarOptions))
+
+  const mailOptions = {
+    from: '"Camara de Administradores de Consorcio" <info@vonceescalada.com>', // reemplazar con credenciales de WP
+    to: req.body.recipients,
+    subject: "Registro existoso",
+    template: "registerSuccess",
+    context: {
+      name: req.body.name,
+      item: req.body.item,
+      email: req.body.recipients[0],
+      password: req.body.password,
+      loginURL: req.body.loginURL,
+    },
+  }
+
+  transporter.sendMail(mailOptions, (error: any) => {
+    if (error) {
+      return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Something went wrong",
+        status: statusCodes.INTERNAL_SERVER_ERROR,
+      })
+    }
+    return res.status(statusCodes.CREATED).json({
+      message: "Email sent successfully",
+      status: statusCodes.CREATED,
+    })
+  })
+}
+
 export {
   clientLogin,
   clientRegister,
@@ -362,4 +418,5 @@ export {
   getClientData,
   editClientData,
   blockAccount,
+  registerSuccessEmail,
 }

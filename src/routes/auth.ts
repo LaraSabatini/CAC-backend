@@ -15,6 +15,7 @@ import {
   getClientData,
   editClientData,
   blockAccount,
+  registerSuccessEmail,
 } from "../services/clientAuth"
 
 const router = express.Router()
@@ -46,5 +47,7 @@ router.put("/client/block_account=true&id=:id", blockAccount)
 router.get("/admin/id=:id", getAdminData)
 
 router.put("/admin/id=:id", editAdminData)
+
+router.post("/client/register_success_email", registerSuccessEmail)
 
 export default router
