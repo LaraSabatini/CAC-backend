@@ -2,6 +2,7 @@ import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import Admin from "../interfaces/users/Admin"
 import statusCodes from "../config/statusCodes"
+import sendEmail from "../helpers/sendEmail"
 import { encrypt, compare } from "../helpers/handleBcrypt"
 
 const adminRegister = async (req: any, res: any) => {
@@ -128,14 +129,22 @@ const adminLogin = async (req: any, res: any) => {
 
 const adminChangePassword = async (req: any, res: any) => {
   try {
+    const { encrypted } = req.params
+
     const { id, password, newPassword } = req.body
-    const passwordHash = await encrypt(newPassword)
 
     const [admin]: any = await pool.query(
       `SELECT * FROM admin WHERE id = '${id}'`,
     )
+    let checkPassword: boolean = false
 
-    const checkPassword = await compare(password, admin[0].password)
+    const passwordHash = await encrypt(newPassword)
+
+    if (encrypted === "true") {
+      checkPassword = password === admin[0].password
+    } else {
+      checkPassword = await compare(password, admin[0].password)
+    }
 
     if (checkPassword) {
       const [changePassword]: any = await pool.query(
@@ -219,10 +228,44 @@ const editAdminData = async (req: any, res: any) => {
   return {}
 }
 
+// Mailing
+const restoreAdminPasswordEmail = async (req: any, res: any) => {
+  try {
+    const { recipients } = req.body
+
+    const [admin]: any = await pool.query(
+      `SELECT * FROM admins WHERE email = '${recipients[0]}'`,
+    )
+
+    if (admin.length) {
+      return sendEmail(
+        recipients,
+        "Recuperacion de contraseña",
+        "restorePassword",
+        {
+          name: req.body.name,
+          restorePasswordURL: `${req.body.restorePasswordURL}&pass=${admin[0].password}&id=${admin[0].id}`,
+        },
+        res,
+      )
+    }
+    res.status(statusCodes.NOT_FOUND)
+    res.send({ message: "User does not exist", status: statusCodes.NOT_FOUND })
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   adminLogin,
   adminRegister,
   adminChangePassword,
   getAdminData,
   editAdminData,
+  restoreAdminPasswordEmail,
 }

@@ -5,6 +5,7 @@ import {
   adminChangePassword,
   getAdminData,
   editAdminData,
+  restoreAdminPasswordEmail,
 } from "../services/adminAuth"
 import {
   clientRegister,
@@ -16,6 +17,7 @@ import {
   editClientData,
   blockAccount,
   registerSuccessEmail,
+  restoreClientPasswordEmail,
 } from "../services/clientAuth"
 
 const router = express.Router()
@@ -24,13 +26,13 @@ router.post("/admin/login", adminLogin)
 
 router.post("/admin/register", adminRegister)
 
-router.put("/admin/change-password", adminChangePassword)
+router.put("/admin/change-password&encrypted=:encrypted", adminChangePassword)
 
 router.post("/client/login", clientLogin)
 
 router.post("/client/register", clientRegister)
 
-router.put("/client/change-password", clientChangePassword)
+router.put("/client/change-password&encrypted=:encrypted", clientChangePassword)
 
 router.post("/client/validate-email", validateEmail)
 router.post(
@@ -49,5 +51,8 @@ router.get("/admin/id=:id", getAdminData)
 router.put("/admin/id=:id", editAdminData)
 
 router.post("/client/register_success_email", registerSuccessEmail)
+
+router.post("/client/restore_password", restoreClientPasswordEmail)
+router.post("/admin/restore_password", restoreAdminPasswordEmail)
 
 export default router
