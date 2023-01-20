@@ -8,7 +8,6 @@ import { encrypt, compare } from "../helpers/handleBcrypt"
 const adminRegister = async (req: any, res: any) => {
   try {
     const {
-      userName,
       password,
       email,
       accessPermits,
@@ -19,7 +18,7 @@ const adminRegister = async (req: any, res: any) => {
     const passwordHash = await encrypt(password)
 
     const registerAdmin = await pool.query(
-      `INSERT INTO admin (userName, email, password, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${userName}', '${email}', '${passwordHash}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`,
+      `INSERT INTO admin (email, password, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}', '${passwordHash}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`,
     )
 
     if (registerAdmin) {

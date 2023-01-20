@@ -233,8 +233,12 @@ const validateEmail = async (req: any, res: any) => {
         status: statusCodes.UNAUTHORIZED,
       })
     } else {
-      res.status(200)
-      res.send({ message: "Can create user", info: "available", status: 200 })
+      res.status(statusCodes.OK)
+      res.send({
+        message: "Can create user",
+        info: "available",
+        status: statusCodes.OK,
+      })
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
