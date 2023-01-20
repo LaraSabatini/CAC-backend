@@ -1,13 +1,8 @@
 import { ResultSetHeader } from "mysql2"
-import hbs, {
-  NodemailerExpressHandlebarsOptions,
-} from "nodemailer-express-handlebars"
-import nodemailer from "nodemailer"
-import path from "path"
 import pool from "../database/index"
-import config from "../config/index"
 import Client from "../interfaces/users/Client"
 import statusCodes from "../config/statusCodes"
+import sendEmail from "../helpers/sendEmail"
 import { encrypt, compare } from "../helpers/handleBcrypt"
 
 const clientRegister = async (req: any, res: any) => {
@@ -173,14 +168,22 @@ const clientLogin = async (req: any, res: any) => {
 
 const clientChangePassword = async (req: any, res: any) => {
   try {
+    const { encrypted } = req.params
     const { id, password, newPassword } = req.body
-    const passwordHash = await encrypt(newPassword)
 
     const [client]: any = await pool.query(
       `SELECT * FROM clients WHERE id = '${id}'`,
     )
 
-    const checkPassword = await compare(password, client[0].password)
+    let checkPassword: boolean = false
+
+    if (encrypted === "true") {
+      checkPassword = password === client[0].password
+    } else {
+      checkPassword = await compare(password, client[0].password)
+    }
+
+    const passwordHash = await encrypt(newPassword)
 
     if (checkPassword) {
       const [changePassword]: any = await pool.query(
@@ -230,8 +233,12 @@ const validateEmail = async (req: any, res: any) => {
         status: statusCodes.UNAUTHORIZED,
       })
     } else {
-      res.status(200)
-      res.send({ message: "Can create user", info: "available", status: 200 })
+      res.status(statusCodes.OK)
+      res.send({
+        message: "Can create user",
+        info: "available",
+        status: statusCodes.OK,
+      })
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
@@ -361,52 +368,51 @@ const blockAccount = async (req: any, res: any) => {
 
 // Mailing
 const registerSuccessEmail = async (req: any, res: any) => {
-  const transporter = nodemailer.createTransport({
-    host: config.MAIL_HOST,
-    port: 587,
-    secure: false,
-    auth: {
-      user: "info@vonceescalada.com", // reemplazar con credenciales de WP
-      pass: config.MAIL_PASS,
-    },
-  })
-
-  const handlebarOptions: NodemailerExpressHandlebarsOptions = {
-    viewEngine: {
-      partialsDir: path.resolve("../views/"),
-      defaultLayout: false,
-    },
-    viewPath: path.resolve("./src/views/"),
-  }
-
-  transporter.use("compile", hbs(handlebarOptions))
-
-  const mailOptions = {
-    from: '"Camara de Administradores de Consorcio" <info@vonceescalada.com>', // reemplazar con credenciales de WP
-    to: req.body.recipients,
-    subject: "Registro existoso",
-    template: "registerSuccess",
-    context: {
+  return sendEmail(
+    [req.body.recipients],
+    "Registro existoso",
+    "registerSuccess",
+    {
       name: req.body.name,
       item: req.body.item,
       email: req.body.recipients[0],
       password: req.body.password,
       loginURL: req.body.loginURL,
     },
+    res,
+  )
+}
+
+const restoreClientPasswordEmail = async (req: any, res: any) => {
+  try {
+    const { recipients } = req.body
+
+    const [client]: any = await pool.query(
+      `SELECT * FROM clients WHERE email LIKE '${recipients[0]}'`,
+    )
+
+    if (client.length) {
+      return sendEmail(
+        recipients,
+        "Recuperacion de contraseña",
+        "restorePassword",
+        {
+          name: req.body.name,
+          restorePasswordURL: `${req.body.restorePasswordURL}&pass=${client[0].password}&id=${client[0].id}`,
+        },
+        res,
+      )
+    }
+    res.status(statusCodes.NOT_FOUND)
+    res.send({ message: "User does not exist", status: statusCodes.NOT_FOUND })
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
   }
 
-  transporter.sendMail(mailOptions, (error: any) => {
-    if (error) {
-      return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Something went wrong",
-        status: statusCodes.INTERNAL_SERVER_ERROR,
-      })
-    }
-    return res.status(statusCodes.CREATED).json({
-      message: "Email sent successfully",
-      status: statusCodes.CREATED,
-    })
-  })
+  return {}
 }
 
 export {
@@ -419,4 +425,5 @@ export {
   editClientData,
   blockAccount,
   registerSuccessEmail,
+  restoreClientPasswordEmail,
 }
