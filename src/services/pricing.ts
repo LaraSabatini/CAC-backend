@@ -7,8 +7,8 @@ const getPricing = async (_req: any, res: any) => {
 
     if (pricing) {
       return res
-        .status(statusCodes.CREATED)
-        .json({ data: pricing, status: statusCodes.CREATED })
+        .status(statusCodes.OK)
+        .json({ data: pricing, status: statusCodes.OK })
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
