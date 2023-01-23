@@ -59,7 +59,7 @@ const adminLogin = async (req: any, res: any) => {
         res.status(statusCodes.CREATED).json({
           message: "Login successfully",
           status: statusCodes.CREATED,
-          adminId: rowAdminData[0].id,
+          userId: rowAdminData[0].id,
           firstLogin: rowAdminData[0].firstLogin,
         })
       } else if (admin.length && rowAdminData[0].accountBlocked === 0) {
@@ -183,7 +183,7 @@ const getAdminData = async (req: any, res: any) => {
     const { id } = req.params
 
     const [admin]: any = await pool.query(
-      `SELECT * FROM admins WHERE id = '${id}'`,
+      `SELECT * FROM admin WHERE id = '${id}'`,
     )
 
     if (admin) {

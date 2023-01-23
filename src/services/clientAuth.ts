@@ -93,7 +93,7 @@ const clientLogin = async (req: any, res: any) => {
         res.status(statusCodes.CREATED).json({
           message: "Login successfully",
           status: statusCodes.CREATED,
-          clientId: rowClientData[0].id,
+          userId: rowClientData[0].id,
           firstLogin: rowClientData[0].firstLogin,
         })
       } else if (rowClientData[0].accountBlocked === 0) {
