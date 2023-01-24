@@ -1,10 +1,34 @@
-export interface Article {
+export interface CreatedByInterface {
+  id: number
+  email: string
+}
+
+export interface ChangesHistoryInterface {
+  date: Date
+  changedBy: CreatedByInterface
+  elementChanged: string
+}
+
+export interface ArticleFiltersInterface {
+  id: number
+  value: string
+}
+
+interface ArticleInterface {
   id: number
   title: string
   description: string
-  categories: number[]
-  picture: Blob
-  attachment: Blob
-  createdBy: number
-  changesHistory: JSON
+  createdBy: JSON // CreatedByInterface
+  changesHistory: JSON // ChangesHistoryInterface[]
+  portrait: string
+  subtitle: string
+  regionFilters: JSON // ArticleFiltersInterface[]
+  themeFilters: JSON // ArticleFiltersInterface[]
+  regionTitle: string
+  regionSubTitle: string
+  article: string
+  attachments: JSON // string[]
+  author: string
 }
+
+export default ArticleInterface

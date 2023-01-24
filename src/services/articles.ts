@@ -2,6 +2,7 @@ import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import config from "../config/index"
 import statusCodes from "../config/statusCodes"
+import ArticleInterface from "../interfaces/content/Article"
 import { getOffset } from "../helpers/pagination"
 
 const createArticle = async (req: any, res: any) => {
@@ -9,22 +10,35 @@ const createArticle = async (req: any, res: any) => {
     const {
       title,
       description,
-      categories,
-      picture,
-      attachment,
       createdBy,
       changesHistory,
-    } = req.body
+      portrait,
+      subtitle,
+      regionFilters,
+      themeFilters,
+      regionTitle,
+      regionSubTitle,
+      article,
+      attachments,
+      author,
+    }: ArticleInterface = req.body
 
     const registerArticle = await pool.query(
       `INSERT INTO articles (
         title,
         description,
-        categories,
-        picture,
-        attachment,
         createdBy,
-        changesHistory) VALUES ('${title}', '${description}', '${categories}', '${picture}', '${attachment}', '${createdBy}', '${changesHistory}');`,
+        changesHistory, 
+        portrait,
+        subtitle,
+        regionFilters, 
+        themeFilters, 
+        regionTitle,
+        regionSubTitle,
+        article,
+        attachments, 
+        author) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
+        '${themeFilters}', '${regionTitle}', '${regionSubTitle}', '${article}', '${attachments}','${author}');`,
     )
 
     if (registerArticle) {
@@ -83,19 +97,27 @@ const editArticle = async (req: any, res: any) => {
     const {
       title,
       description,
-      categories,
-      picture,
-      attachment,
       createdBy,
       changesHistory,
-    } = req.body
+      portrait,
+      subtitle,
+      regionFilters,
+      themeFilters,
+      regionTitle,
+      regionSubTitle,
+      article,
+      attachments,
+      author,
+    }: ArticleInterface = req.body
     const { id } = req.params
 
-    const [article]: any = await pool.query(
-      `UPDATE article SET title = '${title}', description = '${description}', categories = '${categories}', picture = '${picture}', attachment = '${attachment}', createdBy = '${createdBy}', changesHistory = '${changesHistory}' WHERE id = ${id}`,
+    const [articleEntry]: any = await pool.query(
+      `UPDATE article SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
+      portrait = '${portrait}', subtitle = '${subtitle}', regionFilters = '${regionFilters}', themeFilters = '${themeFilters}',
+      regionTitle = '${regionTitle}', regionSubTitle = '${regionSubTitle}', article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`,
     )
 
-    if (article) {
+    if (articleEntry) {
       res.status(statusCodes.CREATED)
       res.send({
         message: "Article updated successfully",
