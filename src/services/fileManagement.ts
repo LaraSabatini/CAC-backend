@@ -1,3 +1,4 @@
+import path from "path"
 import statusCodes from "../config/statusCodes"
 
 const uploadFiles = async (req: any, res: any) => {
@@ -18,4 +19,19 @@ const uploadFiles = async (req: any, res: any) => {
   })
 }
 
-export default uploadFiles
+const getFile = async (req: any, res: any, next: any) => {
+  const options = {
+    root: `${path.join(__dirname).split("services")[0]}files`,
+  }
+
+  const fileName = req.params.file_name
+  const fileExtension = req.params.file_extension
+
+  res.sendFile(`${fileName}.${fileExtension}`, options, (err: any) => {
+    if (err) {
+      next(err)
+    }
+  })
+}
+
+export { uploadFiles, getFile }

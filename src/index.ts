@@ -10,7 +10,7 @@ import articlesRouter from "./routes/articles"
 import paymentsRouter from "./routes/payment"
 import validateHumanRouter from "./routes/validateReCaptcha"
 import feedbackRouter from "./routes/feedback"
-import fileUploadRouter from "./routes/uploadFiles"
+import fileManagementRouter from "./routes/fileManagement"
 
 const app = express()
 
@@ -34,7 +34,7 @@ app.use("/articles", articlesRouter)
 app.use("/payment", paymentsRouter)
 app.use("/reCaptcha", validateHumanRouter)
 app.use("/feedback", feedbackRouter)
-app.use("/fileUpload", fileUploadRouter)
+app.use("/fileManagement", fileManagementRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
