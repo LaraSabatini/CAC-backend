@@ -1,4 +1,6 @@
 import express from "express"
+import fileUpload from "express-fileupload"
+import bodyParser from "body-parser"
 import cors from "cors"
 import config from "./config"
 
@@ -8,6 +10,7 @@ import articlesRouter from "./routes/articles"
 import paymentsRouter from "./routes/payment"
 import validateHumanRouter from "./routes/validateReCaptcha"
 import feedbackRouter from "./routes/feedback"
+import fileUploadRouter from "./routes/uploadFiles"
 
 const app = express()
 
@@ -20,12 +23,18 @@ app.use(
   }),
 )
 
+app.use(fileUpload())
+app.use(express.static("files"))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.use("/users", usersRouter)
 app.use("/pricing", pricingRouter)
 app.use("/articles", articlesRouter)
 app.use("/payment", paymentsRouter)
 app.use("/reCaptcha", validateHumanRouter)
 app.use("/feedback", feedbackRouter)
+app.use("/fileUpload", fileUploadRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
