@@ -16,8 +16,6 @@ const createArticle = async (req: any, res: any) => {
       subtitle,
       regionFilters,
       themeFilters,
-      regionTitle,
-      regionSubTitle,
       article,
       attachments,
       author,
@@ -33,12 +31,10 @@ const createArticle = async (req: any, res: any) => {
         subtitle,
         regionFilters, 
         themeFilters, 
-        regionTitle,
-        regionSubTitle,
         article,
         attachments, 
         author) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
-        '${themeFilters}', '${regionTitle}', '${regionSubTitle}', '${article}', '${attachments}','${author}');`,
+        '${themeFilters}', '${article}', '${attachments}','${author}');`,
     )
 
     if (registerArticle) {
@@ -103,8 +99,6 @@ const editArticle = async (req: any, res: any) => {
       subtitle,
       regionFilters,
       themeFilters,
-      regionTitle,
-      regionSubTitle,
       article,
       attachments,
       author,
@@ -114,7 +108,7 @@ const editArticle = async (req: any, res: any) => {
     const [articleEntry]: any = await pool.query(
       `UPDATE article SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
       portrait = '${portrait}', subtitle = '${subtitle}', regionFilters = '${regionFilters}', themeFilters = '${themeFilters}',
-      regionTitle = '${regionTitle}', regionSubTitle = '${regionSubTitle}', article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`,
+      article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`,
     )
 
     if (articleEntry) {
@@ -161,4 +155,34 @@ const deleteArticle = async (req: any, res: any) => {
   return {}
 }
 
-export { createArticle, getArticles, editArticle, deleteArticle }
+const getArticleById = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [article] = await pool.query(
+      `SELECT * FROM articles WHERE id = '${id}'`,
+    )
+
+    if (article) {
+      return res.status(statusCodes.OK).json({
+        data: article,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export {
+  createArticle,
+  getArticles,
+  editArticle,
+  deleteArticle,
+  getArticleById,
+}

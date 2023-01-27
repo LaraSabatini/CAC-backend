@@ -2,7 +2,7 @@ import path from "path"
 import statusCodes from "../config/statusCodes"
 
 const uploadFiles = async (req: any, res: any) => {
-  const newpath = `${__dirname}/files/`
+  const newpath = `${__dirname.split("services")[0]}files/`
   const { file }: any = req.files
   const filename = file.name
 

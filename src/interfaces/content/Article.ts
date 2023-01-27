@@ -24,8 +24,6 @@ interface ArticleInterface {
   subtitle: string
   regionFilters: JSON // ArticleFiltersInterface[]
   themeFilters: JSON // ArticleFiltersInterface[]
-  regionTitle: string
-  regionSubTitle: string
   article: string
   attachments: JSON // string[]
   author: string

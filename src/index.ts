@@ -11,6 +11,7 @@ import paymentsRouter from "./routes/payment"
 import validateHumanRouter from "./routes/validateReCaptcha"
 import feedbackRouter from "./routes/feedback"
 import fileManagementRouter from "./routes/fileManagement"
+import filtersRouter from "./routes/filters"
 
 const app = express()
 
@@ -35,6 +36,7 @@ app.use("/payment", paymentsRouter)
 app.use("/reCaptcha", validateHumanRouter)
 app.use("/feedback", feedbackRouter)
 app.use("/fileManagement", fileManagementRouter)
+app.use("/filters", filtersRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
