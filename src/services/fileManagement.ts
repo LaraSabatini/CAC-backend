@@ -1,4 +1,5 @@
 import path from "path"
+import fs from "fs"
 import statusCodes from "../config/statusCodes"
 
 const uploadFiles = async (req: any, res: any) => {
@@ -34,4 +35,19 @@ const getFile = async (req: any, res: any, next: any) => {
   })
 }
 
-export { uploadFiles, getFile }
+const deleteFile = async (req: any, res: any) => {
+  fs.unlink(req.params.route, error => {
+    if (error) {
+      res.status(500).send({
+        message: "Server error",
+        code: statusCodes.INTERNAL_SERVER_ERROR,
+      })
+    } else {
+      res
+        .status(201)
+        .send({ message: "File deleted successfully", code: statusCodes.OK })
+    }
+  })
+}
+
+export { uploadFiles, getFile, deleteFile }
