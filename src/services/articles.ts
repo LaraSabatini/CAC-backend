@@ -106,7 +106,7 @@ const editArticle = async (req: any, res: any) => {
     const { id } = req.params
 
     const [articleEntry]: any = await pool.query(
-      `UPDATE article SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
+      `UPDATE articles SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
       portrait = '${portrait}', subtitle = '${subtitle}', regionFilters = '${regionFilters}', themeFilters = '${themeFilters}',
       article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`,
     )
