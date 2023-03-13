@@ -157,10 +157,8 @@ const clientLogin = async (req: any, res: any) => {
       }
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Something went wrong",
-      status: statusCodes.INTERNAL_SERVER_ERROR,
-    })
+    res.status(statusCodes.NOT_FOUND)
+    res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
   }
 
   return {}
@@ -394,7 +392,7 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
     if (client.length) {
       return sendEmail(
         recipients,
-        "Recuperacion de contraseña",
+        "Recuperación de contraseña",
         "restorePassword",
         {
           name: req.body.name,

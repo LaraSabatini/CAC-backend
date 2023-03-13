@@ -2,6 +2,7 @@ import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import config from "../config/index"
 import statusCodes from "../config/statusCodes"
+import ArticleInterface from "../interfaces/content/Article"
 import { getOffset } from "../helpers/pagination"
 
 const createArticle = async (req: any, res: any) => {
@@ -9,22 +10,31 @@ const createArticle = async (req: any, res: any) => {
     const {
       title,
       description,
-      categories,
-      picture,
-      attachment,
       createdBy,
       changesHistory,
-    } = req.body
+      portrait,
+      subtitle,
+      regionFilters,
+      themeFilters,
+      article,
+      attachments,
+      author,
+    }: ArticleInterface = req.body
 
     const registerArticle = await pool.query(
       `INSERT INTO articles (
         title,
         description,
-        categories,
-        picture,
-        attachment,
         createdBy,
-        changesHistory) VALUES ('${title}', '${description}', '${categories}', '${picture}', '${attachment}', '${createdBy}', '${changesHistory}');`,
+        changesHistory, 
+        portrait,
+        subtitle,
+        regionFilters, 
+        themeFilters, 
+        article,
+        attachments, 
+        author) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
+        '${themeFilters}', '${article}', '${attachments}','${author}');`,
     )
 
     if (registerArticle) {
@@ -83,19 +93,25 @@ const editArticle = async (req: any, res: any) => {
     const {
       title,
       description,
-      categories,
-      picture,
-      attachment,
       createdBy,
       changesHistory,
-    } = req.body
+      portrait,
+      subtitle,
+      regionFilters,
+      themeFilters,
+      article,
+      attachments,
+      author,
+    }: ArticleInterface = req.body
     const { id } = req.params
 
-    const [article]: any = await pool.query(
-      `UPDATE article SET title = '${title}', description = '${description}', categories = '${categories}', picture = '${picture}', attachment = '${attachment}', createdBy = '${createdBy}', changesHistory = '${changesHistory}' WHERE id = ${id}`,
+    const [articleEntry]: any = await pool.query(
+      `UPDATE articles SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
+      portrait = '${portrait}', subtitle = '${subtitle}', regionFilters = '${regionFilters}', themeFilters = '${themeFilters}',
+      article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`,
     )
 
-    if (article) {
+    if (articleEntry) {
       res.status(statusCodes.CREATED)
       res.send({
         message: "Article updated successfully",
@@ -139,4 +155,59 @@ const deleteArticle = async (req: any, res: any) => {
   return {}
 }
 
-export { createArticle, getArticles, editArticle, deleteArticle }
+const getArticleById = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [article] = await pool.query(
+      `SELECT * FROM articles WHERE id = '${id}'`,
+    )
+
+    if (article) {
+      return res.status(statusCodes.OK).json({
+        data: article,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getRelatedArticles = async (req: any, res: any) => {
+  try {
+    const { themeId, regionId } = req.params
+
+    const [relatedArticles] = await pool.query(
+      `SELECT * FROM articles WHERE regionFilters LIKE '%${regionId}%' OR themeFilters LIKE '%${themeId}%' LIMIT 2`,
+    )
+
+    if (relatedArticles) {
+      return res.status(statusCodes.OK).json({
+        data: relatedArticles,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export {
+  createArticle,
+  getArticles,
+  editArticle,
+  deleteArticle,
+  getArticleById,
+  getRelatedArticles,
+}

@@ -239,7 +239,7 @@ const restoreAdminPasswordEmail = async (req: any, res: any) => {
     if (admin.length) {
       return sendEmail(
         recipients,
-        "Recuperacion de contraseña",
+        "Recuperación de contraseña",
         "restorePassword",
         {
           name: req.body.name,
