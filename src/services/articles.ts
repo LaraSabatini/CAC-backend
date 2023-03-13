@@ -179,10 +179,35 @@ const getArticleById = async (req: any, res: any) => {
   return {}
 }
 
+const getRelatedArticles = async (req: any, res: any) => {
+  try {
+    const { themeId, regionId } = req.params
+
+    const [relatedArticles] = await pool.query(
+      `SELECT * FROM articles WHERE regionFilters LIKE '%${regionId}%' OR themeFilters LIKE '%${themeId}%' LIMIT 2`,
+    )
+
+    if (relatedArticles) {
+      return res.status(statusCodes.OK).json({
+        data: relatedArticles,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   createArticle,
   getArticles,
   editArticle,
   deleteArticle,
   getArticleById,
+  getRelatedArticles,
 }
