@@ -6,11 +6,14 @@ import {
   deleteArticle,
   getArticleById,
   getRelatedArticles,
+  filterArticles,
 } from "../services/articles"
 
 const router = express.Router()
 
 router.post("/", createArticle)
+
+router.post("/filterArticles", filterArticles)
 
 router.get("/page=:page", getArticles)
 
