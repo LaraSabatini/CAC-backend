@@ -4,6 +4,7 @@ import config from "../config/index"
 import statusCodes from "../config/statusCodes"
 import ArticleInterface from "../interfaces/content/Article"
 import { getOffset } from "../helpers/pagination"
+import deleteDuplicates from "../helpers/deleteDuplicates"
 
 const createArticle = async (req: any, res: any) => {
   try {
@@ -203,6 +204,73 @@ const getRelatedArticles = async (req: any, res: any) => {
   return {}
 }
 
+const filterArticles = async (req: any, res: any) => {
+  try {
+    const { regionIds, themeIds } = req.body
+
+    let articles: any[] = []
+
+    for (let i = 0; i < regionIds.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const [results]: any[] = await pool.query(
+        `SELECT * FROM articles WHERE regionFilters LIKE '%${regionIds[i]}%'`,
+      )
+
+      articles = [...articles, ...results]
+    }
+
+    for (let i = 0; i < themeIds.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const [results]: any[] = await pool.query(
+        `SELECT * FROM articles WHERE themeFilters LIKE '%${themeIds[i]}%'`,
+      )
+      articles = [...articles, ...results]
+    }
+
+    if (articles) {
+      return res.status(statusCodes.OK).json({
+        data: articles,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const searchArticles = async (req: any, res: any) => {
+  try {
+    const { search } = req.body
+
+    const [fromTitle]: any[] = await pool.query(
+      `SELECT * FROM articles WHERE title LIKE '%${search}%'`,
+    )
+
+    const [fromText]: any[] = await pool.query(
+      `SELECT * FROM articles WHERE article LIKE '%${search}%'`,
+    )
+
+    if (fromTitle && fromText) {
+      return res.status(statusCodes.OK).json({
+        data: deleteDuplicates([...fromText, ...fromTitle]),
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   createArticle,
   getArticles,
@@ -210,4 +278,6 @@ export {
   deleteArticle,
   getArticleById,
   getRelatedArticles,
+  filterArticles,
+  searchArticles,
 }
