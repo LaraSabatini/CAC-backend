@@ -10,6 +10,10 @@ interface Client extends User {
   preferences: number[]
   subscription: 1 | 0
   dateCreated: string
+  plan: number
+  region: number
+  paymentDate: string
+  paymentExpireDate: string
 }
 
 export default Client

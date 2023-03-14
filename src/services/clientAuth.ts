@@ -22,6 +22,10 @@ const clientRegister = async (req: any, res: any) => {
       dateCreated,
       loginAttempts,
       firstLogin,
+      plan,
+      region,
+      paymentDate,
+      paymentExpireDate,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -38,7 +42,13 @@ const clientRegister = async (req: any, res: any) => {
         accountBlocked,
         subscription,
         dateCreated,
-        loginAttempts, firstLogin) VALUES ('${name}',
+        loginAttempts,
+        firstLogin,
+        plan,
+        region,
+        paymentDate,
+        paymentExpireDate
+        ) VALUES ('${name}',
         '${lastName}',
         '${email}',
         '${passwordHash}',
@@ -50,7 +60,13 @@ const clientRegister = async (req: any, res: any) => {
         '${accountBlocked}',
         '${subscription}',
         '${dateCreated}',
-        '${loginAttempts}', '${firstLogin}');`,
+        '${loginAttempts}',
+        '${firstLogin}',
+        '${plan}',
+        '${region}',
+        '${paymentDate}',
+        '${paymentExpireDate}'
+        );`,
     )
 
     if (registerClient) {
@@ -312,13 +328,15 @@ const editClientData = async (req: any, res: any) => {
       phoneAreaCode,
       phoneNumber,
       firstLogin,
+      region,
     } = req.body
 
     const [client]: any = await pool.query(
       `UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
       phoneAreaCode = '${phoneAreaCode}',
       phoneNumber = '${phoneNumber}',
-      firstLogin = '${firstLogin}'
+      firstLogin = '${firstLogin}',
+      region = '${region}'
       WHERE id = ${id}`,
     )
 
@@ -413,6 +431,60 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
   return {}
 }
 
+const updateClientPaymentData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const { plan, region, paymentDate, paymentExpireDate } = req.body
+
+    const [client]: any = await pool.query(
+      `UPDATE clients SET plan = '${plan}',
+      region = '${region}',
+      paymentDate = '${paymentDate}',
+      paymentExpireDate = '${paymentExpireDate}'
+      WHERE id = ${id}`,
+    )
+
+    if (client) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Payment data updated successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getClientDataForTable = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [client]: any = await pool.query(
+      `SELECT name, lastName, id, plan, identificationNumber, region, memberSince FROM clients WHERE id = '${id}'`,
+    )
+
+    if (client) {
+      return res.status(statusCodes.OK).json({
+        data: client,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   clientLogin,
   clientRegister,
@@ -424,4 +496,6 @@ export {
   blockAccount,
   registerSuccessEmail,
   restoreClientPasswordEmail,
+  updateClientPaymentData,
+  getClientDataForTable,
 }
