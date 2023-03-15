@@ -59,6 +59,6 @@ router.post("/client/register_success_email", registerSuccessEmail)
 router.post("/client/restore_password", restoreClientPasswordEmail)
 router.post("/admin/restore_password", restoreAdminPasswordEmail)
 
-router.get("/client/user_data&id=:id", getClientDataForTable)
+router.get("/client/user_data&page=:page", getClientDataForTable)
 
 export default router
