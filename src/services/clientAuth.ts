@@ -2,7 +2,6 @@ import { ResultSetHeader } from "mysql2"
 import pool from "../database/index"
 import Client from "../interfaces/users/Client"
 import statusCodes from "../config/statusCodes"
-import config from "../config/index"
 import sendEmail from "../helpers/sendEmail"
 import { getOffset } from "../helpers/pagination"
 import { encrypt, compare } from "../helpers/handleBcrypt"
@@ -466,20 +465,20 @@ const updateClientPaymentData = async (req: any, res: any) => {
 const getClientDataForTable = async (req: any, res: any) => {
   try {
     const { page } = req.params
-    const offset = getOffset(config.listPerPage, page)
+    const offset = getOffset(10, page)
 
     const [client]: any = await pool.query(
-      `SELECT name, lastName, id, plan, identificationNumber, region, memberSince FROM clients LIMIT ${offset},${config.listPerPage}`,
+      `SELECT name, lastName, id, plan, identificationNumber, region, dateCreated FROM clients LIMIT ${offset},10`,
     )
 
     const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM clients`)
 
     if (client) {
-      const rowData: ResultSetHeader = amountOfPages as ResultSetHeader
+      const rowData: any = amountOfPages as ResultSetHeader
 
       const meta = {
         page,
-        totalPages: parseInt(Object.keys(rowData)[0], 10),
+        totalPages: Math.ceil(rowData[0]["COUNT(*)"] / 10),
       }
 
       return res.status(statusCodes.OK).json({
