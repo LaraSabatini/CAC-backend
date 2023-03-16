@@ -20,6 +20,8 @@ import {
   restoreClientPasswordEmail,
   updateClientPaymentData,
   getClientDataForTable,
+  accountBlockedNotificationEmail,
+  accountUnblockedNotificationEmail,
 } from "../services/clientAuth"
 
 const router = express.Router()
@@ -46,7 +48,7 @@ router.get("/client/id=:id", getClientData)
 
 router.put("/client/id=:id", editClientData)
 
-router.put("/client/block_account=true&id=:id", blockAccount)
+router.put("/client/block_account=:action&id=:id", blockAccount)
 
 router.put("/client/update_payment_data&id=:id", updateClientPaymentData)
 
@@ -60,5 +62,8 @@ router.post("/client/restore_password", restoreClientPasswordEmail)
 router.post("/admin/restore_password", restoreAdminPasswordEmail)
 
 router.get("/client/user_data&page=:page", getClientDataForTable)
+
+router.post("/client/block_account_mail", accountBlockedNotificationEmail)
+router.post("/client/unblock_account_mail", accountUnblockedNotificationEmail)
 
 export default router
