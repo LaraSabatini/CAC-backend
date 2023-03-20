@@ -3,6 +3,7 @@ import pool from "../database/index"
 import Client from "../interfaces/users/Client"
 import statusCodes from "../config/statusCodes"
 import sendEmail from "../helpers/sendEmail"
+import { getOffset } from "../helpers/pagination"
 import { encrypt, compare } from "../helpers/handleBcrypt"
 
 const clientRegister = async (req: any, res: any) => {
@@ -22,6 +23,10 @@ const clientRegister = async (req: any, res: any) => {
       dateCreated,
       loginAttempts,
       firstLogin,
+      plan,
+      region,
+      paymentDate,
+      paymentExpireDate,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -38,7 +43,13 @@ const clientRegister = async (req: any, res: any) => {
         accountBlocked,
         subscription,
         dateCreated,
-        loginAttempts, firstLogin) VALUES ('${name}',
+        loginAttempts,
+        firstLogin,
+        plan,
+        region,
+        paymentDate,
+        paymentExpireDate
+        ) VALUES ('${name}',
         '${lastName}',
         '${email}',
         '${passwordHash}',
@@ -50,7 +61,13 @@ const clientRegister = async (req: any, res: any) => {
         '${accountBlocked}',
         '${subscription}',
         '${dateCreated}',
-        '${loginAttempts}', '${firstLogin}');`,
+        '${loginAttempts}',
+        '${firstLogin}',
+        '${plan}',
+        '${region}',
+        '${paymentDate}',
+        '${paymentExpireDate}'
+        );`,
     )
 
     if (registerClient) {
@@ -312,13 +329,15 @@ const editClientData = async (req: any, res: any) => {
       phoneAreaCode,
       phoneNumber,
       firstLogin,
+      region,
     } = req.body
 
     const [client]: any = await pool.query(
       `UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
       phoneAreaCode = '${phoneAreaCode}',
       phoneNumber = '${phoneNumber}',
-      firstLogin = '${firstLogin}'
+      firstLogin = '${firstLogin}',
+      region = '${region}'
       WHERE id = ${id}`,
     )
 
@@ -341,16 +360,20 @@ const editClientData = async (req: any, res: any) => {
 
 const blockAccount = async (req: any, res: any) => {
   try {
-    const { id } = req.params
+    const { id, action } = req.params
 
     const [client]: any = await pool.query(
-      `UPDATE clients SET accountBlocked = 1, subscription = 0 WHERE id = ${id}`,
+      `UPDATE clients SET accountBlocked = ${
+        action === "block" ? "1" : "0"
+      }, subscription = ${action === "block" ? "0" : "1"} WHERE id = ${id}`,
     )
 
     if (client) {
       res.status(statusCodes.CREATED)
       res.send({
-        message: "Account blocked successfully",
+        message: `Account ${
+          action === "block" ? "blocked" : "unblocked"
+        } successfully`,
         status: statusCodes.CREATED,
       })
     }
@@ -413,6 +436,100 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
   return {}
 }
 
+const updateClientPaymentData = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const { plan, region, paymentDate, paymentExpireDate } = req.body
+
+    const [client]: any = await pool.query(
+      `UPDATE clients SET plan = '${plan}',
+      region = '${region}',
+      paymentDate = '${paymentDate}',
+      paymentExpireDate = '${paymentExpireDate}'
+      WHERE id = ${id}`,
+    )
+
+    if (client) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Payment data updated successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getClientDataForTable = async (req: any, res: any) => {
+  try {
+    const { page } = req.params
+    const offset = getOffset(10, page)
+
+    const [client]: any = await pool.query(
+      `SELECT name, lastName, id, plan, identificationNumber, region, dateCreated FROM clients LIMIT ${offset},10`,
+    )
+
+    const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM clients`)
+
+    if (client) {
+      const rowData: any = amountOfPages as ResultSetHeader
+
+      const meta = {
+        page,
+        totalPages: Math.ceil(rowData[0]["COUNT(*)"] / 10),
+      }
+
+      return res.status(statusCodes.OK).json({
+        data: client,
+        meta,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const accountBlockedNotificationEmail = async (req: any, res: any) => {
+  return sendEmail(
+    [req.body.recipients],
+    "Cuenta bloqueada",
+    "accountBlockedNotification",
+    {
+      name: req.body.name,
+      email: req.body.recipients[0],
+      motive: req.body.motive,
+      supportURL: req.body.supportURL,
+    },
+    res,
+  )
+}
+
+const accountUnblockedNotificationEmail = async (req: any, res: any) => {
+  return sendEmail(
+    [req.body.recipients],
+    "Cuenta desbloqueada",
+    "accountUnblockedNotification",
+    {
+      name: req.body.name,
+      email: req.body.recipients[0],
+      loginURL: req.body.loginURL,
+    },
+    res,
+  )
+}
+
 export {
   clientLogin,
   clientRegister,
@@ -424,4 +541,8 @@ export {
   blockAccount,
   registerSuccessEmail,
   restoreClientPasswordEmail,
+  updateClientPaymentData,
+  getClientDataForTable,
+  accountBlockedNotificationEmail,
+  accountUnblockedNotificationEmail,
 }
