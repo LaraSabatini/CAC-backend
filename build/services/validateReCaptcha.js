@@ -9,14 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import axios from "axios";
 import config from "../config";
+import statusCodes from "../config/statusCodes";
 const validateReCaptcha = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { token } = req.body;
     yield axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${config.RECAPTCHA_PRIVATE_KEY}&response=${token}`);
-    if (res.status(200)) {
-        res.status(201).json({ message: "Passed validation", status: 201 });
+    if (res.status(statusCodes.OK)) {
+        res
+            .status(statusCodes.CREATED)
+            .json({ message: "Passed validation", status: statusCodes.CREATED });
     }
     else {
-        res.status(401).json({ message: "Not passed validation", status: 401 });
+        res.status(statusCodes.UNAUTHORIZED).json({
+            message: "Not passed validation",
+            status: statusCodes.UNAUTHORIZED,
+        });
     }
     return {};
 });

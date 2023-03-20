@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import mercadopago from "../helpers/mercadoPago";
 import pool from "../database/index";
+import statusCodes from "../config/statusCodes";
 const registerPaymentInDB = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { paymentId, collectionId, collectionStatus, status, paymentType, merchantOrderId, preferenceId, pricePaid, clientId, paymentExpireDate, itemId, } = req.body;
@@ -34,15 +35,16 @@ const registerPaymentInDB = (req, res) => __awaiter(void 0, void 0, void 0, func
         '${paymentExpireDate}',
         '${itemId}');`);
         if (registerPayment) {
-            res
-                .status(201)
-                .json({ message: "Payment registered successfully", status: 201 });
+            res.status(statusCodes.CREATED).json({
+                message: "Payment registered successfully",
+                status: statusCodes.CREATED,
+            });
         }
     }
     catch (error) {
-        return res.status(500).json({
+        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while registering the payment, please try again.",
-            status: 500,
+            status: statusCodes.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
@@ -52,17 +54,17 @@ const getPaymentsByClient = (req, res) => __awaiter(void 0, void 0, void 0, func
         const { id } = req.params;
         const [payment] = yield pool.query(`SELECT * FROM payments WHERE clientId = ${id}`);
         if (payment.length) {
-            res.status(201).json({ data: payment, status: 201 });
+            res.status(statusCodes.OK).json({ data: payment, status: statusCodes.OK });
         }
         else {
-            res.status(200);
-            res.send({ error: "Payments not found", status: 404 });
+            res.status(statusCodes.NOT_FOUND);
+            res.send({ error: "Payments not found", status: statusCodes.NOT_FOUND });
         }
     }
     catch (error) {
-        return res.status(500).json({
+        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while getting the payments, please try again.",
-            status: 500,
+            status: statusCodes.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
@@ -84,16 +86,20 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
             .then((response) => {
             res.json({
                 id: response.body.id,
-                status: 201,
+                status: statusCodes.CREATED,
             });
         })
             .catch((error) => {
-            res.status(404);
-            res.send({ error, message: "Couldn't process payment", status: 404 });
+            res.status(statusCodes.NOT_FOUND);
+            res.send({
+                error,
+                message: "Couldn't process payment",
+                status: statusCodes.NOT_FOUND,
+            });
         });
     }
     catch (error) {
-        return res.status(500).json({
+        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while getting the preference, please try again.",
         });
     }
