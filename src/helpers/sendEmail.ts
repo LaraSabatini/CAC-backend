@@ -19,7 +19,7 @@ const transportInfo = {
   port: 587,
   secure: false,
   auth: {
-    user: "info@vonceescalada.com", // reemplazar con credenciales de WP
+    user: config.EMAIL,
     pass: config.MAIL_PASS,
   },
 }
@@ -36,7 +36,7 @@ const sendEmail = (
   transporter.use("compile", hbs(handlebarOptions))
 
   const mailOptions = {
-    from: '"Camara de Administradores de Consorcio" <info@vonceescalada.com>', // reemplazar con credenciales de WP
+    from: '"Camara federal" <admin@camarafederal.com.ar>', // OR hola@camarafederal.com.ar>
     to,
     subject,
     template,
@@ -45,6 +45,8 @@ const sendEmail = (
 
   transporter.sendMail(mailOptions, (error: any) => {
     if (error) {
+      console.log("error", error)
+
       return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Something went wrong",
         status: statusCodes.INTERNAL_SERVER_ERROR,

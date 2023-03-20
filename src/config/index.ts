@@ -17,6 +17,7 @@ const config = {
   },
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PASS: process.env.MAIL_PASS,
+  EMAIL: process.env.EMAIL,
   MP_PUBLIC_KEY_TEST: process.env.MP_PUBLIC_KEY_TEST,
   MP_ACCESS_TOKEN_TEST: process.env.MP_ACCESS_TOKEN_TEST,
   MP_PUBLIC_KEY_OWN: process.env.MP_PUBLIC_KEY_OWN,
