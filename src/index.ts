@@ -12,6 +12,7 @@ import validateHumanRouter from "./routes/validateReCaptcha"
 import feedbackRouter from "./routes/feedback"
 import fileManagementRouter from "./routes/fileManagement"
 import filtersRouter from "./routes/filters"
+import supportRouter from "./routes/support"
 
 const app = express()
 
@@ -37,6 +38,7 @@ app.use("/reCaptcha", validateHumanRouter)
 app.use("/feedback", feedbackRouter)
 app.use("/fileManagement", fileManagementRouter)
 app.use("/filters", filtersRouter)
+app.use("/support", supportRouter)
 
 app.get("/", (_req, res) => {
   res.json({ message: "ok" })
