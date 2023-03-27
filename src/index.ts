@@ -30,8 +30,6 @@ app.use(express.static("files"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// bla
-
 app.use("/users", usersRouter)
 app.use("/pricing", pricingRouter)
 app.use("/articles", articlesRouter)
