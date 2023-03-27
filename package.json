@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "env-cmd -f .env.production node build/index.js",
-    "dev": "env-cmd -f .env.development ts-node-dev src/index.ts",
-    "prod": "env-cmd -f .env.production ts-node-dev src/index.ts",
-    "tsc": "tsc",
-    "test": "env-cmd -f .env.test jest"
+    "start": "env-cmd -f .env node build/index.js",
+    "dev": "env-cmd -f .env ts-node-dev src/index.ts",
+    "prod": "env-cmd -f .env ts-node-dev src/index.ts",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",

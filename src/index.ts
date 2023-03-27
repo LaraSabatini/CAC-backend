@@ -30,17 +30,17 @@ app.use(express.static("files"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use("/users", usersRouter)
-app.use("/pricing", pricingRouter)
-app.use("/articles", articlesRouter)
-app.use("/payment", paymentsRouter)
-app.use("/reCaptcha", validateHumanRouter)
-app.use("/feedback", feedbackRouter)
-app.use("/fileManagement", fileManagementRouter)
-app.use("/filters", filtersRouter)
-app.use("/support", supportRouter)
+app.use("/software/api/users", usersRouter)
+app.use("/software/api/pricing", pricingRouter)
+app.use("/software/api/articles", articlesRouter)
+app.use("/software/api/payment", paymentsRouter)
+app.use("/software/api/reCaptcha", validateHumanRouter)
+app.use("/software/api/feedback", feedbackRouter)
+app.use("/software/api/fileManagement", fileManagementRouter)
+app.use("/software/api/filters", filtersRouter)
+app.use("/software/api/support", supportRouter)
 
-app.get("/", (_req, res) => {
+app.get("/software/api/", (_req, res) => {
   res.json({ message: "ok" })
 })
 

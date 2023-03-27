@@ -13,6 +13,7 @@
     "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
     "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
     /* Completeness */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+    "module": "commonjs"
   }
 }
