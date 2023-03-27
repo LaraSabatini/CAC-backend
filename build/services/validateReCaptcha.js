@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,23 +8,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import axios from "axios";
-import config from "../config";
-import statusCodes from "../config/statusCodes";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(require("axios"));
+const config_1 = __importDefault(require("../config"));
+const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const validateReCaptcha = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { token } = req.body;
-    yield axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${config.RECAPTCHA_PRIVATE_KEY}&response=${token}`);
-    if (res.status(statusCodes.OK)) {
+    yield axios_1.default.post(`https://www.google.com/recaptcha/api/siteverify?secret=${config_1.default.RECAPTCHA_PRIVATE_KEY}&response=${token}`);
+    if (res.status(statusCodes_1.default.OK)) {
         res
-            .status(statusCodes.CREATED)
-            .json({ message: "Passed validation", status: statusCodes.CREATED });
+            .status(statusCodes_1.default.CREATED)
+            .json({ message: "Passed validation", status: statusCodes_1.default.CREATED });
     }
     else {
-        res.status(statusCodes.UNAUTHORIZED).json({
+        res.status(statusCodes_1.default.UNAUTHORIZED).json({
             message: "Not passed validation",
-            status: statusCodes.UNAUTHORIZED,
+            status: statusCodes_1.default.UNAUTHORIZED,
         });
     }
     return {};
 });
-export default validateReCaptcha;
+exports.default = validateReCaptcha;

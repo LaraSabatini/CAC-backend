@@ -1,6 +1,11 @@
-import mercadopago from "mercadopago";
-import config from "../config";
-mercadopago.configure({
-    access_token: `${config.MP_ACCESS_TOKEN_TEST}`,
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mercadopago_1 = __importDefault(require("mercadopago"));
+const config_1 = __importDefault(require("../config"));
+mercadopago_1.default.configure({
+    access_token: `${config_1.default.MP_ACCESS_TOKEN_TEST}`,
 });
-export default mercadopago;
+exports.default = mercadopago_1.default;

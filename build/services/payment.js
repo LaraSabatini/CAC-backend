@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,13 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import mercadopago from "../helpers/mercadoPago";
-import pool from "../database/index";
-import statusCodes from "../config/statusCodes";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createPreference = exports.getPaymentsByClient = exports.registerPaymentInDB = void 0;
+const mercadoPago_1 = __importDefault(require("../helpers/mercadoPago"));
+const index_1 = __importDefault(require("../database/index"));
+const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const registerPaymentInDB = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { paymentId, collectionId, collectionStatus, status, paymentType, merchantOrderId, preferenceId, pricePaid, clientId, paymentExpireDate, itemId, } = req.body;
-        const registerPayment = yield pool.query(`INSERT INTO payments (paymentId,
+        const registerPayment = yield index_1.default.query(`INSERT INTO payments (paymentId,
         collectionId,
         collectionStatus,
         status,
@@ -35,40 +41,42 @@ const registerPaymentInDB = (req, res) => __awaiter(void 0, void 0, void 0, func
         '${paymentExpireDate}',
         '${itemId}');`);
         if (registerPayment) {
-            res.status(statusCodes.CREATED).json({
+            res.status(statusCodes_1.default.CREATED).json({
                 message: "Payment registered successfully",
-                status: statusCodes.CREATED,
+                status: statusCodes_1.default.CREATED,
             });
         }
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while registering the payment, please try again.",
-            status: statusCodes.INTERNAL_SERVER_ERROR,
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
 });
+exports.registerPaymentInDB = registerPaymentInDB;
 const getPaymentsByClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const [payment] = yield pool.query(`SELECT * FROM payments WHERE clientId = ${id}`);
+        const [payment] = yield index_1.default.query(`SELECT * FROM payments WHERE clientId = ${id}`);
         if (payment.length) {
-            res.status(statusCodes.OK).json({ data: payment, status: statusCodes.OK });
+            res.status(statusCodes_1.default.OK).json({ data: payment, status: statusCodes_1.default.OK });
         }
         else {
-            res.status(statusCodes.NOT_FOUND);
-            res.send({ error: "Payments not found", status: statusCodes.NOT_FOUND });
+            res.status(statusCodes_1.default.NOT_FOUND);
+            res.send({ error: "Payments not found", status: statusCodes_1.default.NOT_FOUND });
         }
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while getting the payments, please try again.",
-            status: statusCodes.INTERNAL_SERVER_ERROR,
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
 });
+exports.getPaymentsByClient = getPaymentsByClient;
 const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const preference = {
@@ -81,28 +89,28 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
             },
             auto_return: "approved",
         };
-        mercadopago.preferences
+        mercadoPago_1.default.preferences
             .create(preference)
             .then((response) => {
             res.json({
                 id: response.body.id,
-                status: statusCodes.CREATED,
+                status: statusCodes_1.default.CREATED,
             });
         })
             .catch((error) => {
-            res.status(statusCodes.NOT_FOUND);
+            res.status(statusCodes_1.default.NOT_FOUND);
             res.send({
                 error,
                 message: "Couldn't process payment",
-                status: statusCodes.NOT_FOUND,
+                status: statusCodes_1.default.NOT_FOUND,
             });
         });
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while getting the preference, please try again.",
         });
     }
     return {};
 });
-export { registerPaymentInDB, getPaymentsByClient, createPreference };
+exports.createPreference = createPreference;

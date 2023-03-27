@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const statusCodes = {
     OK: 200,
     CREATED: 201,
@@ -5,4 +7,4 @@ const statusCodes = {
     NOT_FOUND: 401,
     INTERNAL_SERVER_ERROR: 500,
 };
-export default statusCodes;
+exports.default = statusCodes;

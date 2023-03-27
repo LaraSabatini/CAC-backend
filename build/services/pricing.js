@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,83 +8,91 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import pool from "../database/index";
-import statusCodes from "../config/statusCodes";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getPricing = exports.deletePricing = exports.editPricing = exports.createPricing = void 0;
+const index_1 = __importDefault(require("../database/index"));
+const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const getPricing = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const [pricing] = yield pool.query(`SELECT * FROM pricing`);
+        const [pricing] = yield index_1.default.query(`SELECT * FROM pricing`);
         if (pricing) {
             return res
-                .status(statusCodes.OK)
-                .json({ data: pricing, status: statusCodes.OK });
+                .status(statusCodes_1.default.OK)
+                .json({ data: pricing, status: statusCodes_1.default.OK });
         }
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred, please try again.",
-            status: statusCodes.INTERNAL_SERVER_ERROR,
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
 });
+exports.getPricing = getPricing;
 const createPricing = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, price, description, time } = req.body;
-        const insertPricing = yield pool.query(`INSERT INTO pricing (name, price, description, time) VALUES ('${name}', '${price}', '${description}', '${time}');`);
+        const insertPricing = yield index_1.default.query(`INSERT INTO pricing (name, price, description, time) VALUES ('${name}', '${price}', '${description}', '${time}');`);
         if (insertPricing) {
-            return res.status(statusCodes.CREATED).json({
+            return res.status(statusCodes_1.default.CREATED).json({
                 message: "Pricing created successfully",
-                status: statusCodes.CREATED,
+                status: statusCodes_1.default.CREATED,
             });
         }
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while creating the pricing, please try again.",
-            status: statusCodes.INTERNAL_SERVER_ERROR,
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
 });
+exports.createPricing = createPricing;
 const editPricing = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, price, description, time } = req.body;
         const { id } = req.params;
-        const [pricing] = yield pool.query(`UPDATE pricing SET price = '${price}', name = '${name}', description = '${description}', time = '${time}' WHERE id = ${id}`);
+        const [pricing] = yield index_1.default.query(`UPDATE pricing SET price = '${price}', name = '${name}', description = '${description}', time = '${time}' WHERE id = ${id}`);
         if (pricing) {
-            res.status(statusCodes.CREATED);
+            res.status(statusCodes_1.default.CREATED);
             res.send({
                 message: "Pricing updated successfully",
-                status: statusCodes.CREATED,
+                status: statusCodes_1.default.CREATED,
             });
         }
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while updating the pricing, please try again.",
-            status: statusCodes.INTERNAL_SERVER_ERROR,
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
 });
+exports.editPricing = editPricing;
 const deletePricing = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const [pricing] = yield pool.query(`DELETE FROM pricing WHERE id=${id}`);
+        const [pricing] = yield index_1.default.query(`DELETE FROM pricing WHERE id=${id}`);
         if (pricing) {
-            res.status(statusCodes.CREATED);
+            res.status(statusCodes_1.default.CREATED);
             res.send({
                 message: "Pricing deleted successfully",
-                status: statusCodes.CREATED,
+                status: statusCodes_1.default.CREATED,
             });
         }
     }
     catch (error) {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while deleting the pricing, please try again.",
-            status: statusCodes.INTERNAL_SERVER_ERROR,
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
     }
     return {};
 });
-export { createPricing, editPricing, deletePricing, getPricing };
+exports.deletePricing = deletePricing;
