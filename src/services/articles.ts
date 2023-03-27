@@ -61,7 +61,7 @@ const getArticles = async (req: any, res: any) => {
     const offset = getOffset(config.listPerPage, page)
 
     const [articles] = await pool.query(
-      `SELECT * FROM articles LIMIT ${offset},${config.listPerPage}`,
+      `SELECT * FROM articles ORDER BY id DESC LIMIT ${offset},${config.listPerPage}`,
     )
     const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM articles`)
 
