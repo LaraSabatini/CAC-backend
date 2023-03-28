@@ -11,6 +11,6 @@ router.post("/register-in-db", registerPaymentInDB)
 
 router.get("/search/id=:id", getPaymentsByClient)
 
-router.post("/create-preference", createPreference)
+router.post("/create-preference/type=:type", createPreference)
 
 export default router

@@ -439,11 +439,10 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
 const updateClientPaymentData = async (req: any, res: any) => {
   try {
     const { id } = req.params
-    const { plan, region, paymentDate, paymentExpireDate } = req.body
+    const { plan, paymentDate, paymentExpireDate } = req.body
 
     const [client]: any = await pool.query(
       `UPDATE clients SET plan = '${plan}',
-      region = '${region}',
       paymentDate = '${paymentDate}',
       paymentExpireDate = '${paymentExpireDate}'
       WHERE id = ${id}`,

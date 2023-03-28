@@ -36,7 +36,7 @@ const sendEmail = (
   transporter.use("compile", hbs(handlebarOptions))
 
   const mailOptions = {
-    from: '"Camara federal" <admin@camarafederal.com.ar>', // OR hola@camarafederal.com.ar>
+    from: '"Camara federal" <info@vonceescalada.com>', // OR hola@camarafederal.com.ar>
     to,
     subject,
     template,
@@ -45,8 +45,6 @@ const sendEmail = (
 
   transporter.sendMail(mailOptions, (error: any) => {
     if (error) {
-      console.log("error", error)
-
       return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Something went wrong",
         status: statusCodes.INTERNAL_SERVER_ERROR,
