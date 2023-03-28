@@ -28,19 +28,18 @@ app.use(express_fileupload_1.default());
 app.use(express_1.default.static("files"));
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use("/users", auth_1.default);
-app.use("/pricing", pricing_1.default);
-app.use("/articles", articles_1.default);
-app.use("/payment", payment_1.default);
-app.use("/reCaptcha", validateReCaptcha_1.default);
-app.use("/feedback", feedback_1.default);
-app.use("/fileManagement", fileManagement_1.default);
-app.use("/filters", filters_1.default);
-app.use("/support", support_1.default);
-app.get("/", (_req, res) => {
+app.use("/software/api/users", auth_1.default);
+app.use("/software/api/pricing", pricing_1.default);
+app.use("/software/api/articles", articles_1.default);
+app.use("/software/api/payment", payment_1.default);
+app.use("/software/api/reCaptcha", validateReCaptcha_1.default);
+app.use("/software/api/feedback", feedback_1.default);
+app.use("/software/api/fileManagement", fileManagement_1.default);
+app.use("/software/api/filters", filters_1.default);
+app.use("/software/api/support", support_1.default);
+app.get("/software/api/", (_req, res) => {
     res.json({ message: "ok" });
 });
-
 app.listen(config_1.default.PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`APP LISTENING ON http://${config_1.default.HOST}:${config_1.default.PORT}`);
