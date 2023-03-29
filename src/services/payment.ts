@@ -87,7 +87,22 @@ const getPaymentsByClient = async (req: any, res: any) => {
 
 const createPreference = async (req: any, res: any) => {
   try {
-    const { type } = req.params.type
+    const { type } = req.params
+
+    const successURL =
+      type === "subscription"
+        ? "http://localhost:3000/payment?payment_status=success"
+        : "http://localhost:3000/profile?payment_done=success"
+
+    const failureURL =
+      type === "subscription"
+        ? "http://localhost:3000/payment?payment_status=failure"
+        : "http://localhost:3000/profile?payment_done=failure"
+
+    const pendingURL =
+      type === "subscription"
+        ? "http://localhost:3000/payment?payment_status=pending"
+        : "http://localhost:3000/profile?payment_done=pending"
 
     const preference: {
       items: any
@@ -102,18 +117,9 @@ const createPreference = async (req: any, res: any) => {
       items: req.body.item,
       payer: req.body.payer,
       back_urls: {
-        success:
-          type === "subscription"
-            ? "http://localhost:3000/payment?payment_status=success"
-            : "http://localhost:3000/profile?payment_done=success",
-        failure:
-          type === "subscription"
-            ? "http://localhost:3000/payment?payment_status=failure"
-            : "http://localhost:3000/profile?payment_done=failure",
-        pending:
-          type === "subscription"
-            ? "http://localhost:3000/payment?payment_status=pending"
-            : "http://localhost:3000/profile?payment_done=pending",
+        success: successURL,
+        failure: failureURL,
+        pending: pendingURL,
       },
       auto_return: "approved",
     }
