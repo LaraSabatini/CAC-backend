@@ -1,10 +1,17 @@
+import pool from "../database/index"
 import statusCodes from "../config/statusCodes"
 
 const paymentNotification = async (req: any, res: any) => {
   try {
-    // eslint-disable-next-line no-console
-    console.log(req.body)
-    res.status(200).send("OK")
+    const savePayment = await pool.query(
+      `INSERT INTO notifications (nombre) VALUES ('${JSON.stringify(
+        req.body,
+      )}');`,
+    )
+
+    if (savePayment) {
+      res.status(200).send("OK")
+    }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:

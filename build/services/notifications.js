@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = __importDefault(require("../database/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const paymentNotification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // eslint-disable-next-line no-console
-        console.log(req.body);
-        res.status(200).send("OK");
+        const savePayment = yield index_1.default.query(`INSERT INTO notifications (nombre) VALUES ('${JSON.stringify(req.body)}');`);
+        if (savePayment) {
+            res.status(200).send("OK");
+        }
     }
     catch (error) {
         return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
