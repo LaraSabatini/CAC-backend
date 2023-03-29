@@ -105,6 +105,7 @@ const createPreference = async (req: any, res: any) => {
         : "http://localhost:3000/profile?payment_done=pending"
 
     const preference: {
+      binary_mode: boolean
       items: any
       payer: any
       back_urls: {
@@ -113,7 +114,9 @@ const createPreference = async (req: any, res: any) => {
         pending: string
       }
       auto_return: "approved" | "all" | undefined
+      notification_url: string
     } = {
+      binary_mode: true,
       items: req.body.item,
       payer: req.body.payer,
       back_urls: {
@@ -122,6 +125,8 @@ const createPreference = async (req: any, res: any) => {
         pending: pendingURL,
       },
       auto_return: "approved",
+      notification_url:
+        "https://camarafederal.com.ar/software/api/notifications",
     }
 
     mercadopago.preferences
