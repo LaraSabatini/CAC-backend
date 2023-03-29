@@ -13,6 +13,7 @@ import feedbackRouter from "./routes/feedback"
 import fileManagementRouter from "./routes/fileManagement"
 import filtersRouter from "./routes/filters"
 import supportRouter from "./routes/support"
+import notificationsRouter from "./routes/notifications"
 
 const app = express()
 
@@ -39,6 +40,7 @@ app.use("/software/api/feedback", feedbackRouter)
 app.use("/software/api/fileManagement", fileManagementRouter)
 app.use("/software/api/filters", filtersRouter)
 app.use("/software/api/support", supportRouter)
+app.use("/software/api/notifications", notificationsRouter)
 
 app.get("/software/api/", (_req, res) => {
   res.json({ message: "ok" })
