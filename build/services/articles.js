@@ -54,7 +54,7 @@ const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { page } = req.params;
         const offset = pagination_1.getOffset(index_2.default.listPerPage, page);
-        const [articles] = yield index_1.default.query(`SELECT * FROM articles LIMIT ${offset},${index_2.default.listPerPage}`);
+        const [articles] = yield index_1.default.query(`SELECT * FROM articles ORDER BY id DESC LIMIT ${offset},${index_2.default.listPerPage}`);
         const [amountOfPages] = yield index_1.default.query(`SELECT COUNT(*) FROM articles`);
         if (articles) {
             const rowData = amountOfPages;

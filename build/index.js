@@ -17,6 +17,7 @@ const feedback_1 = __importDefault(require("./routes/feedback"));
 const fileManagement_1 = __importDefault(require("./routes/fileManagement"));
 const filters_1 = __importDefault(require("./routes/filters"));
 const support_1 = __importDefault(require("./routes/support"));
+const notifications_1 = __importDefault(require("./routes/notifications"));
 const app = express_1.default();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
@@ -37,6 +38,7 @@ app.use("/software/api/feedback", feedback_1.default);
 app.use("/software/api/fileManagement", fileManagement_1.default);
 app.use("/software/api/filters", filters_1.default);
 app.use("/software/api/support", support_1.default);
+app.use("/software/api/notifications", notifications_1.default);
 app.get("/software/api/", (_req, res) => {
     res.json({ message: "ok" });
 });

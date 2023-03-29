@@ -4,9 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const payment_1 = require("../services/payment");
+const notifications_1 = __importDefault(require("../services/notifications"));
 const router = express_1.default.Router();
-router.post("/register-in-db", payment_1.registerPaymentInDB);
-router.get("/search/id=:id", payment_1.getPaymentsByClient);
-router.post("/create-preference/type=:type", payment_1.createPreference);
+router.post("/", notifications_1.default);
 exports.default = router;

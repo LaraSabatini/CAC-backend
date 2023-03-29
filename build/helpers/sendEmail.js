@@ -28,7 +28,7 @@ const sendEmail = (to, subject, template, context, res) => {
     const transporter = nodemailer_1.default.createTransport(transportInfo);
     transporter.use("compile", nodemailer_express_handlebars_1.default(handlebarOptions));
     const mailOptions = {
-        from: '"Camara federal" <admin@camarafederal.com.ar>',
+        from: '"Camara federal" <info@vonceescalada.com>',
         to,
         subject,
         template,
@@ -36,7 +36,6 @@ const sendEmail = (to, subject, template, context, res) => {
     };
     transporter.sendMail(mailOptions, (error) => {
         if (error) {
-            console.log("error", error);
             return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
                 message: "Something went wrong",
                 status: statusCodes_1.default.INTERNAL_SERVER_ERROR,

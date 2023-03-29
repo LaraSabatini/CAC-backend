@@ -79,13 +79,23 @@ const getPaymentsByClient = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.getPaymentsByClient = getPaymentsByClient;
 const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { type } = req.params;
+        const successURL = type === "subscription"
+            ? "http://localhost:3000/payment?payment_status=success"
+            : "http://localhost:3000/profile?payment_done=success";
+        const failureURL = type === "subscription"
+            ? "http://localhost:3000/payment?payment_status=failure"
+            : "http://localhost:3000/profile?payment_done=failure";
+        const pendingURL = type === "subscription"
+            ? "http://localhost:3000/payment?payment_status=pending"
+            : "http://localhost:3000/profile?payment_done=pending";
         const preference = {
             items: req.body.item,
             payer: req.body.payer,
             back_urls: {
-                success: "http://localhost:3000/payment?payment_status=success",
-                failure: "http://localhost:3000/payment?payment_status=failure",
-                pending: "http://localhost:3000/payment?payment_status=pending",
+                success: successURL,
+                failure: failureURL,
+                pending: pendingURL,
             },
             auto_return: "approved",
         };

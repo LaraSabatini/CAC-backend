@@ -355,9 +355,8 @@ exports.restoreClientPasswordEmail = restoreClientPasswordEmail;
 const updateClientPaymentData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { plan, region, paymentDate, paymentExpireDate } = req.body;
+        const { plan, paymentDate, paymentExpireDate } = req.body;
         const [client] = yield index_1.default.query(`UPDATE clients SET plan = '${plan}',
-      region = '${region}',
       paymentDate = '${paymentDate}',
       paymentExpireDate = '${paymentExpireDate}'
       WHERE id = ${id}`);
