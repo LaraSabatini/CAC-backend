@@ -90,6 +90,7 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
             ? "http://localhost:3000/payment?payment_status=pending"
             : "http://localhost:3000/profile?payment_done=pending";
         const preference = {
+            binary_mode: true,
             items: req.body.item,
             payer: req.body.payer,
             back_urls: {
@@ -98,6 +99,7 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 pending: pendingURL,
             },
             auto_return: "approved",
+            notification_url: "https://camarafederal.com.ar/software/api/notifications",
         };
         mercadoPago_1.default.preferences
             .create(preference)
