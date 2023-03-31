@@ -1,16 +1,13 @@
 export interface DBPaymentInterface {
-  id: number
+  id?: number
   paymentId: string
-  collectionId: string
-  collectionStatus: string
-  status: string
-  paymentType: string
-  merchantOrderId: string
   preferenceId: string
-  pricePaid: number
   clientId: number
-  paymentExpireDate: string
+  mpId: string
   itemId: string
+  pricePaid: number
+  date: string
+  paymentExpireDate: string
 }
 
 export interface PreferenceInterface {
@@ -255,4 +252,12 @@ export interface MPPreferenceInterface {
   }
   total_amount: any
   last_updated: any
+}
+
+export interface PlanInterface {
+  id: number
+  name: string
+  description: string
+  price: number
+  time: number
 }

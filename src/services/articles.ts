@@ -83,6 +83,8 @@ const getArticles = async (req: any, res: any) => {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
+      error,
+      config,
     })
   }
 
