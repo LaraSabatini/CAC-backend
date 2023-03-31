@@ -107,8 +107,8 @@ const paymentNotification = (req, res) => __awaiter(void 0, void 0, void 0, func
     try {
         // get https://api.mercadopago.com/v1/payments/${data.id}
         // bearer: TEST-6602058583432591-010310-2f7ad3d408353f5b162ce3e24a7ddc17-1270310472
-        const { id, action, data, date_created, type, user_id } = req.body;
-        const savePayment = yield index_1.default.query(`INSERT INTO notifications (id, action, payment_id, date_created, type, user_id) VALUES ('${id}', '${action}', '${data.id}', '${date_created}', '${type}', '${user_id}');`);
+        const { action, data, date_created, type, user_id } = req.body;
+        const savePayment = yield index_1.default.query(`INSERT INTO notifications (action, payment_id, date_created, type, user_id) VALUES ('${action}', '${data.id}', '${date_created}', '${type}', '${user_id}');`);
         // const [client]: any = await pool.query(
         //   `SELECT id FROM clients WHERE mpId = '${user_id}'`,
         // )
@@ -150,7 +150,7 @@ const paymentNotification = (req, res) => __awaiter(void 0, void 0, void 0, func
         // )
         // if (!payment.length) {
         //   // a.
-        //   // enviar mail de registro
+        //   //   // enviar mail de registro
         //   // eslint-disable-next-line no-console
         //   console.log(client)
         //   // eslint-disable-next-line no-console
@@ -163,14 +163,15 @@ const paymentNotification = (req, res) => __awaiter(void 0, void 0, void 0, func
         if (savePayment) {
             res.status(200).send("OK");
         }
-        else {
-            res.status(200).send("OK");
-        }
+        //  else {
+        //   res.status(200).send("OK")
+        // }
     }
     catch (error) {
         return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
             message: "An error has occurred while registering the payment, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+            error,
         });
     }
     return {};
