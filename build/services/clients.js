@@ -18,7 +18,7 @@ const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const updatePaymentData = (id, subscription, plan, paymentDate, paymentExpireDate) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const [client] = yield index_1.default.query(`UPDATE clients SET subscription = '${subscription}', paymentDate = '${paymentDate}',
-      paymentExpireDate = '${paymentExpireDate}', plan = '${plan}'
+      paymentExpireDate = '${paymentExpireDate}', plan = '${plan}', accountBlocked = '0'
         WHERE id = ${id}`);
         if (client) {
             return {

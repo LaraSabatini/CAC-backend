@@ -100,10 +100,10 @@ const sendRegisterEmail = (body) => __awaiter(void 0, void 0, void 0, function* 
     const res = yield defaultPost_1.default(`https://camarafederal.com.ar/software/api/users/client/register_success_email`, body);
     return res;
 });
-const processPayment = (mpId, paymentId) => __awaiter(void 0, void 0, void 0, function* () {
+const processPayment = (email, paymentId) => __awaiter(void 0, void 0, void 0, function* () {
     let success = false;
     const password = generatePassword_1.default();
-    const [client] = yield index_1.default.query(`SELECT id, email, name FROM clients WHERE mpId LIKE '${mpId}'`);
+    const [client] = yield index_1.default.query(`SELECT id, email, name, mpId FROM clients WHERE email LIKE '${email}'`);
     const getPaymentDataCall = yield getPaymentData(paymentId);
     const [pricing] = yield index_1.default.query(`SELECT * FROM pricing`);
     const filterPlans = pricing.filter((plan) => plan.id ===
@@ -111,7 +111,7 @@ const processPayment = (mpId, paymentId) => __awaiter(void 0, void 0, void 0, fu
     const today = new Date();
     const updatePayment = yield clients_1.updatePaymentData(client[0].id, 1, parseInt(getPaymentDataCall.data.additional_info.items[0].id, 10), getToday_1.dateFormated, addMonths_1.default(filterPlans, today));
     // Checkear si enviar mail o no
-    const [payment] = yield index_1.default.query(`SELECT id FROM payments WHERE mpId = ${mpId}`);
+    const [payment] = yield index_1.default.query(`SELECT id FROM payments WHERE clientId = ${client[0].id}`);
     const registerPayment = yield index_1.default.query(`INSERT INTO payments (paymentId,
           clientId,
           mpId,
@@ -120,7 +120,7 @@ const processPayment = (mpId, paymentId) => __awaiter(void 0, void 0, void 0, fu
           date,
           paymentExpireDate) VALUES ('${paymentId}',
           '${client[0].id}',
-          '${mpId}',
+          '${client[0].mpId}',
           '${getPaymentDataCall.data.additional_info.items[0].id}',
           '${parseInt(getPaymentDataCall.data.additional_info.items[0].unit_price, 10)}',
           '${getToday_1.dateFormated}',
@@ -149,7 +149,8 @@ const paymentNotification = (req, res) => __awaiter(void 0, void 0, void 0, func
         // bearer: TEST-6602058583432591-010310-2f7ad3d408353f5b162ce3e24a7ddc17-1270310472
         const { action, data, date_created, type, user_id } = req.body;
         const savePayment = yield index_1.default.query(`INSERT INTO notifications (action, payment_id, date_created, type, user_id) VALUES ('${action}', '${data.id}', '${date_created}', '${type}', '${user_id}');`);
-        const processAdmission = yield processPayment(user_id, data.id);
+        const mpUser = yield getPaymentData(data.id);
+        const processAdmission = yield processPayment(mpUser.data.payer.email, data.id);
         if (savePayment && processAdmission) {
             res.status(200).send("OK");
         }
