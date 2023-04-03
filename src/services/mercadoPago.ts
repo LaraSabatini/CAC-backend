@@ -109,7 +109,7 @@ const sendRegisterEmail = async (body: {
   loginURL: string
 }) => {
   const res = await defaultPost(
-    `http://localhost:3001/software/api/users/client/register_success_email`,
+    `https://camarafederal.com.ar/software/api/users/client/register_success_email`,
     body,
   )
   return res
