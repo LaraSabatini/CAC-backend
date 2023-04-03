@@ -37,6 +37,5 @@ const updatePaymentData = (id, subscription, plan, paymentDate, paymentExpireDat
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         };
     }
-    return {};
 });
 exports.updatePaymentData = updatePaymentData;
