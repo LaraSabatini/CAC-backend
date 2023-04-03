@@ -31,8 +31,6 @@ const updatePaymentData = async (
       status: statusCodes.INTERNAL_SERVER_ERROR,
     }
   }
-
-  return {}
 }
 
 // eslint-disable-next-line import/prefer-default-export
