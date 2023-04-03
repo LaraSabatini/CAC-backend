@@ -97,7 +97,7 @@ const getPaymentData = (paymentId) => __awaiter(void 0, void 0, void 0, function
     return response;
 });
 const sendRegisterEmail = (body) => __awaiter(void 0, void 0, void 0, function* () {
-    const res = yield defaultPost_1.default(`http://localhost:3001/software/api/users/client/register_success_email`, body);
+    const res = yield defaultPost_1.default(`https://camarafederal.com.ar/software/api/users/client/register_success_email`, body);
     return res;
 });
 const processPayment = (mpId, paymentId) => __awaiter(void 0, void 0, void 0, function* () {
