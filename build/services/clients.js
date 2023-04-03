@@ -26,6 +26,10 @@ const updatePaymentData = (id, subscription, plan, paymentDate, paymentExpireDat
                 status: statusCodes_1.default.CREATED,
             };
         }
+        return {
+            message: "Client not found",
+            status: statusCodes_1.default.NOT_FOUND,
+        };
     }
     catch (error) {
         return {

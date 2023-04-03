@@ -17,16 +17,14 @@ const index_1 = __importDefault(require("../database/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const registerPaymentInDB = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { paymentId, preferenceId, clientId, mpId, itemId, pricePaid, date, paymentExpireDate, } = req.body;
+        const { paymentId, clientId, mpId, itemId, pricePaid, date, paymentExpireDate, } = req.body;
         const registerPayment = yield index_1.default.query(`INSERT INTO payments (paymentId,
-        preferenceId,
         clientId,
         mpId,
         itemId,
         pricePaid,
         date,
         paymentExpireDate) VALUES ('${paymentId}',
-        '${preferenceId}',
         '${clientId}',
         '${mpId}',
         '${itemId}',
