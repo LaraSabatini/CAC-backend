@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from "axios"
 import mercadopago from "../helpers/mercadoPago"
@@ -7,13 +8,14 @@ import config from "../config/index"
 import returnPaymentResponse from "../helpers/returnPaymentResponse"
 import {
   PreferenceInterface,
-  // PlanInterface,
-  // DBPaymentInterface,
+  PlanInterface,
 } from "../interfaces/payment/Payment"
-// import addMonths from "../helpers/addMonths"
-// import { updatePaymentData } from "./clients"
-// import { dateFormated } from "../helpers/getToday"
-// import defaultPost from "../helpers/defaultPost"
+import addMonths from "../helpers/addMonths"
+import generatePassword from "../helpers/generatePassword"
+import { encrypt } from "../helpers/handleBcrypt"
+import { updatePaymentData } from "./clients"
+import { dateFormated } from "../helpers/getToday"
+import defaultPost from "../helpers/defaultPost"
 
 const createPreference = async (req: any, res: any) => {
   try {
@@ -83,29 +85,114 @@ const getClientId = async (req: any, res: any) => {
   }
 }
 
-// const getPaymentData = async (paymentId: string) => {
-//   const headers = {
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${config.MP_ACCESS_TOKEN_TEST}`,
-//     },
-//   }
+const getPaymentData = async (paymentId: string) => {
+  const headers = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.MP_ACCESS_TOKEN_TEST}`,
+    },
+  }
 
-//   const response: any = await axios.get(
-//     `https://api.mercadopago.com/v1/payments/${paymentId}`,
-//     headers,
-//   )
+  const response: any = await axios.get(
+    `https://api.mercadopago.com/v1/payments/${paymentId}`,
+    headers,
+  )
 
-//   return response
-// }
+  return response
+}
 
-// const registerPaymentInDB = async (payment: DBPaymentInterface) => {
-//   const res = await defaultPost(
-//     "http://localhost:3001/software/api/payment/register-in-db",
-//     payment,
-//   )
-//   return res
-// }
+const sendRegisterEmail = async (body: {
+  recipients: string[]
+  name: string
+  item: string
+  password: string
+  loginURL: string
+}) => {
+  const res = await defaultPost(
+    `http://localhost:3001/software/api/users/client/register_success_email`,
+    body,
+  )
+  return res
+}
+
+const processPayment = async (mpId: string, paymentId: string) => {
+  let success: boolean = false
+
+  const password = generatePassword()
+
+  const [client]: any = await pool.query(
+    `SELECT id, email, name FROM clients WHERE mpId LIKE '${mpId}'`,
+  )
+
+  const getPaymentDataCall = await getPaymentData(paymentId)
+
+  const [pricing]: any = await pool.query(`SELECT * FROM pricing`)
+
+  const filterPlans = pricing.filter(
+    (plan: PlanInterface) =>
+      plan.id ===
+      parseInt(getPaymentDataCall.data.additional_info.items[0].id, 10),
+  )[0].time
+
+  const today = new Date()
+
+  const updatePayment = await updatePaymentData(
+    client[0].id,
+    1,
+    parseInt(getPaymentDataCall.data.additional_info.items[0].id, 10),
+    dateFormated,
+    addMonths(filterPlans, today),
+  )
+
+  // Checkear si enviar mail o no
+  const [payment]: any = await pool.query(
+    `SELECT id FROM payments WHERE mpId = ${mpId}`,
+  )
+
+  const registerPayment = await pool.query(
+    `INSERT INTO payments (paymentId,
+          clientId,
+          mpId,
+          itemId,
+          pricePaid,
+          date,
+          paymentExpireDate) VALUES ('${paymentId}',
+          '${client[0].id}',
+          '${mpId}',
+          '${getPaymentDataCall.data.additional_info.items[0].id}',
+          '${parseInt(
+            getPaymentDataCall.data.additional_info.items[0].unit_price,
+            10,
+          )}',
+          '${dateFormated}',
+          '${addMonths(filterPlans, today)}'
+          );`,
+  )
+
+  success = registerPayment.length && updatePayment.status === 201
+
+  if (!payment.length) {
+    const passwordHash = await encrypt(password)
+
+    const [changePassword]: any = await pool.query(
+      `UPDATE clients SET password = '${passwordHash}' WHERE id = ${client[0].id}`,
+    )
+
+    if (changePassword) {
+      const sendEmail = await sendRegisterEmail({
+        recipients: [client[0].email],
+        name: client[0].name,
+        item: getPaymentDataCall.data.additional_info.items[0].title,
+        password,
+        loginURL: "http://localhost:3000/login?user=client",
+      })
+
+      success = sendEmail.status === 201
+    }
+  }
+
+  return success
+}
 
 const paymentNotification = async (req: any, res: any) => {
   try {
@@ -118,73 +205,11 @@ const paymentNotification = async (req: any, res: any) => {
       `INSERT INTO notifications (action, payment_id, date_created, type, user_id) VALUES ('${action}', '${data.id}', '${date_created}', '${type}', '${user_id}');`,
     )
 
-    // const [client]: any = await pool.query(
-    //   `SELECT id FROM clients WHERE mpId = '${user_id}'`,
-    // )
+    const processAdmission = await processPayment(user_id, data.id)
 
-    // // 1. traer datos de la compra
-    // const getPaymentDataCall = await getPaymentData(data.id)
-
-    // // 2. traer datos de planes
-    // const [pricing]: any = await pool.query(`SELECT * FROM pricing`)
-
-    // // 3. encontrar el plan al que se anoto
-    // const filterPlans = pricing.filter(
-    //   (plan: PlanInterface) =>
-    //     plan.id === getPaymentDataCall.additional_info.items[0].id,
-    // )[0].time
-
-    // // 4. Actualizar datos de subscripcion en el perfil con esos datos
-    // const today = new Date()
-
-    // const updatePayment = await updatePaymentData(
-    //   user_id,
-    //   1,
-    //   getPaymentDataCall.additional_info.items[0].id,
-    //   dateFormated,
-    //   addMonths(filterPlans, today),
-    // )
-
-    // // eslint-disable-next-line no-console
-    // console.log("updatePayment", updatePayment)
-
-    // // 5. crear pago nuevo
-    // const registerPaymentInDBCall = await registerPaymentInDB({
-    //   paymentId: data.id,
-    //   preferenceId: "",
-    //   clientId: client[0].id,
-    //   mpId: user_id,
-    //   itemId: getPaymentDataCall.additional_info.items[0].id,
-    //   pricePaid: getPaymentDataCall.additional_info.items[0].unit_price,
-    //   date: dateFormated,
-    //   paymentExpireDate: addMonths(filterPlans, today),
-    // })
-    // // eslint-disable-next-line no-console
-    // console.log("registerPaymentInDBCall", registerPaymentInDBCall)
-
-    // const [payment]: any = await pool.query(
-    //   `SELECT id FROM payments WHERE mpId = ${user_id}`,
-    // )
-
-    // if (!payment.length) {
-    //   // a.
-    //   //   // enviar mail de registro
-    //   // eslint-disable-next-line no-console
-    //   console.log(client)
-    //   // eslint-disable-next-line no-console
-    //   console.log("ENVIAR MAIL")
-    // } else {
-    //   // b.
-    //   // eslint-disable-next-line no-console
-    //   console.log("NADA")
-    // }
-
-    if (savePayment) {
+    if (savePayment && processAdmission) {
       res.status(200).send("OK")
     }
-    //  else {
-    //   res.status(200).send("OK")
-    // }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       message:

@@ -21,6 +21,10 @@ const updatePaymentData = async (
         status: statusCodes.CREATED,
       }
     }
+    return {
+      message: "Client not found",
+      status: statusCodes.NOT_FOUND,
+    }
   } catch (error) {
     return {
       message: "Something went wrong",

@@ -6,7 +6,6 @@ const registerPaymentInDB = async (req: any, res: any) => {
   try {
     const {
       paymentId,
-      preferenceId,
       clientId,
       mpId,
       itemId,
@@ -17,14 +16,12 @@ const registerPaymentInDB = async (req: any, res: any) => {
 
     const registerPayment = await pool.query(
       `INSERT INTO payments (paymentId,
-        preferenceId,
         clientId,
         mpId,
         itemId,
         pricePaid,
         date,
         paymentExpireDate) VALUES ('${paymentId}',
-        '${preferenceId}',
         '${clientId}',
         '${mpId}',
         '${itemId}',
