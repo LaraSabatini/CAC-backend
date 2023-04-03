@@ -115,13 +115,13 @@ const sendRegisterEmail = async (body: {
   return res
 }
 
-const processPayment = async (mpId: string, paymentId: string) => {
+const processPayment = async (email: string, paymentId: string) => {
   let success: boolean = false
 
   const password = generatePassword()
 
   const [client]: any = await pool.query(
-    `SELECT id, email, name FROM clients WHERE mpId LIKE '${mpId}'`,
+    `SELECT id, email, name, mpId FROM clients WHERE email LIKE '${email}'`,
   )
 
   const getPaymentDataCall = await getPaymentData(paymentId)
@@ -146,7 +146,7 @@ const processPayment = async (mpId: string, paymentId: string) => {
 
   // Checkear si enviar mail o no
   const [payment]: any = await pool.query(
-    `SELECT id FROM payments WHERE mpId = ${mpId}`,
+    `SELECT id FROM payments WHERE clientId = ${client[0].id}`,
   )
 
   const registerPayment = await pool.query(
@@ -158,7 +158,7 @@ const processPayment = async (mpId: string, paymentId: string) => {
           date,
           paymentExpireDate) VALUES ('${paymentId}',
           '${client[0].id}',
-          '${mpId}',
+          '${client[0].mpId}',
           '${getPaymentDataCall.data.additional_info.items[0].id}',
           '${parseInt(
             getPaymentDataCall.data.additional_info.items[0].unit_price,
@@ -205,7 +205,9 @@ const paymentNotification = async (req: any, res: any) => {
       `INSERT INTO notifications (action, payment_id, date_created, type, user_id) VALUES ('${action}', '${data.id}', '${date_created}', '${type}', '${user_id}');`,
     )
 
-    const processAdmission = await processPayment(user_id, data.id)
+    const mpUser = await getPaymentData(data.id)
+
+    const processAdmission = await processPayment(mpUser.data.payer.email, data.id)
 
     if (savePayment && processAdmission) {
       res.status(200).send("OK")

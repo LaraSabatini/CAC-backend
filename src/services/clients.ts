@@ -11,7 +11,7 @@ const updatePaymentData = async (
   try {
     const [client]: any = await pool.query(
       `UPDATE clients SET subscription = '${subscription}', paymentDate = '${paymentDate}',
-      paymentExpireDate = '${paymentExpireDate}', plan = '${plan}'
+      paymentExpireDate = '${paymentExpireDate}', plan = '${plan}', accountBlocked = '0'
         WHERE id = ${id}`,
     )
 
