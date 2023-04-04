@@ -69,7 +69,7 @@ const getClientId = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const headers = {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${index_2.default.MP_ACCESS_TOKEN_TEST}`,
+                Authorization: `Bearer ${index_2.default.MP_ACCESS_TOKEN_AS_SELLER}`,
             },
         };
         const response = yield axios_1.default.get(`https://api.mercadopago.com/checkout/preferences/${preferenceId}`, headers);
@@ -90,7 +90,7 @@ const getPaymentData = (paymentId) => __awaiter(void 0, void 0, void 0, function
     const headers = {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${index_2.default.MP_ACCESS_TOKEN_TEST}`,
+            Authorization: `Bearer ${index_2.default.MP_ACCESS_TOKEN_AS_SELLER}`,
         },
     };
     const response = yield axios_1.default.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, headers);
