@@ -8,6 +8,7 @@ import {
   getRelatedArticles,
   filterArticles,
   searchArticles,
+  editAmountsSaved
 } from "../services/articles"
 
 const router = express.Router()
@@ -30,5 +31,7 @@ router.get(
 router.put("/id=:id", editArticle)
 
 router.delete("/id=:id", deleteArticle)
+
+router.put("/saved/id=:id&action=:action&prevAmount=:prevAmount", editAmountsSaved)
 
 export default router

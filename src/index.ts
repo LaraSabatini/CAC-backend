@@ -14,6 +14,7 @@ import fileManagementRouter from "./routes/fileManagement"
 import filtersRouter from "./routes/filters"
 import supportRouter from "./routes/support"
 import mercadoPagoRouter from "./routes/mercadoPago"
+import clientsRouter from './routes/clients'
 
 const app = express()
 
@@ -41,6 +42,8 @@ app.use("/software/api/fileManagement", fileManagementRouter)
 app.use("/software/api/filters", filtersRouter)
 app.use("/software/api/support", supportRouter)
 app.use("/software/api/mercadoPago", mercadoPagoRouter)
+app.use("/software/api/clients", clientsRouter)
+
 
 app.get("/software/api/", (_req, res) => {
   res.json({ message: "ok" })

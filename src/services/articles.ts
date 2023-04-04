@@ -271,6 +271,36 @@ const searchArticles = async (req: any, res: any) => {
   return {}
 }
 
+const editAmountsSaved = async (req: any, res: any) => {
+  try {
+    const { id, action, prevAmount } = req.params
+   
+
+    const removeAmount = parseInt(prevAmount, 10) - 1 === -1 ? 0 : parseInt(prevAmount, 10) - 1
+
+    const newAmount = action === "add" ? parseInt(prevAmount, 10) + 1 : removeAmount
+
+    const [article]: any = await pool.query(
+      `UPDATE articles SET saved = '${newAmount}' WHERE id = ${id}`,
+    )
+
+    if (article) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Edited saved times successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   createArticle,
   getArticles,
@@ -280,4 +310,5 @@ export {
   getRelatedArticles,
   filterArticles,
   searchArticles,
+  editAmountsSaved
 }
