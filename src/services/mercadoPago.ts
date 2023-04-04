@@ -196,20 +196,14 @@ const processPayment = async (email: string, paymentId: string) => {
 
 const paymentNotification = async (req: any, res: any) => {
   try {
-    // get https://api.mercadopago.com/v1/payments/${data.id}
-    // bearer: TEST-6602058583432591-010310-2f7ad3d408353f5b162ce3e24a7ddc17-1270310472
 
-    const { action, data, date_created, type, user_id } = req.body
-
-    const savePayment = await pool.query(
-      `INSERT INTO notifications (action, payment_id, date_created, type, user_id) VALUES ('${action}', '${data.id}', '${date_created}', '${type}', '${user_id}');`,
-    )
+    const { data } = req.body
 
     const mpUser = await getPaymentData(data.id)
 
     const processAdmission = await processPayment(mpUser.data.payer.email, data.id)
 
-    if (savePayment && processAdmission) {
+    if (processAdmission) {
       res.status(200).send("OK")
     }
   } catch (error) {
