@@ -22,7 +22,7 @@ const app = express_1.default();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(cors_1.default({
-    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000"],
+    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000", "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app"],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
 }));
 app.use(express_fileupload_1.default());
