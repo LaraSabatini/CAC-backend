@@ -64,7 +64,7 @@ const getClientId = async (req: any, res: any) => {
     const headers = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${config.MP_ACCESS_TOKEN_TEST}`,
+        Authorization: `Bearer ${config.MP_ACCESS_TOKEN_AS_SELLER}`,
       },
     }
 
@@ -89,7 +89,7 @@ const getPaymentData = async (paymentId: string) => {
   const headers = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${config.MP_ACCESS_TOKEN_TEST}`,
+      Authorization: `Bearer ${config.MP_ACCESS_TOKEN_AS_SELLER}`,
     },
   }
 
