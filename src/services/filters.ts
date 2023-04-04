@@ -1,10 +1,9 @@
 import pool from "../database/index"
 import statusCodes from "../config/statusCodes"
 
-const getFilters = async (req: any, res: any) => {
+const getFilters = async (_req: any, res: any) => {
   try {
-    const { type } = req.params
-    const [filters] = await pool.query(`SELECT * FROM ${type}`)
+    const [filters] = await pool.query(`SELECT * FROM themes`)
 
     if (filters) {
       return res
@@ -23,10 +22,10 @@ const getFilters = async (req: any, res: any) => {
 
 const createFilter = async (req: any, res: any) => {
   try {
-    const { value, type } = req.body
+    const { value } = req.body
 
     const insertFilter = await pool.query(
-      `INSERT INTO ${type} (value) VALUES ('${value}');`,
+      `INSERT INTO themes (value) VALUES ('${value}');`,
     )
 
     if (insertFilter) {
@@ -48,9 +47,9 @@ const createFilter = async (req: any, res: any) => {
 
 const deleteFilter = async (req: any, res: any) => {
   try {
-    const { id, type } = req.params
+    const { id } = req.params
 
-    const [filter]: any = await pool.query(`DELETE FROM ${type} WHERE id=${id}`)
+    const [filter]: any = await pool.query(`DELETE FROM themes WHERE id=${id}`)
 
     if (filter) {
       res.status(statusCodes.CREATED)
