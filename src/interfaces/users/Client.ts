@@ -8,12 +8,13 @@ interface Client extends User {
   phoneAreaCode: string
   phoneNumber: string
   preferences: number[]
-  subscription: 1 | 0
+  subscription: 1 | 0 | null
   dateCreated: string
-  plan: number
+  plan: number | null
   region: number
-  paymentDate: string
-  paymentExpireDate: string
+  paymentDate: string | null
+  paymentExpireDate: string | null
+  mpId: string
 }
 
 export default Client

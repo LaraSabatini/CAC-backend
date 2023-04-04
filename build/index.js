@@ -17,11 +17,12 @@ const feedback_1 = __importDefault(require("./routes/feedback"));
 const fileManagement_1 = __importDefault(require("./routes/fileManagement"));
 const filters_1 = __importDefault(require("./routes/filters"));
 const support_1 = __importDefault(require("./routes/support"));
+const mercadoPago_1 = __importDefault(require("./routes/mercadoPago"));
 const app = express_1.default();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(cors_1.default({
-    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000"],
+    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000", "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app"],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
 }));
 app.use(express_fileupload_1.default());
@@ -37,6 +38,7 @@ app.use("/software/api/feedback", feedback_1.default);
 app.use("/software/api/fileManagement", fileManagement_1.default);
 app.use("/software/api/filters", filters_1.default);
 app.use("/software/api/support", support_1.default);
+app.use("/software/api/mercadoPago", mercadoPago_1.default);
 app.get("/software/api/", (_req, res) => {
     res.json({ message: "ok" });
 });

@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dateFormated = exports.month = exports.day = exports.year = exports.today = void 0;
+exports.today = new Date();
+const getDay = exports.today.getDate();
+const getMonth = exports.today.getMonth() + 1;
+exports.year = exports.today.getFullYear();
+exports.day = getDay > 9 ? getDay : `0${getDay}`;
+exports.month = getMonth > 9 ? getMonth : `0${getMonth}`;
+exports.dateFormated = `${exports.day}-${exports.month}-${exports.year}`;

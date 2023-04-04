@@ -20,7 +20,7 @@ const pagination_1 = require("../helpers/pagination");
 const handleBcrypt_1 = require("../helpers/handleBcrypt");
 const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, lastName, email, password, identificationType, identificationNumber, phoneAreaCode, phoneNumber, preferences, accountBlocked, subscription, dateCreated, loginAttempts, firstLogin, plan, region, paymentDate, paymentExpireDate, } = req.body;
+        const { name, lastName, email, password, identificationType, identificationNumber, phoneAreaCode, phoneNumber, preferences, accountBlocked, subscription, dateCreated, loginAttempts, firstLogin, plan, region, paymentDate, paymentExpireDate, mpId, } = req.body;
         const passwordHash = yield handleBcrypt_1.encrypt(password);
         const [registerClient] = yield index_1.default.query(`INSERT INTO clients (name,
         lastName,
@@ -39,7 +39,8 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         plan,
         region,
         paymentDate,
-        paymentExpireDate
+        paymentExpireDate,
+        mpId
         ) VALUES ('${name}',
         '${lastName}',
         '${email}',
@@ -57,7 +58,8 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         '${plan}',
         '${region}',
         '${paymentDate}',
-        '${paymentExpireDate}'
+        '${paymentExpireDate}',
+        '${mpId}'
         );`);
         if (registerClient) {
             const rowData = registerClient;
@@ -84,7 +86,9 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (client.length && client[0].accountBlocked === 0) {
             const checkPassword = yield handleBcrypt_1.compare(password, client[0].password);
             const rowClientData = client;
-            const loginAttempts = rowClientData[0].loginAttempts + 1;
+            const loginAttempts = rowClientData[0].loginAttempts !== null
+                ? rowClientData[0].loginAttempts + 1
+                : 1 + 1;
             if (checkPassword) {
                 yield index_1.default.query(`UPDATE clients SET loginAttempts = '0' WHERE id = ${rowClientData[0].id}`);
                 res.status(statusCodes_1.default.CREATED).json({
@@ -107,14 +111,18 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                     }
                 }
                 else {
-                    const [updateLoginAttempts] = yield index_1.default.query(`UPDATE clients SET loginAttempts = '${rowClientData[0].loginAttempts + 1}' WHERE id = ${rowClientData[0].id}`);
+                    const [updateLoginAttempts] = yield index_1.default.query(`UPDATE clients SET loginAttempts = '${rowClientData[0].loginAttempts !== null
+                        ? rowClientData[0].loginAttempts + 1
+                        : 1}' WHERE id = ${rowClientData[0].id}`);
                     const rowClientUpdatedData = updateLoginAttempts;
                     res.status(statusCodes_1.default.UNAUTHORIZED);
                     res.send({
                         message: "Wrong password or email",
                         status: statusCodes_1.default.UNAUTHORIZED,
                         loginAttempts: rowClientUpdatedData.affectedRows === 1 &&
-                            rowClientData[0].loginAttempts + 1,
+                            rowClientData[0].loginAttempts !== null
+                            ? rowClientData[0].loginAttempts + 1
+                            : 1,
                     });
                 }
             }
@@ -355,9 +363,8 @@ exports.restoreClientPasswordEmail = restoreClientPasswordEmail;
 const updateClientPaymentData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { plan, region, paymentDate, paymentExpireDate } = req.body;
+        const { plan, paymentDate, paymentExpireDate } = req.body;
         const [client] = yield index_1.default.query(`UPDATE clients SET plan = '${plan}',
-      region = '${region}',
       paymentDate = '${paymentDate}',
       paymentExpireDate = '${paymentExpireDate}'
       WHERE id = ${id}`);

@@ -27,6 +27,7 @@ const clientRegister = async (req: any, res: any) => {
       region,
       paymentDate,
       paymentExpireDate,
+      mpId,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -48,7 +49,8 @@ const clientRegister = async (req: any, res: any) => {
         plan,
         region,
         paymentDate,
-        paymentExpireDate
+        paymentExpireDate,
+        mpId
         ) VALUES ('${name}',
         '${lastName}',
         '${email}',
@@ -66,7 +68,8 @@ const clientRegister = async (req: any, res: any) => {
         '${plan}',
         '${region}',
         '${paymentDate}',
-        '${paymentExpireDate}'
+        '${paymentExpireDate}',
+        '${mpId}'
         );`,
     )
 
@@ -100,7 +103,10 @@ const clientLogin = async (req: any, res: any) => {
     if (client.length && client[0].accountBlocked === 0) {
       const checkPassword = await compare(password, client[0].password)
       const rowClientData: Client[] = client as Client[]
-      const loginAttempts = rowClientData[0].loginAttempts + 1
+      const loginAttempts =
+        rowClientData[0].loginAttempts !== null
+          ? rowClientData[0].loginAttempts + 1
+          : 1 + 1
 
       if (checkPassword) {
         await pool.query(
@@ -132,7 +138,9 @@ const clientLogin = async (req: any, res: any) => {
         } else {
           const [updateLoginAttempts]: any = await pool.query(
             `UPDATE clients SET loginAttempts = '${
-              rowClientData[0].loginAttempts + 1
+              rowClientData[0].loginAttempts !== null
+                ? rowClientData[0].loginAttempts + 1
+                : 1
             }' WHERE id = ${rowClientData[0].id}`,
           )
 
@@ -145,7 +153,9 @@ const clientLogin = async (req: any, res: any) => {
             status: statusCodes.UNAUTHORIZED,
             loginAttempts:
               rowClientUpdatedData.affectedRows === 1 &&
-              rowClientData[0].loginAttempts + 1,
+              rowClientData[0].loginAttempts !== null
+                ? rowClientData[0].loginAttempts + 1
+                : 1,
           })
         }
       } else {
@@ -439,11 +449,10 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
 const updateClientPaymentData = async (req: any, res: any) => {
   try {
     const { id } = req.params
-    const { plan, region, paymentDate, paymentExpireDate } = req.body
+    const { plan, paymentDate, paymentExpireDate } = req.body
 
     const [client]: any = await pool.query(
       `UPDATE clients SET plan = '${plan}',
-      region = '${region}',
       paymentDate = '${paymentDate}',
       paymentExpireDate = '${paymentExpireDate}'
       WHERE id = ${id}`,

@@ -1,46 +1,34 @@
-import mercadopago from "../helpers/mercadoPago"
 import pool from "../database/index"
 import statusCodes from "../config/statusCodes"
-import { PaymentInterface } from "../interfaces/payment/Payment"
+import { DBPaymentInterface } from "../interfaces/payment/Payment"
 
 const registerPaymentInDB = async (req: any, res: any) => {
   try {
     const {
       paymentId,
-      collectionId,
-      collectionStatus,
-      status,
-      paymentType,
-      merchantOrderId,
-      preferenceId,
-      pricePaid,
       clientId,
-      paymentExpireDate,
+      mpId,
       itemId,
-    }: PaymentInterface = req.body
+      pricePaid,
+      date,
+      paymentExpireDate,
+    }: DBPaymentInterface = req.body
 
     const registerPayment = await pool.query(
       `INSERT INTO payments (paymentId,
-        collectionId,
-        collectionStatus,
-        status,
-        paymentType,
-        merchantOrderId,
-        preferenceId,
-        pricePaid,
         clientId,
-        paymentExpireDate,
-        itemId) VALUES ('${paymentId}',
-        '${collectionId}',
-        '${collectionStatus}',
-        '${status}',
-        '${paymentType}',
-        '${merchantOrderId}',
-        '${preferenceId}',
-        '${pricePaid}',
+        mpId,
+        itemId,
+        pricePaid,
+        date,
+        paymentExpireDate) VALUES ('${paymentId}',
         '${clientId}',
+        '${mpId}',
+        '${itemId}',
+        '${pricePaid}',
+        '${date}',
         '${paymentExpireDate}',
-        '${itemId}');`,
+        );`,
     )
 
     if (registerPayment) {
@@ -85,52 +73,4 @@ const getPaymentsByClient = async (req: any, res: any) => {
   return {}
 }
 
-const createPreference = async (req: any, res: any) => {
-  try {
-    const preference: {
-      items: any
-      payer: any
-      back_urls: {
-        success: string
-        failure: string
-        pending: string
-      }
-      auto_return: "approved" | "all" | undefined
-    } = {
-      items: req.body.item,
-      payer: req.body.payer,
-      back_urls: {
-        success: "http://localhost:3000/payment?payment_status=success",
-        failure: "http://localhost:3000/payment?payment_status=failure",
-        pending: "http://localhost:3000/payment?payment_status=pending",
-      },
-      auto_return: "approved",
-    }
-
-    mercadopago.preferences
-      .create(preference)
-      .then((response: any) => {
-        res.json({
-          id: response.body.id,
-          status: statusCodes.CREATED,
-        })
-      })
-      .catch((error: any) => {
-        res.status(statusCodes.NOT_FOUND)
-        res.send({
-          error,
-          message: "Couldn't process payment",
-          status: statusCodes.NOT_FOUND,
-        })
-      })
-  } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
-      message:
-        "An error has occurred while getting the preference, please try again.",
-    })
-  }
-
-  return {}
-}
-
-export { registerPaymentInDB, getPaymentsByClient, createPreference }
+export { registerPaymentInDB, getPaymentsByClient }

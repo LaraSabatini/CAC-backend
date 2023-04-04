@@ -12,34 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPreference = exports.getPaymentsByClient = exports.registerPaymentInDB = void 0;
-const mercadoPago_1 = __importDefault(require("../helpers/mercadoPago"));
+exports.getPaymentsByClient = exports.registerPaymentInDB = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const registerPaymentInDB = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { paymentId, collectionId, collectionStatus, status, paymentType, merchantOrderId, preferenceId, pricePaid, clientId, paymentExpireDate, itemId, } = req.body;
+        const { paymentId, clientId, mpId, itemId, pricePaid, date, paymentExpireDate, } = req.body;
         const registerPayment = yield index_1.default.query(`INSERT INTO payments (paymentId,
-        collectionId,
-        collectionStatus,
-        status,
-        paymentType,
-        merchantOrderId,
-        preferenceId,
-        pricePaid,
         clientId,
-        paymentExpireDate,
-        itemId) VALUES ('${paymentId}',
-        '${collectionId}',
-        '${collectionStatus}',
-        '${status}',
-        '${paymentType}',
-        '${merchantOrderId}',
-        '${preferenceId}',
-        '${pricePaid}',
+        mpId,
+        itemId,
+        pricePaid,
+        date,
+        paymentExpireDate) VALUES ('${paymentId}',
         '${clientId}',
+        '${mpId}',
+        '${itemId}',
+        '${pricePaid}',
+        '${date}',
         '${paymentExpireDate}',
-        '${itemId}');`);
+        );`);
         if (registerPayment) {
             res.status(statusCodes_1.default.CREATED).json({
                 message: "Payment registered successfully",
@@ -77,40 +69,3 @@ const getPaymentsByClient = (req, res) => __awaiter(void 0, void 0, void 0, func
     return {};
 });
 exports.getPaymentsByClient = getPaymentsByClient;
-const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const preference = {
-            items: req.body.item,
-            payer: req.body.payer,
-            back_urls: {
-                success: "http://localhost:3000/payment?payment_status=success",
-                failure: "http://localhost:3000/payment?payment_status=failure",
-                pending: "http://localhost:3000/payment?payment_status=pending",
-            },
-            auto_return: "approved",
-        };
-        mercadoPago_1.default.preferences
-            .create(preference)
-            .then((response) => {
-            res.json({
-                id: response.body.id,
-                status: statusCodes_1.default.CREATED,
-            });
-        })
-            .catch((error) => {
-            res.status(statusCodes_1.default.NOT_FOUND);
-            res.send({
-                error,
-                message: "Couldn't process payment",
-                status: statusCodes_1.default.NOT_FOUND,
-            });
-        });
-    }
-    catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
-            message: "An error has occurred while getting the preference, please try again.",
-        });
-    }
-    return {};
-});
-exports.createPreference = createPreference;
