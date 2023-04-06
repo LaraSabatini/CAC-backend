@@ -67,7 +67,6 @@ const getSavedArticles = async (req: any, res: any) => {
 
     const [articleList]: any = await pool.query(`SELECT savedArticles FROM clients WHERE id = ${id}`)
 
-    console.log(articleList)
 
     if (articleList) {
       return res
