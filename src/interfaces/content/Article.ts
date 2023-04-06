@@ -27,6 +27,7 @@ interface ArticleInterface {
   article: string
   attachments: JSON // string[]
   author: string
+  saved: number
 }
 
 export default ArticleInterface
