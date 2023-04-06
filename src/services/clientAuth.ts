@@ -28,6 +28,7 @@ const clientRegister = async (req: any, res: any) => {
       paymentDate,
       paymentExpireDate,
       mpId,
+      realEstateRegistration
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -50,7 +51,8 @@ const clientRegister = async (req: any, res: any) => {
         region,
         paymentDate,
         paymentExpireDate,
-        mpId
+        mpId,
+        realEstateRegistration
         ) VALUES ('${name}',
         '${lastName}',
         '${email}',
@@ -69,7 +71,8 @@ const clientRegister = async (req: any, res: any) => {
         '${region}',
         '${paymentDate}',
         '${paymentExpireDate}',
-        '${mpId}'
+        '${mpId}',
+        '${realEstateRegistration}'
         );`,
     )
 
@@ -340,6 +343,7 @@ const editClientData = async (req: any, res: any) => {
       phoneNumber,
       firstLogin,
       region,
+      realEstateRegistration
     } = req.body
 
     const [client]: any = await pool.query(
@@ -347,7 +351,8 @@ const editClientData = async (req: any, res: any) => {
       phoneAreaCode = '${phoneAreaCode}',
       phoneNumber = '${phoneNumber}',
       firstLogin = '${firstLogin}',
-      region = '${region}'
+      region = '${region}',
+      realEstateRegistration = '${realEstateRegistration}'
       WHERE id = ${id}`,
     )
 

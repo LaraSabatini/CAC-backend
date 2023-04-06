@@ -16,6 +16,7 @@ interface Client extends User {
   paymentExpireDate: string | null
   mpId: string
   savedArticles: number[]
+  realEstateRegistration: string
 }
 
 export default Client
