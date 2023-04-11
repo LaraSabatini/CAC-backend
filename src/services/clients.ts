@@ -168,4 +168,30 @@ const filterClients = async (req: any, res: any) => {
   return {}
 }
 
-export { updatePaymentData, editSavedArticles, getSavedArticles, createComment, getCommentsByClient, filterClients }
+const searchClients = async (req: any, res: any) => {
+  console.log(req.body)
+  try {
+    const { search } = req.body
+
+    const [clients]: any[] = await pool.query(
+      `SELECT * FROM clients WHERE name LIKE '%${search}%' OR lastName LIKE '%${search}%' OR email LIKE '%${search}%' OR identificationNumber LIKE '%${search}%' OR realEstateRegistration LIKE '%${search}%'`,
+    )
+
+
+    if (clients) {
+      return res.status(statusCodes.OK).json({
+        data: clients,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export { updatePaymentData, editSavedArticles, getSavedArticles, createComment, getCommentsByClient, filterClients, searchClients }
