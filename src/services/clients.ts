@@ -83,4 +83,115 @@ const getSavedArticles = async (req: any, res: any) => {
   return {}
 }
 
-export { updatePaymentData, editSavedArticles, getSavedArticles }
+const createComment = async (req: any, res: any) => {
+  try {
+    const { clientId, comment, author, date, hour } = req.body
+
+    const createComment = await pool.query(
+      `INSERT INTO comments (clientId, comment, author, date, hour) VALUES ('${clientId}', '${comment}', '${author}', '${date}', '${hour}');`,
+    )
+
+    if (createComment) {
+      return res.status(statusCodes.CREATED).json({
+        message: "Comment created successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message:
+        "An error has occurred while saving the comment, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getCommentsByClient = async (req: any, res: any) => {
+  try {
+    const {id} = req.params
+
+    const [comments]: any = await pool.query(`SELECT * FROM comments WHERE clientId = ${id} ORDER BY id DESC`)
+
+    if (comments) {
+      return res
+        .status(statusCodes.OK)
+        .json({ data: comments, status: statusCodes.OK })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const filterClients = async (req: any, res: any) => {
+  try {
+    const { regionIds, planIds } = req.body
+
+    let clients: any[] = []
+
+    for (let i = 0; i < regionIds.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const [results]: any[] = await pool.query(
+        `SELECT * FROM clients WHERE region LIKE '%${regionIds[i]}%'`,
+      )
+
+      clients = [...clients, ...results]
+    }
+
+    for (let i = 0; i < planIds.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const [results]: any[] = await pool.query(
+        `SELECT * FROM clients WHERE plan LIKE '%${planIds[i]}%'`,
+      )
+      clients = [...clients, ...results]
+    }
+
+    if (clients) {
+      return res.status(statusCodes.OK).json({
+        data: clients,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const searchClients = async (req: any, res: any) => {
+  console.log(req.body)
+  try {
+    const { search } = req.body
+
+    const [clients]: any[] = await pool.query(
+      `SELECT * FROM clients WHERE name LIKE '%${search}%' OR lastName LIKE '%${search}%' OR email LIKE '%${search}%' OR identificationNumber LIKE '%${search}%' OR realEstateRegistration LIKE '%${search}%'`,
+    )
+
+
+    if (clients) {
+      return res.status(statusCodes.OK).json({
+        data: clients,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export { updatePaymentData, editSavedArticles, getSavedArticles, createComment, getCommentsByClient, filterClients, searchClients }
