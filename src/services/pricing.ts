@@ -98,4 +98,23 @@ const deletePricing = async (req: any, res: any) => {
   return {}
 }
 
-export { createPricing, editPricing, deletePricing, getPricing }
+const getPricingAsFilter = async (_req: any, res: any) => {
+  try {
+    const [pricing] = await pool.query(`SELECT id, name FROM pricing`)
+
+    if (pricing) {
+      return res
+        .status(statusCodes.OK)
+        .json({ data: pricing, status: statusCodes.OK })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export { createPricing, editPricing, deletePricing, getPricing, getPricingAsFilter }

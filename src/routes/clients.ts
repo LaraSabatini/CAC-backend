@@ -1,6 +1,6 @@
 import express from "express"
 import { editSavedArticles, getSavedArticles,
-    createComment, getCommentsByClient
+    createComment, getCommentsByClient, filterClients
 } from "../services/clients"
 
 const router = express.Router()
@@ -12,5 +12,7 @@ router.get("/saved-articles/id=:id", getSavedArticles)
 router.post("/comments", createComment)
 
 router.get("/comments/id=:id", getCommentsByClient)
+
+router.post('/filter', filterClients)
 
 export default router
