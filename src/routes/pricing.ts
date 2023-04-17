@@ -4,7 +4,7 @@ import {
   editPricing,
   deletePricing,
   getPricing,
-  getPricingAsFilter
+  getPricingAsFilter,
 } from "../services/pricing"
 
 const router = express.Router()

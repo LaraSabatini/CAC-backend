@@ -14,5 +14,4 @@ const unblockRequest = async (req: any, res: any) => {
   )
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export { unblockRequest }

@@ -28,7 +28,7 @@ const clientRegister = async (req: any, res: any) => {
       paymentDate,
       paymentExpireDate,
       mpId,
-      realEstateRegistration
+      realEstateRegistration,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -203,7 +203,7 @@ const clientChangePassword = async (req: any, res: any) => {
       `SELECT * FROM clients WHERE id = '${id}'`,
     )
 
-    let checkPassword: boolean = false
+    let checkPassword = false
 
     if (encrypted === "true") {
       checkPassword = password === client[0].password
@@ -343,7 +343,7 @@ const editClientData = async (req: any, res: any) => {
       phoneNumber,
       firstLogin,
       region,
-      realEstateRegistration
+      realEstateRegistration,
     } = req.body
 
     const [client]: any = await pool.query(

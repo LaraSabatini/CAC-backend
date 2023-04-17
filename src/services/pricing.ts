@@ -117,4 +117,10 @@ const getPricingAsFilter = async (_req: any, res: any) => {
   return {}
 }
 
-export { createPricing, editPricing, deletePricing, getPricing, getPricingAsFilter }
+export {
+  createPricing,
+  editPricing,
+  deletePricing,
+  getPricing,
+  getPricingAsFilter,
+}

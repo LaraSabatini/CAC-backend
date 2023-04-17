@@ -135,7 +135,7 @@ const adminChangePassword = async (req: any, res: any) => {
     const [admin]: any = await pool.query(
       `SELECT * FROM admin WHERE id = '${id}'`,
     )
-    let checkPassword: boolean = false
+    let checkPassword = false
 
     const passwordHash = await encrypt(newPassword)
 

@@ -14,8 +14,8 @@ import fileManagementRouter from "./routes/fileManagement"
 import filtersRouter from "./routes/filters"
 import supportRouter from "./routes/support"
 import mercadoPagoRouter from "./routes/mercadoPago"
-import clientsRouter from './routes/clients'
-import trainingsRouter from './routes/trainings'
+import clientsRouter from "./routes/clients"
+import trainingsRouter from "./routes/trainings"
 
 const app = express()
 
@@ -23,7 +23,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(
   cors({
-    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000", "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app"],
+    origin: [
+      "https://cac-frontend-qa.vercel.app",
+      "http://localhost:3000",
+      "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   }),
 )

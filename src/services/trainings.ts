@@ -59,55 +59,55 @@ const createTraining = async (req: any, res: any) => {
 }
 
 const deleteTraining = async (req: any, res: any) => {
-    try {
-      const { id } = req.params
-  
-      const [training]: any = await pool.query(
-        `DELETE FROM trainings WHERE id=${id}`,
-      )
-  
-      if (training) {
-        res.status(statusCodes.OK)
-        res.send({
-          message: "Training deleted successfully",
-          status: statusCodes.OK,
-        })
-      }
-    } catch (error) {
-      return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
-        message:
-          "An error has occurred while deleting the training, please try again.",
-        status: statusCodes.INTERNAL_SERVER_ERROR,
+  try {
+    const { id } = req.params
+
+    const [training]: any = await pool.query(
+      `DELETE FROM trainings WHERE id=${id}`,
+    )
+
+    if (training) {
+      res.status(statusCodes.OK)
+      res.send({
+        message: "Training deleted successfully",
+        status: statusCodes.OK,
       })
     }
-  
-    return {}
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message:
+        "An error has occurred while deleting the training, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
   }
 
-  const editTraining = async (req: any, res: any) => {
-    try {
-        const {id} = req.params
-      const { youtubeURL, title, author, description, theme, region } = req.body
-  
-      const editTraining = await pool.query(
-        `UPDATE trainings SET youtubeURL = '${youtubeURL}', title = '${title}', author = '${author}', description = '${description}', theme = '${theme}', region = '${region}' WHERE id = ${id}`,
-      )
-  
-      if (editTraining) {
-        return res.status(statusCodes.CREATED).json({
-          message: "Training edited successfully",
-          status: statusCodes.CREATED,
-        })
-      }
-    } catch (error) {
-      return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
-        message:
-          "An error has occurred while creating the training, please try again.",
-        status: statusCodes.INTERNAL_SERVER_ERROR,
+  return {}
+}
+
+const editTraining = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const { youtubeURL, title, author, description, theme, region } = req.body
+
+    const editTraining = await pool.query(
+      `UPDATE trainings SET youtubeURL = '${youtubeURL}', title = '${title}', author = '${author}', description = '${description}', theme = '${theme}', region = '${region}' WHERE id = ${id}`,
+    )
+
+    if (editTraining) {
+      return res.status(statusCodes.CREATED).json({
+        message: "Training edited successfully",
+        status: statusCodes.CREATED,
       })
     }
-  
-    return {}
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message:
+        "An error has occurred while creating the training, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
   }
+
+  return {}
+}
 
 export { getTrainings, createTraining, deleteTraining, editTraining }

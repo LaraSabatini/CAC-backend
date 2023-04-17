@@ -274,11 +274,12 @@ const searchArticles = async (req: any, res: any) => {
 const editAmountsSaved = async (req: any, res: any) => {
   try {
     const { id, action, prevAmount } = req.params
-   
 
-    const removeAmount = parseInt(prevAmount, 10) - 1 === -1 ? 0 : parseInt(prevAmount, 10) - 1
+    const removeAmount =
+      parseInt(prevAmount, 10) - 1 === -1 ? 0 : parseInt(prevAmount, 10) - 1
 
-    const newAmount = action === "add" ? parseInt(prevAmount, 10) + 1 : removeAmount
+    const newAmount =
+      action === "add" ? parseInt(prevAmount, 10) + 1 : removeAmount
 
     const [article]: any = await pool.query(
       `UPDATE articles SET saved = '${newAmount}' WHERE id = ${id}`,
@@ -310,5 +311,5 @@ export {
   getRelatedArticles,
   filterArticles,
   searchArticles,
-  editAmountsSaved
+  editAmountsSaved,
 }
