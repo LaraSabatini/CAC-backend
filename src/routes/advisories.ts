@@ -26,7 +26,7 @@ router.get("/events/month=:month", getEvents)
 router.put("/events", signUpToEvent)
 
 router.post("/availability", createAvailavility)
-router.get("/availability?id=:id", getAvailavility)
+router.get("/availability/adminId=:adminId", getAvailavility)
 router.put("/availability", editAvailavility)
 
 export default router

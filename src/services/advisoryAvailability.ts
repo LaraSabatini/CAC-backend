@@ -29,8 +29,8 @@ const getAvailavility = async (req: any, res: any) => {
   try {
     const { adminId } = req.params
 
-    const request = await pool.query(
-      `SELECT * FROM advisoryAvailability WHERE adminId = '${adminId}';`,
+    const [request] = await pool.query(
+      `SELECT * FROM advisoryAvailability WHERE adminId LIKE '${adminId}';`,
     )
     if (request) {
       return res.status(statusCodes.OK).json({
