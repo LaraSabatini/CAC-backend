@@ -6,6 +6,7 @@ import {
   getCommentsByClient,
   filterClients,
   searchClients,
+  getClientsEmails,
 } from "../services/clients"
 
 const router = express.Router()
@@ -17,6 +18,8 @@ router.get("/saved-articles/id=:id", getSavedArticles)
 router.post("/comments", createComment)
 
 router.get("/comments/id=:id", getCommentsByClient)
+
+router.get("/emails", getClientsEmails)
 
 router.post("/filter", filterClients)
 

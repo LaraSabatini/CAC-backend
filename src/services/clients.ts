@@ -198,6 +198,28 @@ const searchClients = async (req: any, res: any) => {
   return {}
 }
 
+const getClientsEmails = async (_req: any, res: any) => {
+  try {
+    const [emails]: any = await pool.query(
+      `SELECT email FROM clients WHERE subscription = 1`,
+    )
+
+    if (emails) {
+      return res.status(statusCodes.OK).json({
+        data: emails,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   updatePaymentData,
   editSavedArticles,
@@ -206,4 +228,5 @@ export {
   getCommentsByClient,
   filterClients,
   searchClients,
+  getClientsEmails,
 }
