@@ -277,6 +277,56 @@ const signUpToEvent = async (req: any, res: any) => {
   return {}
 }
 
+const deletePublicEvent = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [event]: any = await pool.query(
+      `DELETE FROM publicEvents WHERE id= '${id}'`,
+    )
+
+    if (event) {
+      res.status(statusCodes.OK)
+      res.send({
+        message: "Event deleted successfully",
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Internal error",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const editPublicEvent = async (req: any, res: any) => {
+  try {
+    const { id, description, title, date, hour, month } = req.body
+
+    const [event]: any = await pool.query(
+      `UPDATE publicEvents SET title = '${title}', description = '${description}', date = '${date}', hour = '${hour}', month = '${month}' WHERE id= '${id}'`,
+    )
+
+    if (event) {
+      res.status(statusCodes.CREATED)
+      res.send({
+        message: "Event edited successfully",
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Internal error",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   requestAdvisory,
   changeAdvisoryStatus,
@@ -285,4 +335,6 @@ export {
   getEvents,
   signUpToEvent,
   getAdvisoriesByMonth,
+  deletePublicEvent,
+  editPublicEvent,
 }

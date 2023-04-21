@@ -7,12 +7,14 @@ import {
   getEvents,
   signUpToEvent,
   getAdvisoriesByMonth,
+  deletePublicEvent,
+  editPublicEvent,
 } from "../services/advisories"
 import {
   createAvailavility,
   getAvailavility,
   editAvailavility,
-} from "../services//advisoryAvailability"
+} from "../services/advisoryAvailability"
 
 const router = express.Router()
 
@@ -24,6 +26,8 @@ router.get("/month=:month&id=:id&type=:type", getAdvisoriesByMonth)
 router.post("/events", createEvent)
 router.get("/events/month=:month", getEvents)
 router.put("/events", signUpToEvent)
+router.put("/events/edit", editPublicEvent)
+router.delete("/events/id=:id", deletePublicEvent)
 
 router.post("/availability", createAvailavility)
 router.get("/availability/adminId=:adminId", getAvailavility)
