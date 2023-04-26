@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const filters_1 = require("../services/filters");
+const trainings_1 = require("../services/trainings");
 const router = express_1.default.Router();
-router.post("/", filters_1.createFilter);
-router.get("/", filters_1.getFilters);
-router.delete("/id=:id", filters_1.deleteFilter);
+router.get("/page=:page", trainings_1.getTrainings);
+router.post("/", trainings_1.createTraining);
+router.delete("/id=:id", trainings_1.deleteTraining);
+router.put("/id=:id", trainings_1.editTraining);
 exports.default = router;

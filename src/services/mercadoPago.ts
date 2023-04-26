@@ -116,7 +116,7 @@ const sendRegisterEmail = async (body: {
 }
 
 const processPayment = async (email: string, paymentId: string) => {
-  let success: boolean = false
+  let success = false
 
   const password = generatePassword()
 
@@ -196,12 +196,14 @@ const processPayment = async (email: string, paymentId: string) => {
 
 const paymentNotification = async (req: any, res: any) => {
   try {
-
     const { data } = req.body
 
     const mpUser = await getPaymentData(data.id)
 
-    const processAdmission = await processPayment(mpUser.data.payer.email, data.id)
+    const processAdmission = await processPayment(
+      mpUser.data.payer.email,
+      data.id,
+    )
 
     if (processAdmission) {
       res.status(200).send("OK")

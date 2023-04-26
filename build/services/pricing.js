@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPricing = exports.deletePricing = exports.editPricing = exports.createPricing = void 0;
+exports.getPricingAsFilter = exports.getPricing = exports.deletePricing = exports.editPricing = exports.createPricing = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const getPricing = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -96,3 +96,21 @@ const deletePricing = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     return {};
 });
 exports.deletePricing = deletePricing;
+const getPricingAsFilter = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const [pricing] = yield index_1.default.query(`SELECT id, name FROM pricing`);
+        if (pricing) {
+            return res
+                .status(statusCodes_1.default.OK)
+                .json({ data: pricing, status: statusCodes_1.default.OK });
+        }
+    }
+    catch (error) {
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+            message: "An error has occurred, please try again.",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+        });
+    }
+    return {};
+});
+exports.getPricingAsFilter = getPricingAsFilter;

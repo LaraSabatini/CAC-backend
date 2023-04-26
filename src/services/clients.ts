@@ -36,9 +36,7 @@ const updatePaymentData = async (
 const editSavedArticles = async (req: any, res: any) => {
   try {
     const { id } = req.params
-    const {
-      savedArticles
-    } = req.body
+    const { savedArticles } = req.body
 
     const [client]: any = await pool.query(
       `UPDATE clients SET savedArticles = '${savedArticles}' WHERE id = ${id}`,
@@ -63,15 +61,20 @@ const editSavedArticles = async (req: any, res: any) => {
 
 const getSavedArticles = async (req: any, res: any) => {
   try {
-    const {id} = req.params
+    const { id } = req.params
 
-    const [articleList]: any = await pool.query(`SELECT savedArticles FROM clients WHERE id = ${id}`)
-
+    const [articleList]: any = await pool.query(
+      `SELECT savedArticles FROM clients WHERE id = ${id}`,
+    )
 
     if (articleList) {
-      return res
-        .status(statusCodes.OK)
-        .json({ data: articleList[0].savedArticles === '' ? '[]' : articleList[0].savedArticles, status: statusCodes.OK })
+      return res.status(statusCodes.OK).json({
+        data:
+          articleList[0].savedArticles === ""
+            ? "[]"
+            : articleList[0].savedArticles,
+        status: statusCodes.OK,
+      })
     }
   } catch (error) {
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
@@ -110,9 +113,11 @@ const createComment = async (req: any, res: any) => {
 
 const getCommentsByClient = async (req: any, res: any) => {
   try {
-    const {id} = req.params
+    const { id } = req.params
 
-    const [comments]: any = await pool.query(`SELECT * FROM comments WHERE clientId = ${id} ORDER BY id DESC`)
+    const [comments]: any = await pool.query(
+      `SELECT * FROM comments WHERE clientId = ${id} ORDER BY id DESC`,
+    )
 
     if (comments) {
       return res
@@ -177,7 +182,6 @@ const searchClients = async (req: any, res: any) => {
       `SELECT * FROM clients WHERE name LIKE '%${search}%' OR lastName LIKE '%${search}%' OR email LIKE '%${search}%' OR identificationNumber LIKE '%${search}%' OR realEstateRegistration LIKE '%${search}%'`,
     )
 
-
     if (clients) {
       return res.status(statusCodes.OK).json({
         data: clients,
@@ -194,4 +198,60 @@ const searchClients = async (req: any, res: any) => {
   return {}
 }
 
-export { updatePaymentData, editSavedArticles, getSavedArticles, createComment, getCommentsByClient, filterClients, searchClients }
+const getClientsEmails = async (_req: any, res: any) => {
+  try {
+    const [emails]: any = await pool.query(
+      `SELECT email FROM clients WHERE subscription = 1`,
+    )
+
+    if (emails) {
+      return res.status(statusCodes.OK).json({
+        data: emails,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getClientEmail = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [email]: any = await pool.query(
+      `SELECT email FROM clients WHERE id = '${id}'`,
+    )
+
+    if (email) {
+      return res.status(statusCodes.OK).json({
+        data: email,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export {
+  updatePaymentData,
+  editSavedArticles,
+  getSavedArticles,
+  createComment,
+  getCommentsByClient,
+  filterClients,
+  searchClients,
+  getClientsEmails,
+  getClientEmail,
+}

@@ -10,4 +10,5 @@ router.post("/", pricing_1.createPricing);
 router.put("/id=:id", pricing_1.editPricing);
 router.delete("/id=:id", pricing_1.deletePricing);
 router.get("/", pricing_1.getPricing);
+router.get("/filters", pricing_1.getPricingAsFilter);
 exports.default = router;

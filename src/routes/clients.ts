@@ -1,6 +1,13 @@
 import express from "express"
-import { editSavedArticles, getSavedArticles,
-    createComment, getCommentsByClient, filterClients, searchClients
+import {
+  editSavedArticles,
+  getSavedArticles,
+  createComment,
+  getCommentsByClient,
+  filterClients,
+  searchClients,
+  getClientsEmails,
+  getClientEmail,
 } from "../services/clients"
 
 const router = express.Router()
@@ -13,8 +20,12 @@ router.post("/comments", createComment)
 
 router.get("/comments/id=:id", getCommentsByClient)
 
-router.post('/filter', filterClients)
+router.get("/emails", getClientsEmails)
 
-router.post('/search', searchClients)
+router.get("/email/id=:id", getClientEmail)
+
+router.post("/filter", filterClients)
+
+router.post("/search", searchClients)
 
 export default router

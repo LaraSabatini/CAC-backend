@@ -9,3 +9,5 @@ node_modules/*
 */node_modules/*
 !.eslintrc
 build/*
+.eslintrc.js
+jest.config.js

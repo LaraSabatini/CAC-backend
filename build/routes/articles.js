@@ -14,4 +14,5 @@ router.get("/id=:id", articles_1.getArticleById);
 router.get("/related-articles/themeId=:themeId&regionId=:regionId", articles_1.getRelatedArticles);
 router.put("/id=:id", articles_1.editArticle);
 router.delete("/id=:id", articles_1.deleteArticle);
+router.put("/saved/id=:id&action=:action&prevAmount=:prevAmount", articles_1.editAmountsSaved);
 exports.default = router;

@@ -14,7 +14,10 @@ import fileManagementRouter from "./routes/fileManagement"
 import filtersRouter from "./routes/filters"
 import supportRouter from "./routes/support"
 import mercadoPagoRouter from "./routes/mercadoPago"
-import clientsRouter from './routes/clients'
+import clientsRouter from "./routes/clients"
+import trainingsRouter from "./routes/trainings"
+import advisoriesRouter from "./routes/advisories"
+import adminsRouter from "./routes/admins"
 
 const app = express()
 
@@ -22,7 +25,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(
   cors({
-    origin: ["https://cac-frontend-qa.vercel.app", "http://localhost:3000", "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app"],
+    origin: [
+      "https://cac-frontend-qa.vercel.app",
+      "http://localhost:3000",
+      "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   }),
 )
@@ -43,7 +50,9 @@ app.use("/software/api/filters", filtersRouter)
 app.use("/software/api/support", supportRouter)
 app.use("/software/api/mercadoPago", mercadoPagoRouter)
 app.use("/software/api/clients", clientsRouter)
-
+app.use("/software/api/trainings", trainingsRouter)
+app.use("/software/api/advisories", advisoriesRouter)
+app.use("/software/api/admins", adminsRouter)
 
 app.get("/software/api/", (_req, res) => {
   res.json({ message: "ok" })
