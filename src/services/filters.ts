@@ -11,7 +11,7 @@ const getFilters = async (_req: any, res: any) => {
         .json({ data: filters, status: statusCodes.OK })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -35,7 +35,7 @@ const createFilter = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message:
         "An error has occurred while creating the filter, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
@@ -59,7 +59,7 @@ const deleteFilter = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message:
         "An error has occurred while deleting the filter, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
