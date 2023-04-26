@@ -11,7 +11,7 @@ const getPricing = async (_req: any, res: any) => {
         .json({ data: pricing, status: statusCodes.OK })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -108,7 +108,7 @@ const getPricingAsFilter = async (_req: any, res: any) => {
         .json({ data: pricing, status: statusCodes.OK })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })

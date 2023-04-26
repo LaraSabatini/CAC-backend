@@ -50,7 +50,7 @@ const editSavedArticles = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -77,7 +77,7 @@ const getSavedArticles = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -125,7 +125,7 @@ const getCommentsByClient = async (req: any, res: any) => {
         .json({ data: comments, status: statusCodes.OK })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -164,7 +164,7 @@ const filterClients = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -189,7 +189,7 @@ const searchClients = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -211,7 +211,7 @@ const getClientsEmails = async (_req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -235,7 +235,7 @@ const getClientEmail = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })

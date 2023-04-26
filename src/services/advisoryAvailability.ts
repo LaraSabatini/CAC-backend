@@ -16,7 +16,7 @@ const createAvailavility = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -39,7 +39,7 @@ const getAvailavility = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -63,7 +63,7 @@ const editAvailavility = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -82,7 +82,7 @@ const getAllAvailavility = async (_req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })

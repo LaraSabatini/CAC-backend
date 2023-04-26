@@ -19,7 +19,7 @@ const createFeedback = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message:
         "An error has occurred while saving the feedback, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
@@ -54,7 +54,7 @@ const getFeedback = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })

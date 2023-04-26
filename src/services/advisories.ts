@@ -50,7 +50,7 @@ const requestAdvisory = async (req: any, res: any) => {
       )
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -79,7 +79,7 @@ const getAdvisoriesByMonth = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -125,7 +125,7 @@ const requestAdvisoryChange = async (req: any, res: any) => {
       )
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -187,7 +187,7 @@ const changeAdvisoryStatus = async (req: any, res: any) => {
       )
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -220,7 +220,7 @@ const createEvent = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -244,7 +244,7 @@ const getEvents = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -268,7 +268,7 @@ const signUpToEvent = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -293,7 +293,7 @@ const deletePublicEvent = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -318,7 +318,7 @@ const editPublicEvent = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -342,7 +342,7 @@ const getAdvisoriesByMonthAndAdmin = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -366,7 +366,7 @@ const getAllAdvisoriesByMonth = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -390,7 +390,7 @@ const getAdvisoryById = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Internal error",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
