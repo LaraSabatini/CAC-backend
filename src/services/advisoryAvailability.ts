@@ -72,4 +72,28 @@ const editAvailavility = async (req: any, res: any) => {
   return {}
 }
 
-export { createAvailavility, getAvailavility, editAvailavility }
+const getAllAvailavility = async (_req: any, res: any) => {
+  try {
+    const [request] = await pool.query(`SELECT * FROM advisoryAvailability;`)
+    if (request) {
+      return res.status(statusCodes.OK).json({
+        data: request,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Internal error",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+export {
+  createAvailavility,
+  getAvailavility,
+  editAvailavility,
+  getAllAvailavility,
+}

@@ -137,10 +137,10 @@ const requestAdvisoryChange = async (req: any, res: any) => {
 const changeAdvisoryStatus = async (req: any, res: any) => {
   try {
     const { from } = req.params
-    const { id, status, adminId, clientId } = req.body
+    const { id, status, adminId, clientId, googleCalendarEvent } = req.body
 
     const [advisory]: any = await pool.query(
-      `UPDATE advisories SET status = '${status}' WHERE id = ${id}`,
+      `UPDATE advisories SET status = '${status}', eventURL = '${googleCalendarEvent}' WHERE id = ${id}`,
     )
 
     if (advisory) {
@@ -175,8 +175,8 @@ const changeAdvisoryStatus = async (req: any, res: any) => {
           butttonURL:
             status === "confirmed"
               ? {
-                  text: "agendar en calendar",
-                  url: "",
+                  text: "Ver evento en Google Calendar",
+                  url: googleCalendarEvent,
                 }
               : {
                   text: "ir al soft",
@@ -327,6 +327,78 @@ const editPublicEvent = async (req: any, res: any) => {
   return {}
 }
 
+const getAdvisoriesByMonthAndAdmin = async (req: any, res: any) => {
+  try {
+    const { month, adminId } = req.params
+
+    const [request] = await pool.query(
+      `SELECT * FROM advisories WHERE month = '${month}' AND adminId = '${adminId}';`,
+    )
+
+    if (request) {
+      return res.status(statusCodes.OK).json({
+        data: request,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Internal error",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getAllAdvisoriesByMonth = async (req: any, res: any) => {
+  try {
+    const { month } = req.params
+
+    const [request] = await pool.query(
+      `SELECT * FROM advisories WHERE month = '${month}';`,
+    )
+
+    if (request) {
+      return res.status(statusCodes.CREATED).json({
+        data: request,
+        status: statusCodes.CREATED,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Internal error",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getAdvisoryById = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+
+    const [request] = await pool.query(
+      `SELECT * FROM advisories WHERE id = '${id}';`,
+    )
+
+    if (request) {
+      return res.status(statusCodes.OK).json({
+        data: request,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Internal error",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
 export {
   requestAdvisory,
   changeAdvisoryStatus,
@@ -337,4 +409,7 @@ export {
   getAdvisoriesByMonth,
   deletePublicEvent,
   editPublicEvent,
+  getAdvisoriesByMonthAndAdmin,
+  getAllAdvisoriesByMonth,
+  getAdvisoryById,
 }

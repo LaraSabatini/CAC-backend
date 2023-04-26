@@ -17,6 +17,7 @@ import mercadoPagoRouter from "./routes/mercadoPago"
 import clientsRouter from "./routes/clients"
 import trainingsRouter from "./routes/trainings"
 import advisoriesRouter from "./routes/advisories"
+import adminsRouter from "./routes/admins"
 
 const app = express()
 
@@ -51,6 +52,7 @@ app.use("/software/api/mercadoPago", mercadoPagoRouter)
 app.use("/software/api/clients", clientsRouter)
 app.use("/software/api/trainings", trainingsRouter)
 app.use("/software/api/advisories", advisoriesRouter)
+app.use("/software/api/admins", adminsRouter)
 
 app.get("/software/api/", (_req, res) => {
   res.json({ message: "ok" })
