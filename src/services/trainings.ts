@@ -18,7 +18,7 @@ const getTrainings = async (req: any, res: any) => {
         .json({ data: trainings, status: statusCodes.OK })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -48,7 +48,7 @@ const createTraining = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message:
         "An error has occurred while creating the training, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
@@ -74,7 +74,7 @@ const deleteTraining = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message:
         "An error has occurred while deleting the training, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
@@ -100,7 +100,7 @@ const editTraining = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message:
         "An error has occurred while creating the training, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
