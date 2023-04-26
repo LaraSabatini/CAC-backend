@@ -86,7 +86,7 @@ const clientRegister = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message:
         "An error has occurred while registering the client, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
@@ -187,8 +187,11 @@ const clientLogin = async (req: any, res: any) => {
       }
     }
   } catch (error) {
-    res.status(statusCodes.NOT_FOUND)
-    res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
+    res.status(statusCodes.OK)
+    res.send({
+      error: "User not found",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
   }
 
   return {}
@@ -225,7 +228,7 @@ const clientChangePassword = async (req: any, res: any) => {
           status: statusCodes.CREATED,
         })
       } else {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes.CREATED).json({
           message: "Something went wrong",
           status: statusCodes.INTERNAL_SERVER_ERROR,
         })
@@ -237,7 +240,7 @@ const clientChangePassword = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -269,7 +272,7 @@ const validateEmail = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -297,7 +300,7 @@ const validateIdentificationNumber = async (req: any, res: any) => {
       res.send({ message: "Can create user", info: "available", status: 200 })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -321,7 +324,7 @@ const getClientData = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -364,7 +367,7 @@ const editClientData = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -393,7 +396,7 @@ const blockAccount = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -442,7 +445,7 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
     res.status(statusCodes.NOT_FOUND)
     res.send({ message: "User does not exist", status: statusCodes.NOT_FOUND })
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -506,7 +509,7 @@ const getClientDataForTable = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })

@@ -117,7 +117,7 @@ const adminLogin = async (req: any, res: any) => {
       }
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
@@ -157,7 +157,7 @@ const adminChangePassword = async (req: any, res: any) => {
           status: statusCodes.CREATED,
         })
       } else {
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes.CREATED).json({
           message: "Something went wrong",
           status: statusCodes.INTERNAL_SERVER_ERROR,
         })
@@ -169,7 +169,7 @@ const adminChangePassword = async (req: any, res: any) => {
       })
     }
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.CREATED).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
