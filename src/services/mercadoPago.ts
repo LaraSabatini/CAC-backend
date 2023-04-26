@@ -78,7 +78,7 @@ const getClientId = async (req: any, res: any) => {
       status: statusCodes.OK,
     })
   } catch {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "An error has occurred, please try again.",
       status: statusCodes.INTERNAL_SERVER_ERROR,
     })
