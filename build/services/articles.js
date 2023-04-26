@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchArticles = exports.filterArticles = exports.getRelatedArticles = exports.getArticleById = exports.deleteArticle = exports.editArticle = exports.getArticles = exports.createArticle = void 0;
+exports.editAmountsSaved = exports.searchArticles = exports.filterArticles = exports.getRelatedArticles = exports.getArticleById = exports.deleteArticle = exports.editArticle = exports.getArticles = exports.createArticle = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const index_2 = __importDefault(require("../config/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
@@ -214,3 +214,26 @@ const searchArticles = (req, res) => __awaiter(void 0, void 0, void 0, function*
     return {};
 });
 exports.searchArticles = searchArticles;
+const editAmountsSaved = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, action, prevAmount } = req.params;
+        const removeAmount = parseInt(prevAmount, 10) - 1 === -1 ? 0 : parseInt(prevAmount, 10) - 1;
+        const newAmount = action === "add" ? parseInt(prevAmount, 10) + 1 : removeAmount;
+        const [article] = yield index_1.default.query(`UPDATE articles SET saved = '${newAmount}' WHERE id = ${id}`);
+        if (article) {
+            res.status(statusCodes_1.default.CREATED);
+            res.send({
+                message: "Edited saved times successfully",
+                status: statusCodes_1.default.CREATED,
+            });
+        }
+    }
+    catch (error) {
+        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+            message: "Something went wrong",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+        });
+    }
+    return {};
+});
+exports.editAmountsSaved = editAmountsSaved;

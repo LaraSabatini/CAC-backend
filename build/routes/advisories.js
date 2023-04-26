@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const advisories_1 = require("../services/advisories");
+const advisoryAvailability_1 = require("../services/advisoryAvailability");
+const router = express_1.default.Router();
+router.post("/", advisories_1.requestAdvisory);
+router.put("/status/from=:from", advisories_1.changeAdvisoryStatus);
+router.put("/change/from=:from", advisories_1.requestAdvisoryChange);
+router.get("/month=:month&id=:id&type=:type", advisories_1.getAdvisoriesByMonth);
+router.get("/month-admin/month=:month&adminId=:adminId", advisories_1.getAdvisoriesByMonthAndAdmin);
+router.get("/month/month=:month", advisories_1.getAllAdvisoriesByMonth);
+router.get("/advisory-data/id=:id", advisories_1.getAdvisoryById);
+router.post("/events", advisories_1.createEvent);
+router.get("/events/month=:month", advisories_1.getEvents);
+router.put("/events", advisories_1.signUpToEvent);
+router.put("/events/edit", advisories_1.editPublicEvent);
+router.delete("/events/id=:id", advisories_1.deletePublicEvent);
+router.post("/availability", advisoryAvailability_1.createAvailavility);
+router.get("/availability/adminId=:adminId", advisoryAvailability_1.getAvailavility);
+router.put("/availability", advisoryAvailability_1.editAvailavility);
+router.get("/all-availability", advisoryAvailability_1.getAllAvailavility);
+exports.default = router;

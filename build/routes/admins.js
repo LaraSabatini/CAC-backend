@@ -4,9 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const filters_1 = require("../services/filters");
+const admins_1 = require("../services/admins");
 const router = express_1.default.Router();
-router.post("/", filters_1.createFilter);
-router.get("/", filters_1.getFilters);
-router.delete("/id=:id", filters_1.deleteFilter);
+router.get("/", admins_1.getAdmins);
 exports.default = router;

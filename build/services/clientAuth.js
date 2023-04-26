@@ -20,7 +20,7 @@ const pagination_1 = require("../helpers/pagination");
 const handleBcrypt_1 = require("../helpers/handleBcrypt");
 const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, lastName, email, password, identificationType, identificationNumber, phoneAreaCode, phoneNumber, preferences, accountBlocked, subscription, dateCreated, loginAttempts, firstLogin, plan, region, paymentDate, paymentExpireDate, mpId, } = req.body;
+        const { name, lastName, email, password, identificationType, identificationNumber, phoneAreaCode, phoneNumber, preferences, accountBlocked, subscription, dateCreated, loginAttempts, firstLogin, plan, region, paymentDate, paymentExpireDate, mpId, realEstateRegistration, } = req.body;
         const passwordHash = yield handleBcrypt_1.encrypt(password);
         const [registerClient] = yield index_1.default.query(`INSERT INTO clients (name,
         lastName,
@@ -40,7 +40,8 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         region,
         paymentDate,
         paymentExpireDate,
-        mpId
+        mpId,
+        realEstateRegistration
         ) VALUES ('${name}',
         '${lastName}',
         '${email}',
@@ -59,7 +60,8 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         '${region}',
         '${paymentDate}',
         '${paymentExpireDate}',
-        '${mpId}'
+        '${mpId}',
+        '${realEstateRegistration}'
         );`);
         if (registerClient) {
             const rowData = registerClient;
@@ -282,12 +284,13 @@ exports.getClientData = getClientData;
 const editClientData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { email, name, lastName, identificationType, identificationNumber, phoneAreaCode, phoneNumber, firstLogin, region, } = req.body;
+        const { email, name, lastName, identificationType, identificationNumber, phoneAreaCode, phoneNumber, firstLogin, region, realEstateRegistration, } = req.body;
         const [client] = yield index_1.default.query(`UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
       phoneAreaCode = '${phoneAreaCode}',
       phoneNumber = '${phoneNumber}',
       firstLogin = '${firstLogin}',
-      region = '${region}'
+      region = '${region}',
+      realEstateRegistration = '${realEstateRegistration}'
       WHERE id = ${id}`);
         if (client) {
             res.status(statusCodes_1.default.CREATED);
