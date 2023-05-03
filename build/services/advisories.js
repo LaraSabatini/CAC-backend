@@ -44,7 +44,7 @@ const requestAdvisory = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -66,7 +66,7 @@ const getAdvisoriesByMonth = (req, res) => __awaiter(void 0, void 0, void 0, fun
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -98,7 +98,7 @@ const requestAdvisoryChange = (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -144,7 +144,7 @@ const changeAdvisoryStatus = (req, res) => __awaiter(void 0, void 0, void 0, fun
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -164,7 +164,7 @@ const createEvent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -184,7 +184,7 @@ const getEvents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -204,7 +204,7 @@ const signUpToEvent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -225,7 +225,7 @@ const deletePublicEvent = (req, res) => __awaiter(void 0, void 0, void 0, functi
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -246,7 +246,7 @@ const editPublicEvent = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -266,7 +266,7 @@ const getAdvisoriesByMonthAndAdmin = (req, res) => __awaiter(void 0, void 0, voi
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -286,7 +286,7 @@ const getAllAdvisoriesByMonth = (req, res) => __awaiter(void 0, void 0, void 0, 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -306,7 +306,7 @@ const getAdvisoryById = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });

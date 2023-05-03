@@ -110,4 +110,42 @@ const editTraining = async (req: any, res: any) => {
   return {}
 }
 
-export { getTrainings, createTraining, deleteTraining, editTraining }
+const filterTrainings = async (req: any, res: any) => {
+  try {
+    const { themeIds } = req.body
+
+    let trainings: any[] = []
+
+    for (let i = 0; i < themeIds.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const [results]: any[] = await pool.query(
+        `SELECT * FROM trainings WHERE theme LIKE '%${themeIds[i]}%'`,
+      )
+
+      trainings = [...trainings, ...results]
+    }
+
+    if (trainings) {
+      return res.status(statusCodes.OK).json({
+        data: trainings,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.OK).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+      error,
+    })
+  }
+
+  return {}
+}
+
+export {
+  getTrainings,
+  createTraining,
+  deleteTraining,
+  editTraining,
+  filterTrainings,
+}

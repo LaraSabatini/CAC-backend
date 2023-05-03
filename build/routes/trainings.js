@@ -10,4 +10,5 @@ router.get("/page=:page", trainings_1.getTrainings);
 router.post("/", trainings_1.createTraining);
 router.delete("/id=:id", trainings_1.deleteTraining);
 router.put("/id=:id", trainings_1.editTraining);
+router.post("/filter", trainings_1.filterTrainings);
 exports.default = router;

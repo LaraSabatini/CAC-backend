@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAdmins = void 0;
+exports.editAdminData = exports.getAdminName = exports.getAdmins = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const getAdmins = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,7 +26,7 @@ const getAdmins = (_req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -34,3 +34,44 @@ const getAdmins = (_req, res) => __awaiter(void 0, void 0, void 0, function* () 
     return {};
 });
 exports.getAdmins = getAdmins;
+const getAdminName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const [admin] = yield index_1.default.query(`SELECT userName FROM admin WHERE id = '${id}'`);
+        if (admin) {
+            return res.status(statusCodes_1.default.OK).json({
+                data: admin,
+                status: statusCodes_1.default.OK,
+            });
+        }
+    }
+    catch (error) {
+        return res.status(statusCodes_1.default.OK).json({
+            message: "An error has occurred, please try again.",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+        });
+    }
+    return {};
+});
+exports.getAdminName = getAdminName;
+const editAdminData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, userName, email } = req.body;
+        const [admin] = yield index_1.default.query(`UPDATE admin SET email = '${email}', userName = '${userName}' WHERE id = ${id}`);
+        if (admin) {
+            return res.status(statusCodes_1.default.OK).json({
+                data: "success",
+                status: statusCodes_1.default.OK,
+            });
+        }
+    }
+    catch (error) {
+        return res.status(statusCodes_1.default.OK).json({
+            message: "An error has occurred, please try again.",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+            error,
+        });
+    }
+    return {};
+});
+exports.editAdminData = editAdminData;

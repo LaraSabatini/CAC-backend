@@ -28,7 +28,7 @@ const createAvailavility = (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -48,7 +48,7 @@ const getAvailavility = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -68,7 +68,7 @@ const editAvailavility = (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -87,7 +87,7 @@ const getAllAvailavility = (_req, res) => __awaiter(void 0, void 0, void 0, func
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Internal error",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });

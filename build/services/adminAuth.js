@@ -100,7 +100,7 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -131,7 +131,7 @@ const adminChangePassword = (req, res) => __awaiter(void 0, void 0, void 0, func
                 });
             }
             else {
-                return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+                return res.status(statusCodes_1.default.CREATED).json({
                     message: "Something went wrong",
                     status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
                 });
@@ -145,7 +145,7 @@ const adminChangePassword = (req, res) => __awaiter(void 0, void 0, void 0, func
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });

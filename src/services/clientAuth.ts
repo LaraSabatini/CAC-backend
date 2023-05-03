@@ -29,6 +29,9 @@ const clientRegister = async (req: any, res: any) => {
       paymentExpireDate,
       mpId,
       realEstateRegistration,
+      activityStartDate,
+      amountOfBuildings,
+      birthDate,
     }: Client = req.body
     const passwordHash = await encrypt(password)
 
@@ -52,7 +55,10 @@ const clientRegister = async (req: any, res: any) => {
         paymentDate,
         paymentExpireDate,
         mpId,
-        realEstateRegistration
+        realEstateRegistration,
+        activityStartDate,
+        amountOfBuildings,
+        birthDate
         ) VALUES ('${name}',
         '${lastName}',
         '${email}',
@@ -72,7 +78,10 @@ const clientRegister = async (req: any, res: any) => {
         '${paymentDate}',
         '${paymentExpireDate}',
         '${mpId}',
-        '${realEstateRegistration}'
+        '${realEstateRegistration}',
+        '${activityStartDate}',
+        '${amountOfBuildings}',
+        '${birthDate}'
         );`,
     )
 
@@ -132,7 +141,7 @@ const clientLogin = async (req: any, res: any) => {
             blockAccount as ResultSetHeader
 
           if (rowBlockAccountData.affectedRows === 1) {
-            res.status(statusCodes.UNAUTHORIZED)
+            res.status(statusCodes.CREATED)
             res.send({
               message: "Account blocked",
               status: statusCodes.UNAUTHORIZED,
@@ -150,7 +159,7 @@ const clientLogin = async (req: any, res: any) => {
           const rowClientUpdatedData: ResultSetHeader =
             updateLoginAttempts as ResultSetHeader
 
-          res.status(statusCodes.UNAUTHORIZED)
+          res.status(statusCodes.CREATED)
           res.send({
             message: "Wrong password or email",
             status: statusCodes.UNAUTHORIZED,
@@ -162,7 +171,7 @@ const clientLogin = async (req: any, res: any) => {
           })
         }
       } else {
-        res.status(statusCodes.UNAUTHORIZED)
+        res.status(statusCodes.CREATED)
         res.send({
           message: "Account blocked",
           status: statusCodes.UNAUTHORIZED,
@@ -173,7 +182,7 @@ const clientLogin = async (req: any, res: any) => {
         `SELECT * FROM admin WHERE email = '${email}'`,
       )
       if (admin.length) {
-        res.status(statusCodes.NOT_FOUND)
+        res.status(statusCodes.CREATED)
         res.send({ error: "User is admin", status: statusCodes.NOT_FOUND })
       } else if (client[0].accountBlocked === 1) {
         res.status(statusCodes.UNAUTHORIZED)
@@ -182,7 +191,7 @@ const clientLogin = async (req: any, res: any) => {
           status: statusCodes.UNAUTHORIZED,
         })
       } else {
-        res.status(statusCodes.NOT_FOUND)
+        res.status(statusCodes.CREATED)
         res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
       }
     }
@@ -234,7 +243,7 @@ const clientChangePassword = async (req: any, res: any) => {
         })
       }
     } else {
-      return res.status(statusCodes.UNAUTHORIZED).json({
+      return res.status(statusCodes.CREATED).json({
         message: "Wrong password",
         status: statusCodes.UNAUTHORIZED,
       })
@@ -347,6 +356,8 @@ const editClientData = async (req: any, res: any) => {
       firstLogin,
       region,
       realEstateRegistration,
+      amountOfBuildings,
+      birthdate,
     } = req.body
 
     const [client]: any = await pool.query(
@@ -355,7 +366,9 @@ const editClientData = async (req: any, res: any) => {
       phoneNumber = '${phoneNumber}',
       firstLogin = '${firstLogin}',
       region = '${region}',
-      realEstateRegistration = '${realEstateRegistration}'
+      realEstateRegistration = '${realEstateRegistration}', 
+      amountOfBuildings = '${amountOfBuildings}',
+      birthdate = '${birthdate}' 
       WHERE id = ${id}`,
     )
 
@@ -442,7 +455,7 @@ const restoreClientPasswordEmail = async (req: any, res: any) => {
         res,
       )
     }
-    res.status(statusCodes.NOT_FOUND)
+    res.status(statusCodes.OK)
     res.send({ message: "User does not exist", status: statusCodes.NOT_FOUND })
   } catch (error) {
     return res.status(statusCodes.OK).json({
