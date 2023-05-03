@@ -17,6 +17,9 @@ interface Client extends User {
   mpId: string
   savedArticles: number[]
   realEstateRegistration: string
+  activityStartDate: string
+  amountOfBuildings: string
+  birthDate: string
 }
 
 export default Client

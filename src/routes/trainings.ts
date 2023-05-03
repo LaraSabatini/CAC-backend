@@ -4,6 +4,7 @@ import {
   createTraining,
   deleteTraining,
   editTraining,
+  filterTrainings,
 } from "../services/trainings"
 
 const router = express.Router()
@@ -15,5 +16,7 @@ router.post("/", createTraining)
 router.delete("/id=:id", deleteTraining)
 
 router.put("/id=:id", editTraining)
+
+router.post("/filter", filterTrainings)
 
 export default router
