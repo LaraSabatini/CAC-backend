@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editTraining = exports.deleteTraining = exports.createTraining = exports.getTrainings = void 0;
+exports.filterTrainings = exports.editTraining = exports.deleteTraining = exports.createTraining = exports.getTrainings = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const pagination_1 = require("../helpers/pagination");
 const index_2 = __importDefault(require("../config/index"));
@@ -29,7 +29,7 @@ const getTrainings = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -55,7 +55,7 @@ const createTraining = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "An error has occurred while creating the training, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -76,7 +76,7 @@ const deleteTraining = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred while deleting the training, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -97,7 +97,7 @@ const editTraining = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "An error has occurred while creating the training, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -105,3 +105,29 @@ const editTraining = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     return {};
 });
 exports.editTraining = editTraining;
+const filterTrainings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { themeIds } = req.body;
+        let trainings = [];
+        for (let i = 0; i < themeIds.length; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            const [results] = yield index_1.default.query(`SELECT * FROM trainings WHERE theme LIKE '%${themeIds[i]}%'`);
+            trainings = [...trainings, ...results];
+        }
+        if (trainings) {
+            return res.status(statusCodes_1.default.OK).json({
+                data: trainings,
+                status: statusCodes_1.default.OK,
+            });
+        }
+    }
+    catch (error) {
+        return res.status(statusCodes_1.default.OK).json({
+            message: "An error has occurred, please try again.",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+            error,
+        });
+    }
+    return {};
+});
+exports.filterTrainings = filterTrainings;

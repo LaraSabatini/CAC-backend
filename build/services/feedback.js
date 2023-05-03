@@ -29,7 +29,7 @@ const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "An error has occurred while saving the feedback, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -57,7 +57,7 @@ const getFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });

@@ -42,7 +42,7 @@ const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred while creating the article, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -70,7 +70,7 @@ const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -94,7 +94,7 @@ const editArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred while updating the article, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -115,7 +115,7 @@ const deleteArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred while deleting the article, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -135,7 +135,7 @@ const getArticleById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -155,7 +155,7 @@ const getRelatedArticles = (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -185,7 +185,7 @@ const filterArticles = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -206,7 +206,7 @@ const searchArticles = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -229,7 +229,7 @@ const editAmountsSaved = (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });

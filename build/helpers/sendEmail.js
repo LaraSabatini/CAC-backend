@@ -36,7 +36,7 @@ const sendEmail = (to, subject, template, context, res) => {
     };
     transporter.sendMail(mailOptions, (error) => {
         if (error) {
-            return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+            return res.status(statusCodes_1.default.CREATED).json({
                 message: "Something went wrong",
                 status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
             });

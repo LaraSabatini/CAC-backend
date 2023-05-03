@@ -7,4 +7,6 @@ const express_1 = __importDefault(require("express"));
 const admins_1 = require("../services/admins");
 const router = express_1.default.Router();
 router.get("/", admins_1.getAdmins);
+router.get("/id=:id", admins_1.getAdminName);
+router.put("/", admins_1.editAdminData);
 exports.default = router;

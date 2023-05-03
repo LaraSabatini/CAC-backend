@@ -20,7 +20,7 @@ const pagination_1 = require("../helpers/pagination");
 const handleBcrypt_1 = require("../helpers/handleBcrypt");
 const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, lastName, email, password, identificationType, identificationNumber, phoneAreaCode, phoneNumber, preferences, accountBlocked, subscription, dateCreated, loginAttempts, firstLogin, plan, region, paymentDate, paymentExpireDate, mpId, realEstateRegistration, } = req.body;
+        const { name, lastName, email, password, identificationType, identificationNumber, phoneAreaCode, phoneNumber, preferences, accountBlocked, subscription, dateCreated, loginAttempts, firstLogin, plan, region, paymentDate, paymentExpireDate, mpId, realEstateRegistration, activityStartDate, amountOfBuildings, birthDate, } = req.body;
         const passwordHash = yield handleBcrypt_1.encrypt(password);
         const [registerClient] = yield index_1.default.query(`INSERT INTO clients (name,
         lastName,
@@ -41,7 +41,10 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         paymentDate,
         paymentExpireDate,
         mpId,
-        realEstateRegistration
+        realEstateRegistration,
+        activityStartDate,
+        amountOfBuildings,
+        birthDate
         ) VALUES ('${name}',
         '${lastName}',
         '${email}',
@@ -61,7 +64,10 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         '${paymentDate}',
         '${paymentExpireDate}',
         '${mpId}',
-        '${realEstateRegistration}'
+        '${realEstateRegistration}',
+        '${activityStartDate}',
+        '${amountOfBuildings}',
+        '${birthDate}'
         );`);
         if (registerClient) {
             const rowData = registerClient;
@@ -73,7 +79,7 @@ const clientRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "An error has occurred while registering the client, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -105,7 +111,7 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                     const [blockAccount] = yield index_1.default.query(`UPDATE clients SET loginAttempts = '${loginAttempts}', accountBlocked='1' WHERE id = ${rowClientData[0].id}`);
                     const rowBlockAccountData = blockAccount;
                     if (rowBlockAccountData.affectedRows === 1) {
-                        res.status(statusCodes_1.default.UNAUTHORIZED);
+                        res.status(statusCodes_1.default.CREATED);
                         res.send({
                             message: "Account blocked",
                             status: statusCodes_1.default.UNAUTHORIZED,
@@ -117,7 +123,7 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                         ? rowClientData[0].loginAttempts + 1
                         : 1}' WHERE id = ${rowClientData[0].id}`);
                     const rowClientUpdatedData = updateLoginAttempts;
-                    res.status(statusCodes_1.default.UNAUTHORIZED);
+                    res.status(statusCodes_1.default.CREATED);
                     res.send({
                         message: "Wrong password or email",
                         status: statusCodes_1.default.UNAUTHORIZED,
@@ -129,7 +135,7 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 }
             }
             else {
-                res.status(statusCodes_1.default.UNAUTHORIZED);
+                res.status(statusCodes_1.default.CREATED);
                 res.send({
                     message: "Account blocked",
                     status: statusCodes_1.default.UNAUTHORIZED,
@@ -139,7 +145,7 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         else {
             const [admin] = yield index_1.default.query(`SELECT * FROM admin WHERE email = '${email}'`);
             if (admin.length) {
-                res.status(statusCodes_1.default.NOT_FOUND);
+                res.status(statusCodes_1.default.CREATED);
                 res.send({ error: "User is admin", status: statusCodes_1.default.NOT_FOUND });
             }
             else if (client[0].accountBlocked === 1) {
@@ -150,14 +156,17 @@ const clientLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 });
             }
             else {
-                res.status(statusCodes_1.default.NOT_FOUND);
+                res.status(statusCodes_1.default.CREATED);
                 res.send({ error: "User not found", status: statusCodes_1.default.NOT_FOUND });
             }
         }
     }
     catch (error) {
-        res.status(statusCodes_1.default.NOT_FOUND);
-        res.send({ error: "User not found", status: statusCodes_1.default.NOT_FOUND });
+        res.status(statusCodes_1.default.OK);
+        res.send({
+            error: "User not found",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+        });
     }
     return {};
 });
@@ -185,21 +194,21 @@ const clientChangePassword = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 });
             }
             else {
-                return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+                return res.status(statusCodes_1.default.CREATED).json({
                     message: "Something went wrong",
                     status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
                 });
             }
         }
         else {
-            return res.status(statusCodes_1.default.UNAUTHORIZED).json({
+            return res.status(statusCodes_1.default.CREATED).json({
                 message: "Wrong password",
                 status: statusCodes_1.default.UNAUTHORIZED,
             });
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -228,7 +237,7 @@ const validateEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -253,7 +262,7 @@ const validateIdentificationNumber = (req, res) => __awaiter(void 0, void 0, voi
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -273,7 +282,7 @@ const getClientData = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -284,13 +293,15 @@ exports.getClientData = getClientData;
 const editClientData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { email, name, lastName, identificationType, identificationNumber, phoneAreaCode, phoneNumber, firstLogin, region, realEstateRegistration, } = req.body;
+        const { email, name, lastName, identificationType, identificationNumber, phoneAreaCode, phoneNumber, firstLogin, region, realEstateRegistration, amountOfBuildings, birthdate, } = req.body;
         const [client] = yield index_1.default.query(`UPDATE clients SET email = '${email}', name = '${name}', lastName = '${lastName}', identificationType = '${identificationType}', identificationNumber = '${identificationNumber}',
       phoneAreaCode = '${phoneAreaCode}',
       phoneNumber = '${phoneNumber}',
       firstLogin = '${firstLogin}',
       region = '${region}',
-      realEstateRegistration = '${realEstateRegistration}'
+      realEstateRegistration = '${realEstateRegistration}', 
+      amountOfBuildings = '${amountOfBuildings}',
+      birthdate = '${birthdate}' 
       WHERE id = ${id}`);
         if (client) {
             res.status(statusCodes_1.default.CREATED);
@@ -301,7 +312,7 @@ const editClientData = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -322,7 +333,7 @@ const blockAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.CREATED).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -351,11 +362,11 @@ const restoreClientPasswordEmail = (req, res) => __awaiter(void 0, void 0, void 
                 restorePasswordURL: `${req.body.restorePasswordURL}&pass=${client[0].password}&id=${client[0].id}`,
             }, res);
         }
-        res.status(statusCodes_1.default.NOT_FOUND);
+        res.status(statusCodes_1.default.OK);
         res.send({ message: "User does not exist", status: statusCodes_1.default.NOT_FOUND });
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
@@ -408,7 +419,7 @@ const getClientDataForTable = (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "An error has occurred, please try again.",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
         });
