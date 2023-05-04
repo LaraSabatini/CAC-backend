@@ -1,4 +1,6 @@
 import pool from "../database/index"
+import { ResultSetHeader } from "mysql2"
+
 import statusCodes from "../config/statusCodes"
 import sendEmail from "../helpers/sendEmail"
 
@@ -25,12 +27,13 @@ const requestAdvisory = async (req: any, res: any) => {
 
     const client = await getClientInfo(clientId)
 
-    const request = await pool.query(
+    const [request] = await pool.query(
       `INSERT INTO advisories (adminId, clientId, clientName, date, hour, month, brief, eventURL, status) VALUES ('${adminId}', '${clientId}', '${client.name} ${client.lastName}', '${date}', '${hour}', '${month}', '${brief}', '${eventURL}', '${status}');`,
     )
 
     if (request) {
       const admin = await getAdminInfo(adminId)
+      const rowData: ResultSetHeader = request as ResultSetHeader
 
       return sendEmail(
         [admin.email],
@@ -44,7 +47,7 @@ const requestAdvisory = async (req: any, res: any) => {
             hour,
             brief,
           },
-          confirmURL: "url de software confirmacion con queries",
+          confirmURL: `http://localhost:3000/advisories?id=${rowData.insertId}`,
         },
         res,
       )
