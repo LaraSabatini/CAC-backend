@@ -9,6 +9,7 @@ import {
   filterArticles,
   searchArticles,
   editAmountsSaved,
+  getDrafts,
 } from "../services/articles"
 
 const router = express.Router()
@@ -22,6 +23,8 @@ router.post("/search", searchArticles)
 router.get("/page=:page", getArticles)
 
 router.get("/id=:id", getArticleById)
+
+router.get("/drafts", getDrafts)
 
 router.get(
   "/related-articles/themeId=:themeId&regionId=:regionId",

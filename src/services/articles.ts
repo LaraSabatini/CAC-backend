@@ -20,6 +20,7 @@ const createArticle = async (req: any, res: any) => {
       article,
       attachments,
       author,
+      draft,
     }: ArticleInterface = req.body
 
     const registerArticle = await pool.query(
@@ -34,8 +35,9 @@ const createArticle = async (req: any, res: any) => {
         themeFilters, 
         article,
         attachments, 
-        author) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
-        '${themeFilters}', '${article}', '${attachments}','${author}');`,
+        author,
+        draft) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
+        '${themeFilters}', '${article}', '${attachments}','${author}', '${draft}');`,
     )
 
     if (registerArticle) {
@@ -61,7 +63,41 @@ const getArticles = async (req: any, res: any) => {
     const offset = getOffset(config.listPerPage, page)
 
     const [articles] = await pool.query(
-      `SELECT * FROM articles ORDER BY id DESC LIMIT ${offset},${config.listPerPage}`,
+      `SELECT * FROM articles WHERE draft = 0 ORDER BY id DESC LIMIT ${offset},${config.listPerPage}`,
+    )
+    const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM articles`)
+
+    if (articles) {
+      const rowData: ResultSetHeader = amountOfPages as ResultSetHeader
+
+      const meta = {
+        page,
+        totalPages: parseInt(Object.keys(rowData)[0], 10),
+      }
+
+      return res.status(statusCodes.OK).json({
+        data: articles,
+        meta,
+        status: statusCodes.OK,
+      })
+    }
+  } catch (error) {
+    return res.status(statusCodes.OK).json({
+      message: "An error has occurred, please try again.",
+      status: statusCodes.INTERNAL_SERVER_ERROR,
+    })
+  }
+
+  return {}
+}
+
+const getDrafts = async (req: any, res: any) => {
+  try {
+    const { page } = req.params
+    const offset = getOffset(config.listPerPage, page)
+
+    const [articles] = await pool.query(
+      `SELECT * FROM articles WHERE draft = 1 ORDER BY id DESC LIMIT ${offset},${config.listPerPage}`,
     )
     const [amountOfPages] = await pool.query(`SELECT COUNT(*) FROM articles`)
 
@@ -103,13 +139,14 @@ const editArticle = async (req: any, res: any) => {
       article,
       attachments,
       author,
+      draft,
     }: ArticleInterface = req.body
     const { id } = req.params
 
     const [articleEntry]: any = await pool.query(
       `UPDATE articles SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
       portrait = '${portrait}', subtitle = '${subtitle}', regionFilters = '${regionFilters}', themeFilters = '${themeFilters}',
-      article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`,
+      article = '${article}', attachments = '${attachments}', author = '${author}', draft = '${draft}' WHERE id = ${id}`,
     )
 
     if (articleEntry) {
@@ -185,7 +222,7 @@ const getRelatedArticles = async (req: any, res: any) => {
     const { themeId, regionId } = req.params
 
     const [relatedArticles] = await pool.query(
-      `SELECT * FROM articles WHERE regionFilters LIKE '%${regionId}%' OR themeFilters LIKE '%${themeId}%' LIMIT 2`,
+      `SELECT * FROM articles WHERE regionFilters LIKE '%${regionId}%' OR themeFilters LIKE '%${themeId}%' AND draft = 0 LIMIT 2`,
     )
 
     if (relatedArticles) {
@@ -210,22 +247,19 @@ const filterArticles = async (req: any, res: any) => {
 
     let articles: any[] = []
 
-    for (let i = 0; i < regionIds.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
+    regionIds.forEach(async (filter: number) => {
       const [results]: any[] = await pool.query(
-        `SELECT * FROM articles WHERE regionFilters LIKE '%${regionIds[i]}%'`,
-      )
-
-      articles = [...articles, ...results]
-    }
-
-    for (let i = 0; i < themeIds.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      const [results]: any[] = await pool.query(
-        `SELECT * FROM articles WHERE themeFilters LIKE '%${themeIds[i]}%'`,
+        `SELECT * FROM articles WHERE regionFilters LIKE '%${filter}%' AND draft = 0`,
       )
       articles = [...articles, ...results]
-    }
+    })
+
+    themeIds.forEach(async (filter: number) => {
+      const [results]: any[] = await pool.query(
+        `SELECT * FROM articles WHERE themeFilters LIKE '%${filter}%' AND draft = 0`,
+      )
+      articles = [...articles, ...results]
+    })
 
     if (articles) {
       return res.status(statusCodes.OK).json({
@@ -248,11 +282,11 @@ const searchArticles = async (req: any, res: any) => {
     const { search } = req.body
 
     const [fromTitle]: any[] = await pool.query(
-      `SELECT * FROM articles WHERE title LIKE '%${search}%'`,
+      `SELECT * FROM articles WHERE title LIKE '%${search}%' AND draft = 0`,
     )
 
     const [fromText]: any[] = await pool.query(
-      `SELECT * FROM articles WHERE article LIKE '%${search}%'`,
+      `SELECT * FROM articles WHERE article LIKE '%${search}%' AND draft = 0`,
     )
 
     if (fromTitle && fromText) {
@@ -312,4 +346,5 @@ export {
   filterArticles,
   searchArticles,
   editAmountsSaved,
+  getDrafts,
 }
