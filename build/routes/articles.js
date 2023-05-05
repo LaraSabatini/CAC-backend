@@ -11,6 +11,7 @@ router.post("/filterArticles", articles_1.filterArticles);
 router.post("/search", articles_1.searchArticles);
 router.get("/page=:page", articles_1.getArticles);
 router.get("/id=:id", articles_1.getArticleById);
+router.get("/drafts", articles_1.getDrafts);
 router.get("/related-articles/themeId=:themeId&regionId=:regionId", articles_1.getRelatedArticles);
 router.put("/id=:id", articles_1.editArticle);
 router.delete("/id=:id", articles_1.deleteArticle);

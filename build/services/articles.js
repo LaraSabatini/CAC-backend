@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editAmountsSaved = exports.searchArticles = exports.filterArticles = exports.getRelatedArticles = exports.getArticleById = exports.deleteArticle = exports.editArticle = exports.getArticles = exports.createArticle = void 0;
+exports.getDrafts = exports.editAmountsSaved = exports.searchArticles = exports.filterArticles = exports.getRelatedArticles = exports.getArticleById = exports.deleteArticle = exports.editArticle = exports.getArticles = exports.createArticle = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const index_2 = __importDefault(require("../config/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
@@ -20,7 +20,7 @@ const pagination_1 = require("../helpers/pagination");
 const deleteDuplicates_1 = __importDefault(require("../helpers/deleteDuplicates"));
 const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { title, description, createdBy, changesHistory, portrait, subtitle, regionFilters, themeFilters, article, attachments, author, } = req.body;
+        const { title, description, createdBy, changesHistory, portrait, subtitle, regionFilters, themeFilters, article, attachments, author, draft, } = req.body;
         const registerArticle = yield index_1.default.query(`INSERT INTO articles (
         title,
         description,
@@ -32,8 +32,9 @@ const createArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         themeFilters, 
         article,
         attachments, 
-        author) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
-        '${themeFilters}', '${article}', '${attachments}','${author}');`);
+        author,
+        draft) VALUES ('${title}', '${description}', '${createdBy}', '${changesHistory}', '${portrait}','${subtitle}', '${regionFilters}',
+        '${themeFilters}', '${article}', '${attachments}','${author}', '${draft}');`);
         if (registerArticle) {
             return res.status(statusCodes_1.default.CREATED).json({
                 message: "Article created successfully",
@@ -54,7 +55,7 @@ const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { page } = req.params;
         const offset = pagination_1.getOffset(index_2.default.listPerPage, page);
-        const [articles] = yield index_1.default.query(`SELECT * FROM articles ORDER BY id DESC LIMIT ${offset},${index_2.default.listPerPage}`);
+        const [articles] = yield index_1.default.query(`SELECT * FROM articles WHERE draft = 0 ORDER BY id DESC LIMIT ${offset},${index_2.default.listPerPage}`);
         const [amountOfPages] = yield index_1.default.query(`SELECT COUNT(*) FROM articles`);
         if (articles) {
             const rowData = amountOfPages;
@@ -78,13 +79,41 @@ const getArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     return {};
 });
 exports.getArticles = getArticles;
+const getDrafts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { page } = req.params;
+        const offset = pagination_1.getOffset(index_2.default.listPerPage, page);
+        const [articles] = yield index_1.default.query(`SELECT * FROM articles WHERE draft = 1 ORDER BY id DESC LIMIT ${offset},${index_2.default.listPerPage}`);
+        const [amountOfPages] = yield index_1.default.query(`SELECT COUNT(*) FROM articles`);
+        if (articles) {
+            const rowData = amountOfPages;
+            const meta = {
+                page,
+                totalPages: parseInt(Object.keys(rowData)[0], 10),
+            };
+            return res.status(statusCodes_1.default.OK).json({
+                data: articles,
+                meta,
+                status: statusCodes_1.default.OK,
+            });
+        }
+    }
+    catch (error) {
+        return res.status(statusCodes_1.default.OK).json({
+            message: "An error has occurred, please try again.",
+            status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+        });
+    }
+    return {};
+});
+exports.getDrafts = getDrafts;
 const editArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { title, description, createdBy, changesHistory, portrait, subtitle, regionFilters, themeFilters, article, attachments, author, } = req.body;
+        const { title, description, createdBy, changesHistory, portrait, subtitle, regionFilters, themeFilters, article, attachments, author, draft, } = req.body;
         const { id } = req.params;
         const [articleEntry] = yield index_1.default.query(`UPDATE articles SET title = '${title}', description = '${description}', createdBy = '${createdBy}', changesHistory = '${changesHistory}',
       portrait = '${portrait}', subtitle = '${subtitle}', regionFilters = '${regionFilters}', themeFilters = '${themeFilters}',
-      article = '${article}', attachments = '${attachments}', author = '${author}' WHERE id = ${id}`);
+      article = '${article}', attachments = '${attachments}', author = '${author}', draft = '${draft}' WHERE id = ${id}`);
         if (articleEntry) {
             res.status(statusCodes_1.default.CREATED);
             res.send({
@@ -146,7 +175,7 @@ exports.getArticleById = getArticleById;
 const getRelatedArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { themeId, regionId } = req.params;
-        const [relatedArticles] = yield index_1.default.query(`SELECT * FROM articles WHERE regionFilters LIKE '%${regionId}%' OR themeFilters LIKE '%${themeId}%' LIMIT 2`);
+        const [relatedArticles] = yield index_1.default.query(`SELECT * FROM articles WHERE regionFilters LIKE '%${regionId}%' OR themeFilters LIKE '%${themeId}%' AND draft = 0 LIMIT 2`);
         if (relatedArticles) {
             return res.status(statusCodes_1.default.OK).json({
                 data: relatedArticles,
@@ -167,16 +196,14 @@ const filterArticles = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { regionIds, themeIds } = req.body;
         let articles = [];
-        for (let i = 0; i < regionIds.length; i += 1) {
-            // eslint-disable-next-line no-await-in-loop
-            const [results] = yield index_1.default.query(`SELECT * FROM articles WHERE regionFilters LIKE '%${regionIds[i]}%'`);
+        regionIds.forEach((filter) => __awaiter(void 0, void 0, void 0, function* () {
+            const [results] = yield index_1.default.query(`SELECT * FROM articles WHERE regionFilters LIKE '%${filter}%' AND draft = 0`);
             articles = [...articles, ...results];
-        }
-        for (let i = 0; i < themeIds.length; i += 1) {
-            // eslint-disable-next-line no-await-in-loop
-            const [results] = yield index_1.default.query(`SELECT * FROM articles WHERE themeFilters LIKE '%${themeIds[i]}%'`);
+        }));
+        themeIds.forEach((filter) => __awaiter(void 0, void 0, void 0, function* () {
+            const [results] = yield index_1.default.query(`SELECT * FROM articles WHERE themeFilters LIKE '%${filter}%' AND draft = 0`);
             articles = [...articles, ...results];
-        }
+        }));
         if (articles) {
             return res.status(statusCodes_1.default.OK).json({
                 data: articles,
@@ -196,8 +223,8 @@ exports.filterArticles = filterArticles;
 const searchArticles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { search } = req.body;
-        const [fromTitle] = yield index_1.default.query(`SELECT * FROM articles WHERE title LIKE '%${search}%'`);
-        const [fromText] = yield index_1.default.query(`SELECT * FROM articles WHERE article LIKE '%${search}%'`);
+        const [fromTitle] = yield index_1.default.query(`SELECT * FROM articles WHERE title LIKE '%${search}%' AND draft = 0`);
+        const [fromText] = yield index_1.default.query(`SELECT * FROM articles WHERE article LIKE '%${search}%' AND draft = 0`);
         if (fromTitle && fromText) {
             return res.status(statusCodes_1.default.OK).json({
                 data: deleteDuplicates_1.default([...fromText, ...fromTitle]),

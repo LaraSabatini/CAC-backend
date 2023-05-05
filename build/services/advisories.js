@@ -28,9 +28,10 @@ const requestAdvisory = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const { adminId, clientId, date, hour, month, brief, eventURL, status } = req.body;
         const client = yield getClientInfo(clientId);
-        const request = yield index_1.default.query(`INSERT INTO advisories (adminId, clientId, clientName, date, hour, month, brief, eventURL, status) VALUES ('${adminId}', '${clientId}', '${client.name} ${client.lastName}', '${date}', '${hour}', '${month}', '${brief}', '${eventURL}', '${status}');`);
+        const [request] = yield index_1.default.query(`INSERT INTO advisories (adminId, clientId, clientName, date, hour, month, brief, eventURL, status) VALUES ('${adminId}', '${clientId}', '${client.name} ${client.lastName}', '${date}', '${hour}', '${month}', '${brief}', '${eventURL}', '${status}');`);
         if (request) {
             const admin = yield getAdminInfo(adminId);
+            const rowData = request;
             return sendEmail_1.default([admin.email], "Solicitud de asesoria", "requestAdvisory", {
                 clientName: `${client.name} ${client.lastName}`,
                 adminName: `${admin.userName}`,
@@ -39,7 +40,7 @@ const requestAdvisory = (req, res) => __awaiter(void 0, void 0, void 0, function
                     hour,
                     brief,
                 },
-                confirmURL: "url de software confirmacion con queries",
+                confirmURL: `http://localhost:3000/advisories?id=${rowData.insertId}`,
             }, res);
         }
     }
