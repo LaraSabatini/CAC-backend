@@ -1,13 +1,13 @@
-import path from "path"
 import fs from "fs"
+import path from "path"
 import statusCodes from "../config/statusCodes"
 
 const uploadFiles = async (req: any, res: any) => {
-  const newpath = `${__dirname.split("services")[0]}files/`
   const { file }: any = req.files
-  const filename = file.name
 
-  file.mv(`${newpath}${filename}`, (err: any) => {
+  const filepath = path.resolve(__dirname, "..", "files", file.name)
+
+  file.mv(filepath, (err: any) => {
     if (err) {
       res.status(500).send({
         message: "File upload failed",
@@ -22,7 +22,7 @@ const uploadFiles = async (req: any, res: any) => {
 
 const getFile = async (req: any, res: any, next: any) => {
   const options = {
-    root: `${path.join(__dirname).split("services")[0]}files`,
+    root: "https://camarafederal.com.ar/software/api/files",
   }
 
   const fileName = req.params.file_name

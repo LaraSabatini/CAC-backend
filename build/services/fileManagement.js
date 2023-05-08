@@ -13,14 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFile = exports.getFile = exports.uploadFiles = void 0;
-const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const uploadFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newpath = `${__dirname.split("services")[0]}files/`;
     const { file } = req.files;
-    const filename = file.name;
-    file.mv(`${newpath}${filename}`, (err) => {
+    const filepath = path_1.default.resolve(__dirname, "..", "files", file.name);
+    file.mv(filepath, (err) => {
         if (err) {
             res.status(500).send({
                 message: "File upload failed",
@@ -35,7 +34,7 @@ const uploadFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.uploadFiles = uploadFiles;
 const getFile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const options = {
-        root: `${path_1.default.join(__dirname).split("services")[0]}files`,
+        root: "https://camarafederal.com.ar/software/api/files",
     };
     const fileName = req.params.file_name;
     const fileExtension = req.params.file_extension;
