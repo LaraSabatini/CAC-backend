@@ -122,7 +122,7 @@ const adminChangePassword = (req, res) => __awaiter(void 0, void 0, void 0, func
             checkPassword = yield handleBcrypt_1.compare(password, admin[0].password);
         }
         if (checkPassword) {
-            const [changePassword] = yield index_1.default.query(`UPDATE admin SET password = '${passwordHash}' WHERE id = ${id}`);
+            const [changePassword] = yield index_1.default.query(`UPDATE admin SET password = '${passwordHash}', firstLogin = '0' WHERE id = ${id}`);
             if (changePassword) {
                 res.status(statusCodes_1.default.CREATED);
                 res.send({

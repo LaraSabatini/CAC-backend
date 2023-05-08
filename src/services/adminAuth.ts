@@ -148,7 +148,7 @@ const adminChangePassword = async (req: any, res: any) => {
 
     if (checkPassword) {
       const [changePassword]: any = await pool.query(
-        `UPDATE admin SET password = '${passwordHash}' WHERE id = ${id}`,
+        `UPDATE admin SET password = '${passwordHash}', firstLogin = '0' WHERE id = ${id}`,
       )
 
       if (changePassword) {
