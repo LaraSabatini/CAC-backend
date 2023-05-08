@@ -19,9 +19,9 @@ const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
 const handleBcrypt_1 = require("../helpers/handleBcrypt");
 const adminRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { password, email, accessPermits, loginAttempts, accountBlocked, firstLogin, } = req.body;
+        const { password, email, userName, accessPermits, loginAttempts, accountBlocked, firstLogin, } = req.body;
         const passwordHash = yield handleBcrypt_1.encrypt(password);
-        const registerAdmin = yield index_1.default.query(`INSERT INTO admin (email, password, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}', '${passwordHash}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`);
+        const registerAdmin = yield index_1.default.query(`INSERT INTO admin (email, password, userName, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}','${passwordHash}', '${userName}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`);
         if (registerAdmin) {
             return res.status(statusCodes_1.default.CREATED).json({
                 message: "Admin registered successfully",
