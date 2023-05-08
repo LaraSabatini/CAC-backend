@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.restoreAdminPasswordEmail = exports.editAdminData = exports.getAdminData = exports.adminChangePassword = exports.adminRegister = exports.adminLogin = void 0;
+exports.registerAdminSuccessEmail = exports.restoreAdminPasswordEmail = exports.editAdminData = exports.getAdminData = exports.adminChangePassword = exports.adminRegister = exports.adminLogin = void 0;
 const index_1 = __importDefault(require("../database/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
@@ -219,3 +219,13 @@ const restoreAdminPasswordEmail = (req, res) => __awaiter(void 0, void 0, void 0
     return {};
 });
 exports.restoreAdminPasswordEmail = restoreAdminPasswordEmail;
+const registerAdminSuccessEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("req", req.body);
+    return sendEmail_1.default([req.body.recipients], "Registro existoso", "registerAdminSuccess", {
+        name: req.body.name,
+        email: req.body.recipients[0],
+        password: req.body.password,
+        loginURL: req.body.loginURL,
+    }, res);
+});
+exports.registerAdminSuccessEmail = registerAdminSuccessEmail;

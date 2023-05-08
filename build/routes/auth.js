@@ -21,6 +21,7 @@ router.put("/client/block_account=:action&id=:id", clientAuth_1.blockAccount);
 router.put("/client/update_payment_data&id=:id", clientAuth_1.updateClientPaymentData);
 router.get("/admin/id=:id", adminAuth_1.getAdminData);
 router.put("/admin/id=:id", adminAuth_1.editAdminData);
+router.post("/admin/register_success_email", adminAuth_1.registerAdminSuccessEmail);
 router.post("/client/register_success_email", clientAuth_1.registerSuccessEmail);
 router.post("/client/restore_password", clientAuth_1.restoreClientPasswordEmail);
 router.post("/admin/restore_password", adminAuth_1.restoreAdminPasswordEmail);

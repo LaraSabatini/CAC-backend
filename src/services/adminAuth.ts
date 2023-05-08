@@ -262,7 +262,6 @@ const restoreAdminPasswordEmail = async (req: any, res: any) => {
 }
 
 const registerAdminSuccessEmail = async (req: any, res: any) => {
-  console.log("req", req.body)
   return sendEmail(
     [req.body.recipients],
     "Registro existoso",
