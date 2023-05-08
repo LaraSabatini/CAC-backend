@@ -60,7 +60,7 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     const [blockAccount] = yield index_1.default.query(`UPDATE admin SET loginAttempts = '${loginAttempts}', accountBlocked='1' WHERE id = ${rowAdminData[0].id}`);
                     const rowBlockAccountData = blockAccount;
                     if (rowBlockAccountData.affectedRows === 1) {
-                        res.status(statusCodes_1.default.UNAUTHORIZED);
+                        res.status(statusCodes_1.default.CREATED);
                         res.send({
                             message: "Account blocked",
                             status: statusCodes_1.default.UNAUTHORIZED,
@@ -70,7 +70,7 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 else {
                     const [updateLoginAttempts] = yield index_1.default.query(`UPDATE admin SET loginAttempts = '${rowAdminData[0].loginAttempts + 1}' WHERE id = ${rowAdminData[0].id}`);
                     const rowAdminUpdatedData = updateLoginAttempts;
-                    res.status(statusCodes_1.default.UNAUTHORIZED);
+                    res.status(statusCodes_1.default.CREATED);
                     res.send({
                         message: "Wrong password or email",
                         status: statusCodes_1.default.UNAUTHORIZED,
@@ -80,7 +80,7 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 }
             }
             else {
-                res.status(statusCodes_1.default.UNAUTHORIZED);
+                res.status(statusCodes_1.default.CREATED);
                 res.send({
                     message: "Account blocked",
                     status: statusCodes_1.default.UNAUTHORIZED,
@@ -90,11 +90,11 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         else {
             const [client] = yield index_1.default.query(`SELECT * FROM clients WHERE email = '${email}'`);
             if (client.length) {
-                res.status(statusCodes_1.default.NOT_FOUND);
+                res.status(statusCodes_1.default.OK);
                 res.send({ error: "User is client", status: statusCodes_1.default.NOT_FOUND });
             }
             else {
-                res.status(statusCodes_1.default.NOT_FOUND);
+                res.status(statusCodes_1.default.OK);
                 res.send({ error: "User not found", status: statusCodes_1.default.NOT_FOUND });
             }
         }
@@ -199,7 +199,7 @@ exports.editAdminData = editAdminData;
 const restoreAdminPasswordEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { recipients } = req.body;
-        const [admin] = yield index_1.default.query(`SELECT * FROM admins WHERE email = '${recipients[0]}'`);
+        const [admin] = yield index_1.default.query(`SELECT * FROM admin WHERE email = '${recipients[0]}'`);
         if (admin.length) {
             return sendEmail_1.default(recipients, "Recuperación de contraseña", "restorePassword", {
                 name: req.body.name,
@@ -210,9 +210,10 @@ const restoreAdminPasswordEmail = (req, res) => __awaiter(void 0, void 0, void 0
         res.send({ message: "User does not exist", status: statusCodes_1.default.NOT_FOUND });
     }
     catch (error) {
-        return res.status(statusCodes_1.default.INTERNAL_SERVER_ERROR).json({
+        return res.status(statusCodes_1.default.OK).json({
             message: "Something went wrong",
             status: statusCodes_1.default.INTERNAL_SERVER_ERROR,
+            hola: error,
         });
     }
     return {};
