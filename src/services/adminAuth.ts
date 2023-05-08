@@ -10,6 +10,7 @@ const adminRegister = async (req: any, res: any) => {
     const {
       password,
       email,
+      userName,
       accessPermits,
       loginAttempts,
       accountBlocked,
@@ -18,7 +19,7 @@ const adminRegister = async (req: any, res: any) => {
     const passwordHash = await encrypt(password)
 
     const registerAdmin = await pool.query(
-      `INSERT INTO admin (email, password, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}', '${passwordHash}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`,
+      `INSERT INTO admin (email, password, userName, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}','${passwordHash}', '${userName}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`,
     )
 
     if (registerAdmin) {
