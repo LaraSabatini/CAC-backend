@@ -220,7 +220,6 @@ const restoreAdminPasswordEmail = (req, res) => __awaiter(void 0, void 0, void 0
 });
 exports.restoreAdminPasswordEmail = restoreAdminPasswordEmail;
 const registerAdminSuccessEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("req", req.body);
     return sendEmail_1.default([req.body.recipients], "Registro existoso", "registerAdminSuccess", {
         name: req.body.name,
         email: req.body.recipients[0],
