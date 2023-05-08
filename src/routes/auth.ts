@@ -6,6 +6,7 @@ import {
   getAdminData,
   editAdminData,
   restoreAdminPasswordEmail,
+  registerAdminSuccessEmail,
 } from "../services/adminAuth"
 import {
   clientRegister,
@@ -55,6 +56,8 @@ router.put("/client/update_payment_data&id=:id", updateClientPaymentData)
 router.get("/admin/id=:id", getAdminData)
 
 router.put("/admin/id=:id", editAdminData)
+
+router.post("/admin/register_success_email", registerAdminSuccessEmail)
 
 router.post("/client/register_success_email", registerSuccessEmail)
 

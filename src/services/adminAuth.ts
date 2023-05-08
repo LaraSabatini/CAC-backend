@@ -261,6 +261,22 @@ const restoreAdminPasswordEmail = async (req: any, res: any) => {
   return {}
 }
 
+const registerAdminSuccessEmail = async (req: any, res: any) => {
+  console.log("req", req.body)
+  return sendEmail(
+    [req.body.recipients],
+    "Registro existoso",
+    "registerAdminSuccess",
+    {
+      name: req.body.name,
+      email: req.body.recipients[0],
+      password: req.body.password,
+      loginURL: req.body.loginURL,
+    },
+    res,
+  )
+}
+
 export {
   adminLogin,
   adminRegister,
@@ -268,4 +284,5 @@ export {
   getAdminData,
   editAdminData,
   restoreAdminPasswordEmail,
+  registerAdminSuccessEmail,
 }
