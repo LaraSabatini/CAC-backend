@@ -72,7 +72,7 @@ const adminLogin = async (req: any, res: any) => {
             blockAccount as ResultSetHeader
 
           if (rowBlockAccountData.affectedRows === 1) {
-            res.status(statusCodes.UNAUTHORIZED)
+            res.status(statusCodes.CREATED)
             res.send({
               message: "Account blocked",
               status: statusCodes.UNAUTHORIZED,
@@ -88,7 +88,7 @@ const adminLogin = async (req: any, res: any) => {
           const rowAdminUpdatedData: ResultSetHeader =
             updateLoginAttempts as ResultSetHeader
 
-          res.status(statusCodes.UNAUTHORIZED)
+          res.status(statusCodes.CREATED)
           res.send({
             message: "Wrong password or email",
             status: statusCodes.UNAUTHORIZED,
@@ -98,7 +98,7 @@ const adminLogin = async (req: any, res: any) => {
           })
         }
       } else {
-        res.status(statusCodes.UNAUTHORIZED)
+        res.status(statusCodes.CREATED)
         res.send({
           message: "Account blocked",
           status: statusCodes.UNAUTHORIZED,
@@ -109,10 +109,10 @@ const adminLogin = async (req: any, res: any) => {
         `SELECT * FROM clients WHERE email = '${email}'`,
       )
       if (client.length) {
-        res.status(statusCodes.NOT_FOUND)
+        res.status(statusCodes.OK)
         res.send({ error: "User is client", status: statusCodes.NOT_FOUND })
       } else {
-        res.status(statusCodes.NOT_FOUND)
+        res.status(statusCodes.OK)
         res.send({ error: "User not found", status: statusCodes.NOT_FOUND })
       }
     }
@@ -233,7 +233,7 @@ const restoreAdminPasswordEmail = async (req: any, res: any) => {
     const { recipients } = req.body
 
     const [admin]: any = await pool.query(
-      `SELECT * FROM admins WHERE email = '${recipients[0]}'`,
+      `SELECT * FROM admin WHERE email = '${recipients[0]}'`,
     )
 
     if (admin.length) {
@@ -251,9 +251,10 @@ const restoreAdminPasswordEmail = async (req: any, res: any) => {
     res.status(statusCodes.NOT_FOUND)
     res.send({ message: "User does not exist", status: statusCodes.NOT_FOUND })
   } catch (error) {
-    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(statusCodes.OK).json({
       message: "Something went wrong",
       status: statusCodes.INTERNAL_SERVER_ERROR,
+      hola: error,
     })
   }
 
