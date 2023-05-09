@@ -8,10 +8,10 @@ import statusCodes from "../config/statusCodes"
 
 const handlebarOptions: NodemailerExpressHandlebarsOptions = {
   viewEngine: {
-    partialsDir: path.resolve("../views/"),
+    partialsDir: path.resolve(__dirname, "..", "views"),
     defaultLayout: false,
   },
-  viewPath: path.resolve("./src/views/"),
+  viewPath: path.resolve(__dirname, "..", "views"),
 }
 
 const transportInfo = {

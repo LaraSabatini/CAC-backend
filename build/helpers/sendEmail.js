@@ -10,10 +10,10 @@ const index_1 = __importDefault(require("../config/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const handlebarOptions = {
     viewEngine: {
-        partialsDir: path_1.default.resolve("../views/"),
+        partialsDir: path_1.default.resolve(__dirname, "..", "views"),
         defaultLayout: false,
     },
-    viewPath: path_1.default.resolve("./src/views/"),
+    viewPath: path_1.default.resolve(__dirname, "..", "views"),
 };
 const transportInfo = {
     host: index_1.default.MAIL_HOST,
