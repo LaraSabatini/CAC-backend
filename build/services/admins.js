@@ -80,9 +80,9 @@ const uploadProfilePic = (req, res) => __awaiter(void 0, void 0, void 0, functio
     const { file } = req.files;
     const { id } = req.params;
     const filepath = path_1.default.resolve(__dirname, "..", "files/profiles", file.name);
-    // const profilePic = `https://camarafederal.com.ar/software/api/files/profiles/${file.name}`
+    const profilePic = `https://camarafederal.com.ar/software/api/files/profiles/${file.name}`;
     // const profilePic = `http://localhost:3001/software/api/files/profiles/${file.name}`
-    yield index_1.default.query(`UPDATE admin SET profilePic = '${filepath}' WHERE id = ${id}`);
+    yield index_1.default.query(`UPDATE admin SET profilePic = '${profilePic}' WHERE id = ${id}`);
     file.mv(filepath, (err) => {
         if (err) {
             res.status(500).send({
