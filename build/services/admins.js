@@ -81,7 +81,6 @@ const uploadProfilePic = (req, res) => __awaiter(void 0, void 0, void 0, functio
     const { id } = req.params;
     const filepath = path_1.default.resolve(__dirname, "..", "files/profiles", file.name);
     const profilePic = `https://camarafederal.com.ar/software/api/files/profiles/${file.name}`;
-    // const profilePic = `http://localhost:3001/software/api/files/profiles/${file.name}`
     yield index_1.default.query(`UPDATE admin SET profilePic = '${profilePic}' WHERE id = ${id}`);
     file.mv(filepath, (err) => {
         if (err) {
@@ -98,8 +97,8 @@ const uploadProfilePic = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.uploadProfilePic = uploadProfilePic;
 const getProfilePic = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        const [admin] = yield index_1.default.query(`SELECT profilePic FROM admin WHERE id = '${id}'`);
+        const { id, name } = req.params;
+        const [admin] = yield index_1.default.query(`SELECT profilePic FROM admin WHERE id = '${id}' OR userName LIKE '${name}'`);
         if (admin) {
             return res.status(statusCodes_1.default.OK).json({
                 data: admin,
