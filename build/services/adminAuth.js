@@ -21,7 +21,7 @@ const adminRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { password, email, userName, accessPermits, loginAttempts, accountBlocked, firstLogin, } = req.body;
         const passwordHash = yield handleBcrypt_1.encrypt(password);
-        const registerAdmin = yield index_1.default.query(`INSERT INTO admin (email, password, userName, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}','${passwordHash}', '${userName}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`);
+        const registerAdmin = yield index_1.default.query(`INSERT INTO admin (email, password, userName, accessPermits, loginAttempts, accountBlocked, firstLogin, profilePic) VALUES ('${email}','${passwordHash}', '${userName}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}', '');`);
         if (registerAdmin) {
             return res.status(statusCodes_1.default.CREATED).json({
                 message: "Admin registered successfully",
@@ -53,6 +53,7 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     status: statusCodes_1.default.CREATED,
                     userId: rowAdminData[0].id,
                     firstLogin: rowAdminData[0].firstLogin,
+                    profilePic: rowAdminData[0].profilePic,
                 });
             }
             else if (admin.length && rowAdminData[0].accountBlocked === 0) {
