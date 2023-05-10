@@ -20,6 +20,6 @@ router.put("/profile-pic/id=:id", removeProfilePic)
 
 router.post("/id=:id", uploadProfilePic)
 
-router.get("/profile-pic/id=:id", getProfilePic)
+router.get("/profile-pic/id=:id&name=:name", getProfilePic)
 
 export default router
