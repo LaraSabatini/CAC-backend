@@ -19,7 +19,7 @@ const adminRegister = async (req: any, res: any) => {
     const passwordHash = await encrypt(password)
 
     const registerAdmin = await pool.query(
-      `INSERT INTO admin (email, password, userName, accessPermits, loginAttempts, accountBlocked, firstLogin) VALUES ('${email}','${passwordHash}', '${userName}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}');`,
+      `INSERT INTO admin (email, password, userName, accessPermits, loginAttempts, accountBlocked, firstLogin, profilePic) VALUES ('${email}','${passwordHash}', '${userName}', '${accessPermits}', '${loginAttempts}', '${accountBlocked}', '${firstLogin}', '');`,
     )
 
     if (registerAdmin) {
@@ -62,6 +62,7 @@ const adminLogin = async (req: any, res: any) => {
           status: statusCodes.CREATED,
           userId: rowAdminData[0].id,
           firstLogin: rowAdminData[0].firstLogin,
+          profilePic: rowAdminData[0].profilePic,
         })
       } else if (admin.length && rowAdminData[0].accountBlocked === 0) {
         if (loginAttempts === 5) {
