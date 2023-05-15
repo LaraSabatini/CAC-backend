@@ -34,7 +34,7 @@ const uploadFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.uploadFiles = uploadFiles;
 const getFile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const options = {
-        root: "https://camarafederal.com.ar/software/api/files",
+        root: "https://camarafederal.com.ar/plataforma/api/files",
     };
     const fileName = req.params.file_name;
     const fileExtension = req.params.file_extension;
