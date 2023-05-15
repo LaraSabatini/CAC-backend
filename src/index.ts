@@ -30,6 +30,7 @@ app.use(
       "http://localhost:3000",
       "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app",
       "https://camarafederal.com.ar/",
+      "http://camarafederal.com.ar/",
     ],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   }),
@@ -54,6 +55,10 @@ app.use("/plataforma/api/clients", clientsRouter)
 app.use("/plataforma/api/trainings", trainingsRouter)
 app.use("/plataforma/api/advisories", advisoriesRouter)
 app.use("/plataforma/api/admins", adminsRouter)
+
+app.get("/plataforma/api", (_req, res) => {
+  res.json({ message: "ok" })
+})
 
 app.listen(config.PORT, () => {
   // eslint-disable-next-line no-console

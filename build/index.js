@@ -31,6 +31,7 @@ app.use(cors_1.default({
         "http://localhost:3000",
         "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app",
         "https://camarafederal.com.ar/",
+        "http://camarafederal.com.ar/",
     ],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
 }));
@@ -52,6 +53,9 @@ app.use("/plataforma/api/clients", clients_1.default);
 app.use("/plataforma/api/trainings", trainings_1.default);
 app.use("/plataforma/api/advisories", advisories_1.default);
 app.use("/plataforma/api/admins", admins_1.default);
+app.get("/plataforma/api", (_req, res) => {
+    res.json({ message: "ok" });
+});
 app.listen(config_1.default.PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`APP LISTENING ON http://${config_1.default.HOST}:${config_1.default.PORT}`);
