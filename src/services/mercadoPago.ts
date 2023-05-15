@@ -28,7 +28,7 @@ const createPreference = async (req: any, res: any) => {
       back_urls: returnPaymentResponse(type),
       auto_return: "approved",
       notification_url:
-        "https://camarafederal.com.ar/software/api/mercadoPago/notifications",
+        "https://camarafederal.com.ar/plataforma/api/mercadoPago/notifications",
     }
 
     mercadopago.preferences
@@ -109,7 +109,7 @@ const sendRegisterEmail = async (body: {
   loginURL: string
 }) => {
   const res = await defaultPost(
-    `https://camarafederal.com.ar/software/api/users/client/register_success_email`,
+    `https://camarafederal.com.ar/plataforma/api/users/client/register_success_email`,
     body,
   )
   return res

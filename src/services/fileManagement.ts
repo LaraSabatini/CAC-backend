@@ -22,7 +22,7 @@ const uploadFiles = async (req: any, res: any) => {
 
 const getFile = async (req: any, res: any, next: any) => {
   const options = {
-    root: "https://camarafederal.com.ar/software/api/files",
+    root: "https://camarafederal.com.ar/plataforma/api/files",
   }
 
   const fileName = req.params.file_name

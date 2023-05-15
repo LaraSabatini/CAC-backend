@@ -29,6 +29,7 @@ app.use(
       "https://cac-frontend-qa.vercel.app",
       "http://localhost:3000",
       "https://cac-frontend-git-feat-update-payment-larasabatini.vercel.app",
+      "https://camarafederal.com.ar/",
     ],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
   }),
@@ -39,24 +40,20 @@ app.use(express.static("files"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use("/software/api/users", usersRouter)
-app.use("/software/api/pricing", pricingRouter)
-app.use("/software/api/articles", articlesRouter)
-app.use("/software/api/payment", paymentsRouter)
-app.use("/software/api/reCaptcha", validateHumanRouter)
-app.use("/software/api/feedback", feedbackRouter)
-app.use("/software/api/fileManagement", fileManagementRouter)
-app.use("/software/api/filters", filtersRouter)
-app.use("/software/api/support", supportRouter)
-app.use("/software/api/mercadoPago", mercadoPagoRouter)
-app.use("/software/api/clients", clientsRouter)
-app.use("/software/api/trainings", trainingsRouter)
-app.use("/software/api/advisories", advisoriesRouter)
-app.use("/software/api/admins", adminsRouter)
-
-app.get("/software/api/", (_req, res) => {
-  res.json({ message: "ok" })
-})
+app.use("/plataforma/api/users", usersRouter)
+app.use("/plataforma/api/pricing", pricingRouter)
+app.use("/plataforma/api/articles", articlesRouter)
+app.use("/plataforma/api/payment", paymentsRouter)
+app.use("/plataforma/api/reCaptcha", validateHumanRouter)
+app.use("/plataforma/api/feedback", feedbackRouter)
+app.use("/plataforma/api/fileManagement", fileManagementRouter)
+app.use("/plataforma/api/filters", filtersRouter)
+app.use("/plataforma/api/support", supportRouter)
+app.use("/plataforma/api/mercadoPago", mercadoPagoRouter)
+app.use("/plataforma/api/clients", clientsRouter)
+app.use("/plataforma/api/trainings", trainingsRouter)
+app.use("/plataforma/api/advisories", advisoriesRouter)
+app.use("/plataforma/api/admins", adminsRouter)
 
 app.listen(config.PORT, () => {
   // eslint-disable-next-line no-console
