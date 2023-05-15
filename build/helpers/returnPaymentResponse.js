@@ -1,15 +1,19 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = __importDefault(require("../config/index"));
 const returnPaymentResponse = (type) => {
     const successURL = type === "subscription"
-        ? "http://localhost:3000/payment?payment_status=success"
-        : "http://localhost:3000/profile?payment_done=success";
+        ? `${index_1.default.FONT_URL}/payment?payment_status=success`
+        : `${index_1.default.FONT_URL}/profile?payment_status=success`;
     const failureURL = type === "subscription"
-        ? "http://localhost:3000/payment?payment_status=failure"
-        : "http://localhost:3000/profile?payment_done=failure";
+        ? `${index_1.default.FONT_URL}/payment?payment_status=failure`
+        : `${index_1.default.FONT_URL}/profile?payment_status=failure`;
     const pendingURL = type === "subscription"
-        ? "http://localhost:3000/payment?payment_status=pending"
-        : "http://localhost:3000/profile?payment_done=pending";
+        ? `${index_1.default.FONT_URL}/payment?payment_status=pending`
+        : `${index_1.default.FONT_URL}/profile?payment_status=pending`;
     return {
         success: successURL,
         failure: failureURL,

@@ -136,7 +136,7 @@ const processPayment = (email, paymentId) => __awaiter(void 0, void 0, void 0, f
                 name: client[0].name,
                 item: getPaymentDataCall.data.additional_info.items[0].title,
                 password,
-                loginURL: "http://localhost:3000/login?user=client",
+                loginURL: `${index_2.default.FONT_URL}/login?user=client`,
             });
             success = sendEmail.status === 201;
         }

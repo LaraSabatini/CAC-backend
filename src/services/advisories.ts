@@ -1,6 +1,6 @@
 import pool from "../database/index"
 import { ResultSetHeader } from "mysql2"
-
+import config from "../config/index"
 import statusCodes from "../config/statusCodes"
 import sendEmail from "../helpers/sendEmail"
 
@@ -47,7 +47,7 @@ const requestAdvisory = async (req: any, res: any) => {
             hour,
             brief,
           },
-          confirmURL: `http://localhost:3000/advisories?id=${rowData.insertId}`,
+          confirmURL: `${config.FONT_URL}/advisories?id=${rowData.insertId}`,
         },
         res,
       )
@@ -183,7 +183,7 @@ const changeAdvisoryStatus = async (req: any, res: any) => {
                 }
               : {
                   text: "ir al soft",
-                  url: "http://localhost:3000/advisories",
+                  url: `${config.FONT_URL}/advisories`,
                 },
         },
         res,

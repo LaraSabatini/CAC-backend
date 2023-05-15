@@ -46,6 +46,7 @@ const config = {
     MP_ACCESS_TOKEN_AS_BUYER: process.env.MP_ACCESS_TOKEN_AS_BUYER,
     RECAPTCHA_PUBLIC_KEY: process.env.RECAPTCHA_PUBLIC_KEY,
     RECAPTCHA_PRIVATE_KEY: process.env.RECAPTCHA_PRIVATE_KEY,
+    FONT_URL: process.env.FRONT_URL,
     listPerPage: 25,
 };
 exports.default = config;

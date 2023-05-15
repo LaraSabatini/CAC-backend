@@ -184,7 +184,7 @@ const processPayment = async (email: string, paymentId: string) => {
         name: client[0].name,
         item: getPaymentDataCall.data.additional_info.items[0].title,
         password,
-        loginURL: "http://localhost:3000/login?user=client",
+        loginURL: `${config.FONT_URL}/login?user=client`,
       })
 
       success = sendEmail.status === 201
