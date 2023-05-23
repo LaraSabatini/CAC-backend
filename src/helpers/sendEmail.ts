@@ -36,7 +36,7 @@ const sendEmail = (
   transporter.use("compile", hbs(handlebarOptions))
 
   const mailOptions = {
-    from: '"Camara federal" <info@vonceescalada.com>', // OR hola@camarafederal.com.ar>
+    from: '"Camara federal" <hola@camarafederal.com.ar>', // OR hola@camarafederal.com.ar>
     to,
     subject,
     template,

@@ -28,7 +28,7 @@ const sendEmail = (to, subject, template, context, res) => {
     const transporter = nodemailer_1.default.createTransport(transportInfo);
     transporter.use("compile", nodemailer_express_handlebars_1.default(handlebarOptions));
     const mailOptions = {
-        from: '"Camara federal" <info@vonceescalada.com>',
+        from: '"Camara federal" <hola@camarafederal.com.ar>',
         to,
         subject,
         template,

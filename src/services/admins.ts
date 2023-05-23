@@ -79,7 +79,7 @@ const uploadProfilePic = async (req: any, res: any) => {
 
   const filepath = path.resolve(__dirname, "..", "files/profiles", file.name)
 
-  const profilePic = `https://camarafederal.com.ar/software/api/files/profiles/${file.name}`
+  const profilePic = `https://camarafederal.com.ar/plataforma/api/files/profiles/${file.name}`
 
   await pool.query(
     `UPDATE admin SET profilePic = '${profilePic}' WHERE id = ${id}`,

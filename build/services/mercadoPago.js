@@ -36,7 +36,7 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
             payer: req.body.payer,
             back_urls: returnPaymentResponse_1.default(type),
             auto_return: "approved",
-            notification_url: "https://camarafederal.com.ar/software/api/mercadoPago/notifications",
+            notification_url: "https://camarafederal.com.ar/plataforma/api/mercadoPago/notifications",
         };
         mercadoPago_1.default.preferences
             .create(preference)
@@ -97,7 +97,7 @@ const getPaymentData = (paymentId) => __awaiter(void 0, void 0, void 0, function
     return response;
 });
 const sendRegisterEmail = (body) => __awaiter(void 0, void 0, void 0, function* () {
-    const res = yield defaultPost_1.default(`https://camarafederal.com.ar/software/api/users/client/register_success_email`, body);
+    const res = yield defaultPost_1.default(`https://camarafederal.com.ar/plataforma/api/users/client/register_success_email`, body);
     return res;
 });
 const processPayment = (email, paymentId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -136,7 +136,7 @@ const processPayment = (email, paymentId) => __awaiter(void 0, void 0, void 0, f
                 name: client[0].name,
                 item: getPaymentDataCall.data.additional_info.items[0].title,
                 password,
-                loginURL: "http://localhost:3000/login?user=client",
+                loginURL: `${index_2.default.FONT_URL}/login?user=client`,
             });
             success = sendEmail.status === 201;
         }

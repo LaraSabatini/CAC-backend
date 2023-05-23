@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAdvisoryById = exports.getAllAdvisoriesByMonth = exports.getAdvisoriesByMonthAndAdmin = exports.editPublicEvent = exports.deletePublicEvent = exports.getAdvisoriesByMonth = exports.signUpToEvent = exports.getEvents = exports.requestAdvisoryChange = exports.createEvent = exports.changeAdvisoryStatus = exports.requestAdvisory = void 0;
 const index_1 = __importDefault(require("../database/index"));
+const index_2 = __importDefault(require("../config/index"));
 const statusCodes_1 = __importDefault(require("../config/statusCodes"));
 const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
 const getAdminInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,7 +41,7 @@ const requestAdvisory = (req, res) => __awaiter(void 0, void 0, void 0, function
                     hour,
                     brief,
                 },
-                confirmURL: `http://localhost:3000/advisories?id=${rowData.insertId}`,
+                confirmURL: `${index_2.default.FONT_URL}/advisories?id=${rowData.insertId}`,
             }, res);
         }
     }
@@ -139,7 +140,7 @@ const changeAdvisoryStatus = (req, res) => __awaiter(void 0, void 0, void 0, fun
                     }
                     : {
                         text: "ir al soft",
-                        url: "http://localhost:3000/advisories",
+                        url: `${index_2.default.FONT_URL}/advisories`,
                     },
             }, res);
         }
